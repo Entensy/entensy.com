@@ -1,4 +1,5 @@
-import Image from 'next/image'
+import Image from 'next/image';
+import Label from 'app/components/Label';
 
 export default function Home() {
   return (
@@ -106,8 +107,10 @@ export default function Home() {
           <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
             Instantly deploy your Next.js site to a shareable URL with Vercel.
           </p>
+
+          <Label />
         </a>
       </div>
     </main>
-  )
+  );
 }
