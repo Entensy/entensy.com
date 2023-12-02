@@ -1,10 +1,9 @@
-import Image from 'next/image';
-import Label from 'app/components/Label';
-
-export default function Home() {
+const Home = () => {
   return (
     <main>
-      <h1 className="message">503 | Under Construction</h1>
+      <h1 className="text-4xl text-neutral-700">503 | Under Construction</h1>
     </main>
   );
-}
+};
+
+export default Home;

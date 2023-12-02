@@ -6,7 +6,3 @@
 body {
   @apply flex items-center justify-center h-screen bg-neutral-100;
 }
-
-.message {
-  @apply text-4xl text-neutral-700;
-}
