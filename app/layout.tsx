@@ -7,6 +7,13 @@ const montserrat = Montserrat({ subsets: ['latin'], weight: '200' });
 export const metadata: Metadata = {
   title: 'Entensy',
   description: 'Software Development and Consulting Company',
+  icons: {
+    icon: './favicon.ico',
+    other: {
+      rel: 'icon',
+      url: './favicon.ico',
+    },
+  },
 };
 
 export default function RootLayout({
