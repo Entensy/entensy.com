@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Montserrat } from 'next/font/google';
-import './css/globals.css';
+import '../styles/css/globals.css';
+import { Toaster } from 'sonner';
 
 const montserrat = Montserrat({ subsets: ['latin'], weight: '200' });
 
@@ -23,6 +24,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <Toaster className="dark:hidden" />
+      <Toaster theme="dark" className="hidden dark:block" />
       <body className={montserrat.className}>{children}</body>
     </html>
   );
