@@ -9,8 +9,8 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write \"**/*.{css,js,json,jsx,ts,tsx}\"",
-    "css:dev": "postcss ./styles/css --dir ./public/styles --watch",
-    "css:build": "postcss ./styles/css --dir ./public/styles"
+    "css:dev": "postcss ./styles --dir ./public/styles --watch",
+    "css:build": "postcss ./styles --dir ./public/styles"
   },
   "dependencies": {
     "framer-motion": "^10.16.16",

@@ -48,5 +48,5 @@ html * {
 }
 
 body {
-  @apply flex items-center justify-center h-screen bg-neutral-100;
+  @apply flex h-screen items-center justify-center bg-neutral-100;
 }
