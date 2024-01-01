@@ -3,6 +3,7 @@ import type { Config } from 'tailwindcss';
 import animate from 'tailwindcss-animate';
 import typogrpahy from '@tailwindcss/typography';
 import queries from '@tailwindcss/container-queries';
+import Logo from './app/navbar/logo';
 // import colors from 'tailwindcss/colors';
 
 const config = {
@@ -61,35 +62,30 @@ const config = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
-        // primary: '#FC002A',
-        // accent: {
-        //   light: '#999999',
-        //   dark: '#404040',
-        // },
-        // secondery: {
-        //   light: '#D9D9D9',
-        //   dark: '#0d0d0d',
-        // },
-        // danger: {
-        //   light: colors.rose[400],
-        //   normal: colors.rose[500],
-        //   dark: colors.rose[600],
-        // },
-        // warning: {
-        //   light: colors.yellow[400],
-        //   normal: colors.yellow[500],
-        //   dark: colors.yellow[600],
-        // },
-        // success: {
-        //   light: colors.green[400],
-        //   normal: colors.green[500],
-        //   dark: colors.green[600],
-        // },
-        // info: {
-        //   light: colors.blue[400],
-        //   normal: colors.blue[500],
-        //   dark: colors.blue[600],
-        // },
+        entensy: {
+          primary: '#FC002A',
+          background: '#f2f2f2',
+          accent: {
+            dark: '#808080',
+            light: '#404040',
+          },
+          secondery: {
+            dark: '#D9D9D9',
+            light: '#262626',
+          },
+          logo: {
+            dark: '##d9d9d9',
+            light: '#1e1e1e',
+          },
+          button: {
+            active: '#FC002A',
+            hover: '#E00025',
+            focus: '#C70021',
+          },
+          card: {
+            background: '#f5f5f5',
+          },
+        },
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
