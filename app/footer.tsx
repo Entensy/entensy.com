@@ -11,8 +11,8 @@ import {
 
 const Footer = () => {
   return (
-    <section>
-      <div className="bg-entensy-secondery-dark flex flex-col items-center justify-evenly gap-8 py-12 lg:flex-row lg:gap-0">
+    <footer>
+      <div className="flex flex-col items-center justify-evenly gap-8 bg-entensy-secondery-dark py-12 lg:flex-row lg:gap-0">
         <div className="flex flex-col">
           <Logo />
           <span className="hidden pt-12 lg:flex">© 2024 Entensy</span>
@@ -46,7 +46,7 @@ const Footer = () => {
           <Socials />
         </div>
       </div>
-    </section>
+    </footer>
   );
 };
 

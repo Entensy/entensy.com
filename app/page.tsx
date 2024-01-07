@@ -8,15 +8,17 @@ import Footer from './footer';
 
 const Home = () => {
   return (
-    <main className="w-full">
+    <>
       <Navigation />
-      <Hero />
-      <Service />
-      <Portfolio />
-      <Contact />
-      <About />
+      <main className="w-full">
+        <Hero />
+        <Service />
+        <Portfolio />
+        <Contact />
+        <About />
+      </main>
       <Footer />
-    </main>
+    </>
   );
 };
 

@@ -98,6 +98,6 @@
     @apply border-border;
   }
   body {
-    @apply bg-entensy-background flex h-screen text-foreground;
+    @apply flex bg-entensy-background text-foreground;
   }
 }
