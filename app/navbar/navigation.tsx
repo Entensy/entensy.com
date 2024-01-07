@@ -13,14 +13,29 @@ import {
   Sheet,
   SheetContent,
   SheetDescription,
-  SheetTitle,
   SheetHeader,
+  SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import { useEffect, useState } from 'react';
+import { cn } from '@/lib/utils';
 
 const Navigation = () => {
+  const [scroll, setScroll] = useState<string>('');
+
+  useEffect(() => {
+    document.addEventListener('scroll', () => {
+      setScroll(window.scrollY > 50 ? 'shadow-lg' : '');
+    });
+  });
+
   return (
-    <nav className="bg-entensy-background sticky   top-0 z-50 flex w-full items-center justify-between px-10 py-2">
+    <nav
+      className={cn(
+        'shadow-gold-100 sticky top-0 z-50 flex w-full items-center justify-between bg-entensy-background px-10 py-2 shadow-sm transition-all duration-150 ease-linear',
+        scroll
+      )}
+    >
       <Logo />
       <NavigationMenu>
         <NavigationMenuList className="hidden lg:block">
@@ -47,7 +62,7 @@ const Navigation = () => {
       <Sheet>
         <SheetTrigger className="lg:hidden">
           <HamburgerMenuIcon
-            className="hover:text-entensy-primary active:text-entensy-active hover:text-entensy-hover focus:text-entensy-focus"
+            className="active:text-entensy-active hover:text-entensy-hover focus:text-entensy-focus hover:text-entensy-primary"
             height={32}
             width={32}
           />
