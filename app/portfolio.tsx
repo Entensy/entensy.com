@@ -22,7 +22,7 @@ const Portfolio = () => {
         <Carousel className="mx-9">
           <CarouselContent>
             <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-              <div className=" border-entensy-secondery-dark flex flex-col items-center rounded-[2rem] border-[1px] shadow-sm">
+              <div className=" flex flex-col items-center rounded-[2rem] border-[1px] border-entensy-secondery-dark shadow-sm">
                 <Image
                   className="w-3/4 p-4"
                   src="/images/1.svg"
@@ -34,7 +34,7 @@ const Portfolio = () => {
                   <h3 className=" text-center font-medium capitalize">
                     HR System Management
                   </h3>
-                  <span className="text-entensy-accent-light capitalize">
+                  <span className="capitalize text-entensy-accent-light">
                     Lorem ipsum dolor sit amet consectetur adipisicing elit.
                     Omnis earum deserunt aspernatur.
                   </span>
@@ -46,8 +46,8 @@ const Portfolio = () => {
               </div>
             </CarouselItem>
           </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
+          <CarouselPrevious variant="secondary" />
+          <CarouselNext variant="secondary" />
         </Carousel>
       </div>
     </section>

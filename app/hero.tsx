@@ -16,15 +16,19 @@ const Hero = () => {
         </div>
         <div className="flex w-full items-center lg:w-1/2">
           <div className="flex w-full flex-col items-center justify-center gap-11 lg:w-3/5 lg:items-start">
-            <h1 className="text-center text-3xl font-bold capitalize leading-normal tracking-[1.60px] lg:text-start lg:text-3xl">
-              enhanced, extensive, efficiency
+            <h1 className="text-center text-3xl font-bold leading-normal tracking-[1.60px] lg:text-start lg:text-3xl">
+              Enhanced, Extensive, and Efficiency
             </h1>
             <span className="text-base">
               Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos
               iste recusandae dicta?
             </span>
             <div className="flex gap-2">
-              <Button size="lg" className=" rounded-3xl text-lg capitalize">
+              <Button
+                variant="default"
+                size="lg"
+                className=" rounded-3xl text-lg capitalize"
+              >
                 Get Started
               </Button>
               <Button

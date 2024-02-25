@@ -18,7 +18,9 @@ const Contact = () => {
           <Input />
           <Textarea />
           <div className="self-center">
-            <Button size="lg">Submit</Button>
+            <Button variant="outline" size="lg">
+              Submit
+            </Button>
           </div>
         </div>
       </div>

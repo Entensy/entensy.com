@@ -3,7 +3,7 @@ import type { Config } from 'tailwindcss';
 import animate from 'tailwindcss-animate';
 import typogrpahy from '@tailwindcss/typography';
 import queries from '@tailwindcss/container-queries';
-import Logo from './app/navbar/logo';
+// import Logo from './app/navbar/logo';
 // import colors from 'tailwindcss/colors';
 
 const config = {
@@ -65,17 +65,17 @@ const config = {
         entensy: {
           primary: '#FC002A',
           background: '#f2f2f2',
+          secondery: {
+            light: '#D9D9D9',
+            dark: '#262626',
+          },
           accent: {
             dark: '#808080',
             light: '#404040',
           },
-          secondery: {
-            dark: '#D9D9D9',
-            light: '#262626',
-          },
           logo: {
-            dark: '##d9d9d9',
-            light: '#1e1e1e',
+            light: '#D9D9D9',
+            dark: '#1E1E1E',
           },
           button: {
             active: '#FC002A',
