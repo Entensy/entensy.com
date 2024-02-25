@@ -3,6 +3,7 @@ import { Montserrat } from 'next/font/google';
 import '../public/styles/fonts.css';
 import { Toaster } from 'sonner';
 import '../styles/globals.css';
+import { cn } from '@/lib/utils';
 
 const montserrat = Montserrat({ subsets: ['latin'], weight: '200' });
 
@@ -27,7 +28,9 @@ export default function RootLayout({
     <html lang="en">
       <Toaster className="dark:hidden" />
       <Toaster theme="dark" className="hidden dark:block" />
-      <body className={montserrat.className}>{children}</body>
+      <body className={cn(montserrat.className, 'flex w-full flex-col')}>
+        {children}
+      </body>
     </html>
   );
 }

@@ -1,11 +1,24 @@
-import { Button } from '@/components/ui/button';
+import Navigation from '@/app/navbar/navigation';
+import Hero from './hero';
+import Service from './service';
+import Portfolio from './portfolio';
+import Contact from './contact';
+import About from './about';
+import Footer from './footer';
 
 const Home = () => {
   return (
-    <main>
-      <h1 className="text-4xl text-neutral-700">503 | Under Construction</h1>
-      <Button>click me!</Button>
-    </main>
+    <>
+      <Navigation />
+      <main className="w-full">
+        <Hero />
+        <Service />
+        <Portfolio />
+        <Contact />
+        <About />
+      </main>
+      <Footer />
+    </>
   );
 };
 
