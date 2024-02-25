@@ -9,9 +9,6 @@
 # testing
 /coverage
 
-# next.js
-/.next/
-/out/
 
 # production
 /build
@@ -39,7 +36,3 @@ next-env.d.ts
 .env
 .env*.local
 .env.prod
-
-#ignore compiled css
-public/styles/**/*.css
-!public/styles/fonts.css
