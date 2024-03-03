@@ -7,9 +7,8 @@
       <div class="flex flex-col items-center justify-center w-full gap-3">
 
         <span class="font-medium capitalize text-primary">introducing enetensy</span>
-        <h1 class="w-full text-4xl text-center text-white lg:text-5xl lg:w-1/2">We resolve problems associated with
-          creative
-          procedures.
+        <h1 class="w-full text-4xl text-center text-white lg:text-5xl lg:w-1/2">
+          We resolve problems associated with creative procedures.
         </h1>
 
       </div>
@@ -18,11 +17,7 @@
 
         <div class="flex flex-col gap-8 lg:flex-row">
           <div class="flex flex-col gap-8 p-10 rounded-3xl bg-card-gradient">
-            <img
-              class="object-cover w-full h-64 rounded-2xl"
-              src="/images/1.webp"
-              alt=""
-            >
+            <img class="object-cover w-full h-64 rounded-2xl" src="/images/1.webp" alt="">
             <div class="flex flex-col gap-2">
               <h1 class="text-3xl text-white">Tailor–made design
               </h1>
@@ -32,11 +27,7 @@
             </div>
           </div>
           <div class="flex flex-col gap-8 p-10 rounded-3xl bg-card-gradient">
-            <img
-              class="object-cover w-full h-64 rounded-2xl"
-              src="/images/1.webp"
-              alt=""
-            >
+            <img class="object-cover w-full h-64 rounded-2xl" src="/images/1.webp" alt="">
             <div class="flex flex-col gap-2">
               <h1 class="text-3xl text-white">Tailor–made design
               </h1>
@@ -46,11 +37,7 @@
             </div>
           </div>
           <div class="flex flex-col gap-8 p-10 rounded-3xl bg-card-gradient">
-            <img
-              class="object-cover w-full h-64 rounded-2xl"
-              src="/images/1.webp"
-              alt=""
-            >
+            <img class="object-cover w-full h-64 rounded-2xl" src="/images/1.webp" alt="">
             <div class="flex flex-col gap-2">
               <h1 class="text-3xl text-white">Tailor–made design
               </h1>
@@ -68,11 +55,7 @@
               <span>Seamlessly connect all your existing apps.</span>
             </div>
             <div class="w-1/2">
-              <img
-                class="object-cover w-full h-full rounded-r-2xl"
-                src="/images/1.webp"
-                alt="images"
-              >
+              <img class="object-cover w-full h-full rounded-r-2xl" src="/images/1.webp" alt="images">
             </div>
           </div>
           <div class="flex w-full gap-4 text-white lg:w-1/2 rounded-3xl bg-card-gradient h-52">
@@ -82,11 +65,7 @@
               <span>Seamlessly connect all your existing apps.</span>
             </div>
             <div class="w-1/2">
-              <img
-                class="object-cover w-full h-full rounded-r-2xl"
-                src="/images/1.webp"
-                alt="images"
-              >
+              <img class="object-cover w-full h-full rounded-r-2xl" src="/images/1.webp" alt="images">
             </div>
 
           </div>

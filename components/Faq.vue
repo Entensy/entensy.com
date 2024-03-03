@@ -15,9 +15,11 @@
       <div class="flex max-w-3xl gap-2 p-6 text-white bg-card-gradient rounded-2xl">
         <div class="flex flex-col justify-between gap-4">
           <h1 class="text-xl">Lorem ipsum dolor sit amet consectetur, adipisicing elit.</h1>
-          <span class="text-base text-accent-light">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Delectus,
+          <span class="text-base text-accent-light">
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Delectus,
             necessitatibus. Quod at fugit quo eius at fugit quo eiusat fugit quo eius
-            at fugit quo eius at fugit quo eius impedit?</span>
+            at fugit quo eius at fugit quo eius impedit?
+          </span>
         </div>
         <button class="self-start">+</button>
       </div>
@@ -25,9 +27,11 @@
       <div class="flex max-w-3xl gap-2 p-6 text-white bg-card-gradient rounded-2xl">
         <div class="flex flex-col justify-between gap-4">
           <h1 class="text-xl">Lorem ipsum dolor sit amet consectetur, adipisicing elit.</h1>
-          <span class="text-base text-accent-light">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Delectus,
+          <span class="text-base text-accent-light">
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Delectus,
             necessitatibus. Quod at fugit quo eius at fugit quo eiusat fugit quo eius
-            at fugit quo eius at fugit quo eius impedit?</span>
+            at fugit quo eius at fugit quo eius impedit?
+          </span>
         </div>
         <button class="self-start">+</button>
       </div>
@@ -35,9 +39,11 @@
       <div class="flex max-w-3xl gap-2 p-6 text-white bg-card-gradient rounded-2xl">
         <div class="flex flex-col justify-between gap-4">
           <h1 class="text-xl">Lorem ipsum dolor sit amet consectetur, adipisicing elit.</h1>
-          <span class="text-base text-accent-light">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Delectus,
+          <span class="text-base text-accent-light">
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Delectus,
             necessitatibus. Quod at fugit quo eius at fugit quo eiusat fugit quo eius
-            at fugit quo eius at fugit quo eius impedit?</span>
+            at fugit quo eius at fugit quo eius impedit?
+          </span>
         </div>
         <button class="self-start">+</button>
       </div>
@@ -45,12 +51,15 @@
       <div class="flex max-w-3xl gap-2 p-6 text-white bg-card-gradient rounded-2xl">
         <div class="flex flex-col justify-between gap-4">
           <h1 class="text-xl">Lorem ipsum dolor sit amet consectetur, adipisicing elit.</h1>
-          <span class="text-base text-accent-light">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Delectus,
+          <span class="text-base text-accent-light">
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Delectus,
             necessitatibus. Quod at fugit quo eius at fugit quo eiusat fugit quo eius
-            at fugit quo eius at fugit quo eius impedit?</span>
+            at fugit quo eius at fugit quo eius impedit?
+          </span>
         </div>
         <button class="self-start">+</button>
       </div>
+
     </div>
 
 
