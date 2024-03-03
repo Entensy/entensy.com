@@ -1,5 +1,11 @@
 {
-  "heading": "Top–notch designs, delivered at your doorstep.",
-  "subheading":"How it works",
+  "heading": {
+    "en":"Top–notch designs, delivered at your doorstep.",
+    "ckb":"Top–notch designs, delivered at your doorstep."
+  },
+  "subheading":{
+    "en": "How it works",
+    "ckb": "How it works"
+  },
   "list":[]
 }

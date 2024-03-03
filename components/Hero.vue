@@ -1,11 +1,17 @@
 <script setup>
 import { hero } from '~/assets/contents/main.json'
+import { inject } from 'vue'
+
+const __ = inject('locale')
 </script>
 
 <template>
   <section class="relative flex justify-center px-16 pt-24">
     <div class="relative flex flex-col items-center justify-center w-full gap-3 max-w-7xl h-min">
       <div class="relative flex flex-col items-center justify-center max-w-3xl gap-8 h-min">
+
+        <button @click="__.setLocale('en')">click en</button>
+        <button @click="__.setLocale('ckb')">click ckb</button>
         <h1 v-motion :initial="{
           scale: .75,
           opacity: 0.15,
@@ -18,7 +24,7 @@ import { hero } from '~/assets/contents/main.json'
             duration: 1000,
           },
         }" class="text-5xl text-center text-white uppercase lg:text-7xl">
-          {{ hero.heading }}
+          {{ __.translate(hero.heading) }}
         </h1>
         <h2 v-motion :initial="{
           y: 25,
@@ -32,16 +38,16 @@ import { hero } from '~/assets/contents/main.json'
             duration: 1000,
           },
         }" class="text-center text-white w-fulltext-lg lg:w-1/2">
-          {{ hero.subheading }}
+          {{ __.translate(hero.subheading) }}
         </h2>
         <div>
           <div class="flex gap-4">
             <button class="px-8 py-4 font-medium text-white uppercase border rounded-full border-white/15 bg-blur">
-              Contact US
+              {{ __.translate(hero.left_action) }}
             </button>
             <button
               class="px-8 py-4 font-medium text-white uppercase bg-primary border rounded-full shadow-2xl border-white/15 shadow-primary">
-              contact us
+              {{ __.translate(hero.right_action) }}
             </button>
           </div>
         </div>

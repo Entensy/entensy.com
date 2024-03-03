@@ -1,42 +1,88 @@
 {
-  "heading": "We resolve problems associated with creative procedures.",
-  "subheading":"introducing enetensy",
+  "heading": {
+    "en": "We resolve problems associated with creative procedures.",
+    "ckb": "We resolve problems associated with creative procedures."
+  },
+  "subheading":{
+    "en": "introducing enetensy",
+    "ckb": "introducing enetensy"
+  },
   "vlist":[
     {
       "id": 1,
-      "title": "Tailor–made design",
-      "content":"We've got the expertise to make your vision a reality.",
+      "title": {
+        "en": "Tailor–made design",
+        "ckb": "Tailor–made design"
+      },
+      "content":{
+        "en": "We've got the expertise to make your vision a reality.",
+        "ckb": "We've got the expertise to make your vision a reality."
+      },
       "src": "/images/1.webp"
     },
     {
       "id": 2,
-      "title": "Tailor–made design",
-      "content":"We've got the expertise to make your vision a reality.",
+      "title": {
+        "en": "Tailor–made design",
+        "ckb": "Tailor–made design"
+      },
+      "content":{
+        "en": "We've got the expertise to make your vision a reality.",
+        "ckb": "We've got the expertise to make your vision a reality."
+      },
       "src": "/images/1.webp"
     }
   ],
   "hlist":[
     {
       "id": 1,
-      "title": "Workflow integration",
-      "content":"Seamlessly connect all your existing apps.",
+      "title": {
+        "en": "Workflow integration",
+        "ckb": "Workflow integration"
+      },
+      "content":{
+        "en": "Seamlessly connect all your existing apps.",
+        "ckb": "Seamlessly connect all your existing apps."
+      },
       "src": "/images/1.webp"
     },
     {
       "id": 2,
-      "title": "Workflow integration",
-      "content":"Seamlessly connect all your existing apps.",
+      "title": {
+        "en": "Workflow integration",
+        "ckb": "Workflow integration"
+      },
+      "content":{
+        "en": "Seamlessly connect all your existing apps.",
+        "ckb": "Seamlessly connect all your existing apps."
+      },
       "src": "/images/1.webp"
     }
   ],
   "tags": [
-    "Design workshops",
-    "Design",
-    "Design workshops",
-    "Design",
-    "Design workshops",
-    "Design",
-    "Design workshops",
-    "Design"
+    {
+      "en": "Design workshops",
+      "ckb": "Design workshops"
+    },
+    {
+      "en": "Design",
+      "ckb": "Design"
+    },
+    {
+      "en": "Design workshops",
+      "ckb": "Design workshops"
+    },
+    {
+      "en": "Design",
+      "ckb": "Design"
+    },
+    {
+      "en": "Design workshops",
+      "ckb": "Design workshops"
+    },
+    {
+      "en": "Design",
+      "ckb": "Design"
+    }
   ]
 }

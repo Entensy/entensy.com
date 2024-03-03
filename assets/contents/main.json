@@ -1,13 +1,42 @@
 {
   "navigations":{
-    "home": "Home",
-    "about": "About",
-    "services": "Services",
-    "portfolio": "Portfolio",
-    "contact": "Contact Us"
+    "home": {
+      "en": "Home",
+      "ckb": "Home"
+    },
+    "about": {
+      "en": "About",
+      "ckb": "About"
+    },
+    "services": {
+      "en": "Services",
+      "ckb": "Services"
+    },
+    "portfolio": {
+      "en": "Portfolio",
+      "ckb": "Portfolio"
+    },
+    "contact": {
+      "en": "Contact Us",
+      "ckb": "Contact Us"
+    }
   },
   "hero":{
-    "heading": "Design work, the efficient way",
-    "subheading": "Innovative design solutions for technology firms and emerging businesses weary of the typical aesthetic methodology. Arriving shortly."
+    "heading": {
+      "en": "Design work, the efficient way",
+      "ckb": "Design work, the efficient way!!"
+    },
+    "subheading": {
+      "en":"Innovative design solutions for technology firms and emerging businesses weary of the typical aesthetic methodology. Arriving shortly.",
+      "ckb":"Innovative design solutions for technology firms and emerging businesses weary of the typical aesthetic methodology. Arriving shortly."
+    },
+    "left_action":{
+        "en":"Get Started",
+        "ckb":"Get Started!!"
+      },
+    "right_action":{
+        "en":"Contact Us",
+        "ckb":"Contact Us"
+      }
   }
 }

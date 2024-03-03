@@ -1,17 +1,19 @@
 <script setup>
 
 import { heading, subheading, list } from '~/assets/contents/faqs.json'
+import { inject } from 'vue'
 
 const faqs = reactive(list)
+const __ = inject('locale')
 </script>
 
 <template>
   <section id="faq" class="flex flex-col items-center w-full gap-8 px-4 py-24 pb-16">
     <div class="flex flex-col gap-16">
       <div class="flex flex-col items-center justify-center w-full gap-3">
-        <span class="font-medium capitalize text-primary">{{ subheading }}</span>
+        <span class="font-medium capitalize text-primary">{{ __.translate(subheading) }}</span>
         <h1 class="w-full text-4xl text-center text-white lg:w-2/3 lg:text-5xl">
-          {{ heading }}
+          {{ __.translate(heading) }}
         </h1>
       </div>
     </div>
@@ -21,10 +23,11 @@ const faqs = reactive(list)
 
       <div v-for="faq in faqs" :key="faq.id" class="flex max-w-3xl gap-2 p-6 text-white bg-card-gradient rounded-2xl">
         <div class="flex flex-col justify-between">
-          <h1 class="text-xl cursor-pointer select-none" @click="faq.collapsed = !faq.collapsed">{{ faq.title }} </h1>
+          <h1 class="text-xl cursor-pointer select-none" @click="faq.collapsed = !faq.collapsed">{{
+          __.translate(faq.title) }} </h1>
           <span class="text-base text-accent-light invisible h-0"
             :class="{ '!visible mt-4 h-auto roll-down': faq.collapsed }">
-            {{ faq.content }}
+            {{ __.translate(faq.content) }}
           </span>
         </div>
         <button @click="faq.collapsed = !faq.collapsed" class="self-start text-2xl font-mono font-bold">

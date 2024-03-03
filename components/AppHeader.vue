@@ -3,6 +3,7 @@ import { inject } from "vue";
 import { navigations } from '~/assets/contents/main.json'
 
 const navigation = inject('navigation')
+const __ = inject('locale')
 </script>
 
 <template>
@@ -14,16 +15,16 @@ const navigation = inject('navigation')
     </NuxtLink>
     <div class="hidden text-white border rounded-full lg:block border-white/15 drop-shadow backdrop-blur-lg">
       <div class="flex items-center justify-center gap-8 px-12 py-4 capitalize text-md">
-        <NuxtLink to="/">{{ navigations.home }}</NuxtLink>
-        <NuxtLink to="#about">{{ navigations.about }}</NuxtLink>
-        <NuxtLink to="#services">{{ navigations.services }}</NuxtLink>
-        <NuxtLink to="#portfolio">{{ navigations.portfolio }}</NuxtLink>
+        <NuxtLink to="/">{{ __.translate(navigations.home) }}</NuxtLink>
+        <NuxtLink to="#about">{{ __.translate(navigations.about) }}</NuxtLink>
+        <NuxtLink to="#services">{{ __.translate(navigations.services) }}</NuxtLink>
+        <NuxtLink to="#portfolio">{{ __.translate(navigations.portfolio) }}</NuxtLink>
       </div>
     </div>
     <div>
       <NuxtLink to="#contact-us">
         <button class="hidden p-4 text-white capitalize border rounded-full lg:block border-white/15 bg-blur">
-          {{ navigations.contact }}
+          {{ __.translate(navigations.contact) }}
         </button>
       </NuxtLink>
     </div>
@@ -52,11 +53,11 @@ const navigation = inject('navigation')
         <div v-if="navigation.state"
           class="block lg:hidden absolute top-32 left-12 right-12 text-white border rounded-2xl border-white/15 drop-shadow backdrop-blur-lg">
           <div class="flex flex-col items-center justify-center gap-8 px-12 py-4 capitalize text-md">
-            <NuxtLink to="/">{{ navigations.home }}</NuxtLink>
-            <NuxtLink to="#about">{{ navigations.about }}</NuxtLink>
-            <NuxtLink to="#services">{{ navigations.services }}</NuxtLink>
-            <NuxtLink to="#portfolio">{{ navigations.portfolio }}</NuxtLink>
-            <NuxtLink to="#contact-us">{{ navigations.contact }}</NuxtLink>
+            <NuxtLink to="/">{{ __.translate(navigations.home) }}</NuxtLink>
+            <NuxtLink to="#about">{{ __.translate(navigations.about) }}</NuxtLink>
+            <NuxtLink to="#services">{{ __.translate(navigations.services) }}</NuxtLink>
+            <NuxtLink to="#portfolio">{{ __.translate(navigations.portfolio) }}</NuxtLink>
+            <NuxtLink to="#contact-us">{{ __.translate(navigations.contact) }}</NuxtLink>
           </div>
         </div>
       </Transition>

@@ -1,13 +1,17 @@
 <script setup>
 import { heading, subheading, list } from '~/assets/contents/portfolio.json'
+import { inject } from 'vue'
+
+const __ = inject('locale')
 </script>
+
 <template>
   <section id="portfolio" class="w-full py-24 pb-16">
     <div class="flex flex-col gap-16">
       <div class="flex flex-col items-center justify-center w-full gap-3">
-        <span class="font-medium text-primary capitalize">{{subheading}}</span>
+        <span class="font-medium text-primary capitalize">{{ __.translate(subheading) }}</span>
         <h1 class="w-full text-4xl text-center text-white lg:w-1/2 lg:text-5xl">
-          {{heading}}
+          {{ __.translate(heading) }}
         </h1>
       </div>
 
