@@ -1,0 +1,10 @@
+{
+  "heading":"Contact Us",
+  "subheading":"Get ready to start producing stunning, efficient design work without the hassles of hiring. Soon available.",
+  "form": {
+  "name": "Name",
+  "email": "Email",
+  "phone": "Phone",
+  "message": "Message",
+    "submit": "Submit" }
+}

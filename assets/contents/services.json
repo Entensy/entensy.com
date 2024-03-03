@@ -1,0 +1,42 @@
+{
+  "heading": "We resolve problems associated with creative procedures.",
+  "subheading":"introducing enetensy",
+  "vlist":[
+    {
+      "id": 1,
+      "title": "Tailor–made design",
+      "content":"We've got the expertise to make your vision a reality.",
+      "src": "/images/1.webp"
+    },
+    {
+      "id": 2,
+      "title": "Tailor–made design",
+      "content":"We've got the expertise to make your vision a reality.",
+      "src": "/images/1.webp"
+    }
+  ],
+  "hlist":[
+    {
+      "id": 1,
+      "title": "Workflow integration",
+      "content":"Seamlessly connect all your existing apps.",
+      "src": "/images/1.webp"
+    },
+    {
+      "id": 2,
+      "title": "Workflow integration",
+      "content":"Seamlessly connect all your existing apps.",
+      "src": "/images/1.webp"
+    }
+  ],
+  "tags": [
+    "Design workshops",
+    "Design",
+    "Design workshops",
+    "Design",
+    "Design workshops",
+    "Design",
+    "Design workshops",
+    "Design"
+  ]
+}

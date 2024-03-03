@@ -1,3 +1,7 @@
+<script setup>
+import { hero } from '~/assets/contents/main.json'
+</script>
+
 <template>
   <section class="relative flex justify-center px-16 pt-24">
     <div class="relative flex flex-col items-center justify-center w-full gap-3 max-w-7xl h-min">
@@ -14,8 +18,7 @@
             duration: 1000,
           },
         }" class="text-5xl text-center text-white uppercase lg:text-7xl">
-          Design work,
-          the efficient way
+          {{ hero.heading }}
         </h1>
         <h2 v-motion :initial="{
           y: 25,
@@ -29,13 +32,11 @@
             duration: 1000,
           },
         }" class="text-center text-white w-fulltext-lg lg:w-1/2">
-          Innovative design solutions for technology firms and emerging businesses weary of the typical aesthetic
-          methodology. Arriving shortly.
+          {{ hero.subheading }}
         </h2>
         <div>
           <div class="flex gap-4">
-            <button
-              class="px-8 py-4 font-medium text-white uppercase border rounded-full border-white/15 bg-blur">
+            <button class="px-8 py-4 font-medium text-white uppercase border rounded-full border-white/15 bg-blur">
               Contact US
             </button>
             <button
@@ -46,13 +47,13 @@
         </div>
       </div>
       <div class="relative lg:flex items-end justify-between w-full h-[350px] hidden">
-        <img class="absolute object-cover w-56 shadow-2xl h-w-56 rounded-3xl -top-56 -left-64" src="/images/1.webp"
-          alt="">
+        <img class="absolute object-cover w-56 shadow-2xl h-w-56 rounded-3xl -top-56 -left-64 lg:-left-16"
+          src="/images/1.webp" alt="">
         <img class="object-cover w-56 shadow-2xl h-w-56 rounded-3xl" src="/images/2.webp" alt="">
         <img class="object-cover w-56 shadow-2xl h-w-56 rounded-3xl" src="/images/3.webp" alt="">
         <img class="object-cover w-56 shadow-2xl h-w-56 rounded-3xl" src="/images/4.webp" alt="">
-        <img class="absolute object-cover w-56 shadow-2xl h-w-56 rounded-3xl -top-56 -right-64" src="/images/5.webp"
-          alt="">
+        <img class="absolute object-cover w-56 shadow-2xl h-w-56 rounded-3xl -top-56 -right-64 lg:right-8"
+          src="/images/5.webp" alt="">
       </div>
     </div>
 

@@ -1,5 +1,5 @@
 <template>
-  <section class="container w-full px-4 py-24 pb-16 mx-auto lg:w-1/2">
+  <section id="about" class="container w-full px-4 py-24 pb-16 mx-auto lg:w-1/2">
     <div class="flex flex-col items-center justify-center w-full gap-12 lg:flex-row">
       <div class="flex flex-col items-center justify-around w-full gap-8 lg:items-start lg:w-1/2">
         <h3 class="font-medium capitalize text-primary ">Customer story</h3>

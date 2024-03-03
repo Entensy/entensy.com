@@ -1,0 +1,42 @@
+{
+  "heading":"Top–notch designs, delivered at your doorstep.",
+  "subheading": "How it works!",
+  "list":[
+    {
+      "id": 1,
+      "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
+      "content":"Lorem ipsum dolor sit amet consectetur, adipisicing elit. Delectus, necessitatibus. Quod at fugit quo eius at fugit quo eiusat fugit quo eius at fugit quo eius at fugit quo eius impedit? Lorem ipsum dolor sit amet consectetur adipisicing elit. Et placeat a molestiae!",
+      "collapsed": false
+    },
+    {
+      "id": 2,
+      "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
+      "content":"Lorem ipsum dolor sit amet consectetur, adipisicing elit. Delectus, necessitatibus. Quod at fugit quo eius at fugit quo eiusat fugit quo eius at fugit quo eius at fugit quo eius impedit? Lorem ipsum dolor sit amet consectetur adipisicing elit. Et placeat a molestiae!",
+      "collapsed": false
+    },
+    {
+      "id": 3,
+      "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
+      "content":"Lorem ipsum dolor sit amet consectetur, adipisicing elit. Delectus, necessitatibus. Quod at fugit quo eius at fugit quo eiusat fugit quo eius at fugit quo eius at fugit quo eius impedit? Lorem ipsum dolor sit amet consectetur adipisicing elit. Et placeat a molestiae!",
+      "collapsed": false
+    },
+    {
+      "id": 4,
+      "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
+      "content":"Lorem ipsum dolor sit amet consectetur, adipisicing elit. Delectus, necessitatibus. Quod at fugit quo eius at fugit quo eiusat fugit quo eius at fugit quo eius at fugit quo eius impedit? Lorem ipsum dolor sit amet consectetur adipisicing elit. Et placeat a molestiae!",
+      "collapsed": false
+    },
+    {
+      "id": 5,
+      "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
+      "content":"Lorem ipsum dolor sit amet consectetur, adipisicing elit. Delectus, necessitatibus. Quod at fugit quo eius at fugit quo eiusat fugit quo eius at fugit quo eius at fugit quo eius impedit? Lorem ipsum dolor sit amet consectetur adipisicing elit. Et placeat a molestiae!",
+      "collapsed": false
+    },
+    {
+      "id": 6,
+      "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
+      "content":"Lorem ipsum dolor sit amet consectetur, adipisicing elit. Delectus, necessitatibus. Quod at fugit quo eius at fugit quo eiusat fugit quo eius at fugit quo eius at fugit quo eius impedit? Lorem ipsum dolor sit amet consectetur adipisicing elit. Et placeat a molestiae!",
+      "collapsed": false
+    }
+  ]
+}
