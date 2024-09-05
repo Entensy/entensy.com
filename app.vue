@@ -23,7 +23,7 @@ const locale = ref({
     this.state = locale
     localStorage.setItem('locale', locale)
   },
-  translate(translate){
+  translate(translate) {
     return translate[this.state]
   }
 })
@@ -45,12 +45,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <AppHeader />
-  <Hero />
-  <Service />
-  <Portfolio />
-  <About />
-  <Faq />
-  <ContactUs />
-  <AppFooter />
+  <NuxtLayout>
+    <AppHeader />
+    <NuxtPage />
+    <AppFooter />
+  </NuxtLayout>
 </template>

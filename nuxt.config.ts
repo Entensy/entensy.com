@@ -2,7 +2,10 @@
 export default defineNuxtConfig({
   ssr: false,
   devtools: { enabled: true },
-  modules: ['@nuxt/image', '@vueuse/motion/nuxt'],
+  modules: [
+    '@nuxt/image',
+    '@vueuse/motion/nuxt',
+  ],
   css: ['~/assets/css/index.css'],
   postcss: {
     plugins: {
