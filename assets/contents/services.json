@@ -3,18 +3,18 @@
     "en": "We resolve problems associated with creative procedures.",
     "ckb": "We resolve problems associated with creative procedures."
   },
-  "subheading":{
+  "subheading": {
     "en": "introducing enetensy",
     "ckb": "introducing enetensy"
   },
-  "vlist":[
+  "vlist": [
     {
       "id": 1,
       "title": {
         "en": "Tailor–made design",
         "ckb": "Tailor–made design"
       },
-      "content":{
+      "content": {
         "en": "We've got the expertise to make your vision a reality.",
         "ckb": "We've got the expertise to make your vision a reality."
       },
@@ -26,21 +26,21 @@
         "en": "Tailor–made design",
         "ckb": "Tailor–made design"
       },
-      "content":{
+      "content": {
         "en": "We've got the expertise to make your vision a reality.",
         "ckb": "We've got the expertise to make your vision a reality."
       },
       "src": "/images/1.webp"
     }
   ],
-  "hlist":[
+  "hlist": [
     {
       "id": 1,
       "title": {
         "en": "Workflow integration",
         "ckb": "Workflow integration"
       },
-      "content":{
+      "content": {
         "en": "Seamlessly connect all your existing apps.",
         "ckb": "Seamlessly connect all your existing apps."
       },
@@ -52,7 +52,7 @@
         "en": "Workflow integration",
         "ckb": "Workflow integration"
       },
-      "content":{
+      "content": {
         "en": "Seamlessly connect all your existing apps.",
         "ckb": "Seamlessly connect all your existing apps."
       },

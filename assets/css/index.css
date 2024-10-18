@@ -1,6 +1,48 @@
+@import 'fonts.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+html * {
+  scroll-behavior: smooth;
+  font-family:
+    montserrat,
+    rabar,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    Segoe UI,
+    Roboto,
+    Helvetica Neue,
+    Arial,
+    Noto Sans,
+    sans-serif,
+    Apple Color Emoji,
+    Segoe UI Emoji,
+    Segoe UI Symbol,
+    Noto Color Emoji;
+}
+:is(:root, html, html *):where([lang='ckb']) {
+  scroll-behavior: smooth;
+  font-family:
+    rabar,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    Segoe UI,
+    Roboto,
+    Helvetica Neue,
+    Arial,
+    Noto Sans,
+    sans-serif,
+    Apple Color Emoji,
+    Segoe UI Emoji,
+    Segoe UI Symbol,
+    Noto Color Emoji;
+    direction: rtl;
+}
 
 @layer base {
   .bg-card-gradient {
@@ -21,4 +63,77 @@
   .bubble-highlight {
     @apply absolute inset-y-0 hidden w-10 h-8 my-auto transition duration-300 rounded-full bg-primary  opacity-40 blur lg:block;
   }
-}
+
+
+  .main-btn {
+    background: transparent;
+    border: 1px solid #FC002A;
+    font-size: 14px;
+    font-weight: bold;
+    color: #ffffff;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    overflow: hidden;
+    transition: all 0.5s;
+    text-transform: uppercase;
+  }
+
+  .main-btn:hover {
+    color: #FC002A;
+    border-color: #fff;
+  }
+
+  .main-btn span {
+    transition: all 0.5s;
+    z-index: -1;
+  }
+
+  .main-btn span:nth-child(1),
+  .main-btn span:nth-child(2),
+  .main-btn span:nth-child(3),
+  .main-btn span:nth-child(4) {
+    position: absolute;
+    width: 100%;
+    height: 20px;
+    background-color: #fff
+  }
+
+  .main-btn span:nth-child(1) {
+    top: -100%;
+    left: 0%;
+    right: 0;
+  }
+
+  .main-btn:hover span:nth-child(1) {
+    top: 0%;
+  }
+
+  .main-btn span:nth-child(2) {
+    top: 10px;
+    right: 100%;
+  }
+
+  .main-btn:hover span:nth-child(2) {
+    right: 0;
+  }
+
+  .main-btn span:nth-child(3) {
+    top: 25px;
+    left: 100%;
+    right: 0;
+  }
+
+  .main-btn:hover span:nth-child(3) {
+    left: 0;
+  }
+
+  .main-btn span:nth-child(4) {
+    bottom: -100%;
+    left: 0;
+  }
+
+  .main-btn:hover span:nth-child(4) {
+    bottom: 0;
+  }}

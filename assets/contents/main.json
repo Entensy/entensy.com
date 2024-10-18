@@ -1,12 +1,12 @@
 {
-  "navigations":{
+  "navigations": {
+    "sitemap": {
+      "en": "Site Map",
+      "ckb": "نەخشەی ماڵپەڕ"
+    },
     "home": {
       "en": "Home",
       "ckb": "Home"
-    },
-    "about": {
-      "en": "About",
-      "ckb": "About"
     },
     "services": {
       "en": "Services",
@@ -16,27 +16,49 @@
       "en": "Portfolio",
       "ckb": "Portfolio"
     },
+    "questions": {
+      "en": "Questions",
+      "ckb": "Questions"
+    },
+    "about": {
+      "en": "About",
+      "ckb": "About"
+    },
     "contact": {
       "en": "Contact Us",
       "ckb": "Contact Us"
     }
   },
-  "hero":{
+  "hero": {
     "heading": {
       "en": "Design work, the efficient way",
       "ckb": "Design work, the efficient way!!"
     },
     "subheading": {
-      "en":"Innovative design solutions for technology firms and emerging businesses weary of the typical aesthetic methodology. Arriving shortly.",
-      "ckb":"Innovative design solutions for technology firms and emerging businesses weary of the typical aesthetic methodology. Arriving shortly."
+      "en": "Innovative design solutions for technology firms and emerging businesses weary of the typical aesthetic methodology. Arriving shortly.",
+      "ckb": "Innovative design solutions for technology firms and emerging businesses weary of the typical aesthetic methodology. Arriving shortly."
     },
-    "left_action":{
-        "en":"Get Started",
-        "ckb":"Get Started!!"
-      },
-    "right_action":{
-        "en":"Contact Us",
-        "ckb":"Contact Us"
-      }
+    "left_action": {
+      "en": "Get Started",
+      "ckb": "Get Started!!"
+    },
+    "right_action": {
+      "en": "Contact Us",
+      "ckb": "Contact Us"
+    }
+  },
+  "languages": {
+    "title": {
+      "en": "Languages",
+      "ckb": "زمان"
+    },
+    "en": {
+      "en": "English",
+      "ckb": "English"
+    },
+    "ckb": {
+      "en": "Kurdish",
+      "ckb": "کوردی"
+    }
   }
 }
