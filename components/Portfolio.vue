@@ -6,7 +6,7 @@ const __ = inject('locale');
 </script>
 
 <template>
-  <section id="portfolio" class="w-full py-24 pb-16">
+  <section id="portfolio" class="w-full overflow-hidden py-24 pb-16">
     <div class="flex flex-col gap-16">
       <div class="flex w-full flex-col items-center justify-center gap-3">
         <span class="font-medium capitalize text-primary">{{
@@ -150,7 +150,7 @@ const __ = inject('locale');
             <div
               class="relative z-10 mx-auto max-w-4xl px-4 md:max-w-6xl md:px-12 lg:max-w-5xl lg:px-6 xl:max-w-[85rem] xl:px-6 2xl:px-0"
             >
-              <div class="grid grid-cols-4 items-center gap-4 md:gap-6">
+              <div class="grid grid-cols-4 items-center gap-2 md:gap-6">
                 <div
                   class="space-y-4 overflow-hidden rounded-xl bg-white pt-4 shadow-2xl shadow-black/10 md:space-y-6"
                 >
@@ -268,121 +268,6 @@ const __ = inject('locale');
           </div>
         </div>
       </div>
-      <!--
-      <div class="container flex flex-col items-center justify-center grid-cols-7 gap-8 p-4 mx-auto lg:grid">
-        <div class="flex flex-col col-span-2 gap-4 cursor-pointer rounded-3xl bg-card-gradient">
-          <img
-            class="object-cover w-full h-64 rounded-t-2xl"
-            src="/images/1.webp"
-            alt=""
-          >
-          <div class="flex flex-col gap-2 px-6 pb-4">
-            <h1 class="text-3xl text-white">Tailor–made design
-            </h1>
-            <span class="text-white">
-              We've got the expertise to make your vision a reality.
-            </span>
-          </div>
-        </div>
-        <div class="flex flex-col col-span-3 gap-4 cursor-pointer rounded-3xl bg-card-gradient">
-          <img
-            class="object-cover w-full h-64 rounded-t-2xl"
-            src="/images/1.webp"
-            alt=""
-          >
-          <div class="flex flex-col gap-2 px-6 pb-4">
-            <h1 class="text-3xl text-white">Tailor–made design
-            </h1>
-            <span class="text-white ">
-              We've got the expertise to make your vision a reality.
-            </span>
-          </div>
-        </div>
-        <div class="flex flex-col col-span-2 gap-4 cursor-pointer rounded-3xl bg-card-gradient">
-          <img
-            class="object-cover object-center w-full h-64 rounded-t-2xl"
-            src="/images/1.webp"
-            alt=""
-          >
-          <div class="flex flex-col gap-2 px-6 pb-4">
-            <h1 class="text-3xl text-white">Tailor–made design
-            </h1>
-            <span class="text-white ">
-              We've got the expertise to make your vision a reality.
-            </span>
-          </div>
-        </div>
-        <div class="flex flex-col col-span-4 gap-4 cursor-pointer rounded-3xl bg-card-gradient">
-          <img
-            class="object-cover object-center w-full h-64 rounded-t-2xl"
-            src="/images/1.webp"
-            alt=""
-          >
-          <div class="flex flex-col gap-2 px-6 pb-4">
-            <h1 class="text-3xl text-white">Tailor–made design
-            </h1>
-            <span class="text-white ">
-              We've got the expertise to make your vision a reality.
-            </span>
-          </div>
-        </div>
-        <div class="flex flex-col col-span-3 gap-4 cursor-pointer rounded-3xl bg-card-gradient">
-          <img
-            class="object-cover object-center w-full h-64 rounded-t-2xl"
-            src="/images/1.webp"
-            alt=""
-          >
-          <div class="flex flex-col gap-2 px-6 pb-4">
-            <h1 class="text-3xl text-white">Tailor–made design
-            </h1>
-            <span class="text-white ">
-              We've got the expertise to make your vision a reality.
-            </span>
-          </div>
-        </div>
-        <div class="flex flex-col col-span-3 gap-4 cursor-pointer rounded-3xl bg-card-gradient">
-          <img
-            class="object-cover object-center w-full h-64 rounded-t-2xl"
-            src="/images/1.webp"
-            alt=""
-          >
-          <div class="flex flex-col gap-2 px-6 pb-4">
-            <h1 class="text-3xl text-white">Tailor–made design
-            </h1>
-            <span class="text-white ">
-              We've got the expertise to make your vision a reality.
-            </span>
-          </div>
-        </div>
-        <div class="flex flex-col col-span-2 gap-4 cursor-pointer rounded-3xl bg-card-gradient">
-          <img
-            class="object-cover object-center w-full h-64 rounded-t-2xl"
-            src="/images/1.webp"
-            alt=""
-          >
-          <div class="flex flex-col gap-2 px-6 pb-4">
-            <h1 class="text-3xl text-white">Tailor–made design
-            </h1>
-            <span class="text-white ">
-              We've got the expertise to make your vision a reality.
-            </span>
-          </div>
-        </div>
-        <div class="flex flex-col col-span-2 gap-4 cursor-pointer rounded-3xl bg-card-gradient">
-          <img
-            class="object-cover object-center w-full h-64 rounded-t-2xl"
-            src="/images/1.webp"
-            alt=""
-          >
-          <div class="flex flex-col gap-2 px-6 pb-4">
-            <h1 class="text-3xl text-white">Tailor–made design
-            </h1>
-            <span class="text-white ">
-              We've got the expertise to make your vision a reality.
-            </span>
-          </div>
-        </div>
-      </div> -->
     </div>
   </section>
 </template>
