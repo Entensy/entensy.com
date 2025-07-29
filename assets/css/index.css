@@ -3,137 +3,192 @@
 @tailwind components;
 @tailwind utilities;
 
-html * {
-  scroll-behavior: smooth;
-  font-family:
-    montserrat,
-    rabar,
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    Segoe UI,
-    Roboto,
-    Helvetica Neue,
-    Arial,
-    Noto Sans,
-    sans-serif,
-    Apple Color Emoji,
-    Segoe UI Emoji,
-    Segoe UI Symbol,
-    Noto Color Emoji;
-}
-:is(:root, html, html *):where([lang='ckb']) {
-  scroll-behavior: smooth;
-  font-family:
-    rabar,
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    Segoe UI,
-    Roboto,
-    Helvetica Neue,
-    Arial,
-    Noto Sans,
-    sans-serif,
-    Apple Color Emoji,
-    Segoe UI Emoji,
-    Segoe UI Symbol,
-    Noto Color Emoji;
-    direction: rtl;
-}
-
 @layer base {
+  /* Base font settings */
+  html {
+    scroll-behavior: smooth;
+    font-family:
+      montserrat,
+      rabar,
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      Segoe UI,
+      Roboto,
+      Helvetica Neue,
+      Arial,
+      Noto Sans,
+      sans-serif,
+      Apple Color Emoji,
+      Segoe UI Emoji,
+      Segoe UI Symbol,
+      Noto Color Emoji;
+  }
+
+  /* RTL support for Kurdish language */
+  html[lang='ckb'] {
+    direction: rtl;
+    font-family:
+      rabar,
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      Segoe UI,
+      Roboto,
+      Helvetica Neue,
+      Arial,
+      Noto Sans,
+      sans-serif,
+      Apple Color Emoji,
+      Segoe UI Emoji,
+      Segoe UI Symbol,
+      Noto Color Emoji;
+  }
+
+  /* Base theme styles */
+  :root {
+    transition:
+      background-color 0.4s ease-in-out,
+      color 0.4s ease-in-out;
+  }
+
+  /* Theme variables */
+  :root {
+    --bg-primary: #111214;
+    --bg-secondary: #0b0c0e;
+    --text-primary: #ffffff;
+    --text-secondary: #cccccc;
+    color-scheme: dark;
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
+  }
+
+  :root.light {
+    --bg-primary: #e9ecef;
+    --bg-secondary: #020202;
+    --text-primary: #020202;
+    --text-secondary: #495057;
+    color-scheme: light;
+  }
+
+  body {
+    @apply bg-[color:var(--bg-primary)] text-[color:var(--text-primary)] transition-colors duration-300;
+  }
+
+  /* Common gradients as utility classes */
   .bg-card-gradient {
     @apply bg-[linear-gradient(180deg,#1e1e1e_0%,rgb(20,20,20)_100%)];
   }
 
-  body {
-    background: rgb(13, 13, 13);
-  }
-
   .bg-contact-card-gradient {
-    background: linear-gradient(
-      140.06451559643327deg,
-      #1a1a1a 0%,
-      rgb(13, 13, 13) 100%
-    );
-  }
-  .bubble-highlight {
-    @apply absolute inset-y-0 hidden w-10 h-8 my-auto transition duration-300 rounded-full bg-primary  opacity-40 blur lg:block;
+    @apply bg-[linear-gradient(140.06deg,#1a1a1a_0%,rgb(13,13,13)_100%)];
   }
 
+  /* Animation classes */
+  .bounce-enter-active {
+    animation: bounce-in 400ms;
+  }
+
+  .bounce-leave-active {
+    animation: bounce-in 400ms reverse;
+  }
+
+  .rotation-enter-active {
+    animation: rotate 300ms;
+  }
+
+  .rotation-leave-active {
+    animation: rotate 300ms reverse;
+  }
+
+  .theme-toggle-enter-active,
+  .theme-toggle-leave-active {
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  .theme-toggle-enter-from,
+  .theme-toggle-leave-to {
+    @apply rotate-[30deg] scale-75 opacity-0;
+  }
+
+  @keyframes bounce-in {
+    0% {
+      transform: scale(0);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes rotate {
+    0% {
+      transform: rotate(0);
+    }
+    100% {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+@layer components {
+  .bubble-highlight {
+    @apply absolute inset-y-0 my-auto hidden h-8 w-10 rounded-full bg-primary opacity-40 blur transition duration-300 lg:block;
+  }
 
   .main-btn {
-    background: transparent;
-    border: 1px solid #FC002A;
-    font-size: 14px;
-    font-weight: bold;
-    color: #ffffff;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    display: flex;
-    overflow: hidden;
-    transition: all 0.5s;
-    text-transform: uppercase;
+    @apply relative flex cursor-pointer overflow-hidden rounded-md border border-primary bg-transparent text-sm font-bold uppercase text-white transition-all duration-500;
   }
 
   .main-btn:hover {
-    color: #FC002A;
-    border-color: #fff;
+    @apply border-white text-primary;
   }
 
   .main-btn span {
-    transition: all 0.5s;
-    z-index: -1;
+    @apply -z-10 transition-all duration-500;
   }
 
   .main-btn span:nth-child(1),
   .main-btn span:nth-child(2),
   .main-btn span:nth-child(3),
   .main-btn span:nth-child(4) {
-    position: absolute;
-    width: 100%;
-    height: 20px;
-    background-color: #fff
+    @apply absolute h-5 w-full bg-white;
   }
 
   .main-btn span:nth-child(1) {
-    top: -100%;
-    left: 0%;
-    right: 0;
+    @apply -top-full left-0 right-0;
   }
 
   .main-btn:hover span:nth-child(1) {
-    top: 0%;
+    @apply top-0;
   }
 
   .main-btn span:nth-child(2) {
-    top: 10px;
-    right: 100%;
+    @apply -right-full top-2.5;
   }
 
   .main-btn:hover span:nth-child(2) {
-    right: 0;
+    @apply right-0;
   }
 
   .main-btn span:nth-child(3) {
-    top: 25px;
-    left: 100%;
-    right: 0;
+    @apply left-full right-0 top-[25px];
   }
 
   .main-btn:hover span:nth-child(3) {
-    left: 0;
+    @apply left-0;
   }
 
   .main-btn span:nth-child(4) {
-    bottom: -100%;
-    left: 0;
+    @apply -bottom-full left-0;
   }
 
   .main-btn:hover span:nth-child(4) {
-    bottom: 0;
-  }}
+    @apply bottom-0;
+  }
+}

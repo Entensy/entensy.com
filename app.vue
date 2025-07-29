@@ -45,7 +45,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <NuxtLayout>
+
+  <NuxtLayout class="mx-auto overflow-x-hidden max-w-7xl">
     <AppHeader />
     <NuxtPage />
     <AppFooter />
