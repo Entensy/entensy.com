@@ -1,0 +1,945 @@
+@import "tailwindcss";
+
+/* ============================================================
+   THEME CONFIGURATION (Tailwind v4 CSS-based)
+   ============================================================ */
+@theme {
+  /* Brand colors */
+  --color-brand: #FC002A;
+  --color-brand-light: #FF3352;
+  --color-brand-dark: #C8001F;
+  --color-gold: #C9A84C;
+  --color-gold-light: #E5C76A;
+  --color-gold-dark: #A07D32;
+
+  /* Dark palette */
+  --color-dark-900: #0D0A1E;
+  --color-dark-800: #110C2A;
+  --color-dark-700: #170F36;
+  --color-dark-600: #1E1442;
+
+  /* Light palette */
+  --color-light-50: #FAFAFA;
+  --color-light-100: #F4F4F6;
+  --color-light-200: #EBEBEF;
+
+  /* Neutral */
+  --color-glass-dark: rgba(255 255 255 / 0.04);
+  --color-glass-light: rgba(255 255 255 / 0.65);
+
+  /* Fonts */
+  --font-sans: 'Montserrat', system-ui, sans-serif;
+
+  /* Breakpoints */
+  --breakpoint-xs: 360px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1440px;
+
+  /* Animations */
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-float-slow: float-slow 9s ease-in-out infinite;
+  --animate-pulse-glow: pulse-glow 3s ease-in-out infinite;
+  --animate-spin-slow: spin-slow 20s linear infinite;
+  --animate-aurora: aurora 12s ease-in-out infinite;
+  --animate-gradient-shift: gradient-shift 8s ease-in-out infinite;
+  --animate-blob: blob 14s ease-in-out infinite;
+  --animate-counter-bounce: counter-bounce 0.3s ease-out;
+}
+
+/* ============================================================
+   KEYFRAMES
+   ============================================================ */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33% { transform: translateY(-12px) rotate(1deg); }
+  66% { transform: translateY(-6px) rotate(-1deg); }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px 0px rgba(252,0,42,0.3); }
+  50% { box-shadow: 0 0 40px 8px rgba(252,0,42,0.6); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes aurora {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes gradient-shift {
+  0%, 100% {
+    opacity: 0.6;
+    transform: translate(0%, 0%) scale(1);
+  }
+  33% {
+    opacity: 0.8;
+    transform: translate(2%, -2%) scale(1.05);
+  }
+  66% {
+    opacity: 0.7;
+    transform: translate(-2%, 2%) scale(0.98);
+  }
+}
+
+@keyframes blob {
+  0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+  25% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+  50% { border-radius: 50% 60% 30% 60% / 30% 60% 70% 40%; }
+  75% { border-radius: 60% 40% 50% 30% / 70% 30% 50% 60%; }
+}
+
+@keyframes counter-bounce {
+  0% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes marquee {
+  from { transform: translateX(0%); }
+  to { transform: translateX(-50%); }
+}
+
+/* ============================================================
+   CSS DESIGN TOKENS (for dark/light mode via next-themes)
+   ============================================================ */
+:root {
+  --bg-primary: #0D0A1E;
+  --bg-secondary: #110C2A;
+  --bg-card: rgba(255, 255, 255, 0.03);
+  --bg-card-hover: rgba(255, 255, 255, 0.06);
+  --text-primary: #F8F8FF;
+  --text-secondary: rgba(248, 248, 255, 0.65);
+  --text-muted: rgba(248, 248, 255, 0.4);
+  --border-color: rgba(255, 255, 255, 0.07);
+  --border-hover: rgba(252, 0, 42, 0.4);
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.07);
+  --scrollbar-track: #0D0A1E;
+  --scrollbar-thumb: rgba(100, 80, 180, 0.32);
+  --scrollbar-thumb-hover: rgba(100, 80, 180, 0.52);
+  --section-orb-opacity: 0.07;
+  --card-surface: rgba(13, 10, 30, 0.70);
+  --capabilities-bg: rgba(13, 10, 30, 0.60);
+  color-scheme: dark;
+}
+
+:root:not(.dark) {
+  --bg-primary: #F5F5F8;
+  --bg-secondary: #ECEDF4;
+  --bg-card: rgba(255, 255, 255, 0.85);
+  --bg-card-hover: rgba(255, 255, 255, 1);
+  --text-primary: #0D0A1E;
+  --text-secondary: rgba(13, 10, 30, 0.7);
+  --text-muted: rgba(13, 10, 30, 0.45);
+  --border-color: rgba(13, 10, 30, 0.1);
+  --border-hover: rgba(252, 0, 42, 0.45);
+  --glass-bg: rgba(255, 255, 255, 0.75);
+  --glass-border: rgba(13, 10, 30, 0.1);
+  --scrollbar-track: #ECEDF4;
+  --scrollbar-thumb: rgba(100, 80, 180, 0.28);
+  --scrollbar-thumb-hover: rgba(100, 80, 180, 0.48);
+  --section-orb-opacity: 0.13;
+  --card-surface: rgba(255, 255, 255, 0.92);
+  --capabilities-bg: rgba(13, 10, 30, 0.04);
+  color-scheme: light;
+}
+
+/* Light mode overrides for section bg-grid-pattern */
+:root:not(.dark) .bg-grid-pattern {
+  background-image: radial-gradient(circle, rgba(13,10,30,0.06) 1px, transparent 1px);
+}
+
+/* Navbar pill — background/blur/shadow via CSS (Framer handles geometry) */
+.navbar-pill-bg {
+  background: transparent;
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  box-shadow: none;
+  transition:
+    background 0.45s cubic-bezier(0.22,1,0.36,1),
+    backdrop-filter 0.45s cubic-bezier(0.22,1,0.36,1),
+    -webkit-backdrop-filter 0.45s cubic-bezier(0.22,1,0.36,1),
+    box-shadow 0.45s cubic-bezier(0.22,1,0.36,1);
+}
+.navbar-pill-bg.navbar-scrolled {
+  background: color-mix(in srgb, var(--bg-primary) 88%, transparent);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.28), 0 2px 8px rgba(0,0,0,0.14), inset 0 1px 0 rgba(255,255,255,0.07);
+}
+:root:not(.dark) .navbar-pill-bg.navbar-scrolled {
+  background: rgba(245, 245, 248, 0.92);
+  box-shadow: 0 8px 24px rgba(13,10,30,0.10), inset 0 1px 0 rgba(255,255,255,0.8);
+}
+
+/* ── Frosted glass — dark mode base for all card types ── */
+.svc-card,
+.sol-card {
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  background: rgba(255,255,255,0.04) !important;
+  border: 1px solid rgba(255,255,255,0.09) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.07) !important;
+}
+
+.portfolio-card-body {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: rgba(13,10,30,0.72) !important;
+  border: 1px solid rgba(255,255,255,0.07);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+
+.soc-card {
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  background: rgba(255,255,255,0.05) !important;
+  border: 1px solid rgba(255,255,255,0.09) !important;
+}
+
+/* ── Light mode card backgrounds — frosted, not too white ── */
+:root:not(.dark) .svc-card,
+:root:not(.dark) .sol-card {
+  background: rgba(255, 255, 255, 0.52) !important;
+  border-color: rgba(13,10,30,0.08) !important;
+  box-shadow: 0 4px 20px rgba(13,10,30,0.07), inset 0 1px 0 rgba(255,255,255,0.8) !important;
+}
+
+:root:not(.dark) .soc-card {
+  background: rgba(255,255,255,0.52) !important;
+  border-color: rgba(13,10,30,0.08) !important;
+}
+
+:root:not(.dark) .portfolio-card-body {
+  background: rgba(245,243,255,0.82) !important;
+  border-color: rgba(13,10,30,0.09) !important;
+  box-shadow: 0 4px 20px rgba(13,10,30,0.07), inset 0 1px 0 rgba(255,255,255,0.9) !important;
+}
+
+
+/* Light mode: glass cards — frosted, not stark white */
+:root:not(.dark) .glass-card {
+  background: rgba(255,255,255,0.55) !important;
+  border-color: rgba(13,10,30,0.09) !important;
+  box-shadow: 0 4px 20px rgba(13,10,30,0.07), inset 0 1px 0 rgba(255,255,255,0.8);
+}
+:root:not(.dark) .glass-card:hover {
+  background: rgba(255,255,255,0.78) !important;
+}
+
+/* Light mode: stack badges — color set by Framer via style prop */
+:root:not(.dark) .stack-badge {
+  border-color: rgba(13,10,30,0.10);
+}
+
+/* Light mode: portfolio card body */
+:root:not(.dark) .portfolio-card-body {
+  background: rgba(255,255,255,0.95) !important;
+  border-color: rgba(13,10,30,0.09) !important;
+}
+
+/* Light mode: portfolio image area gradient overlay (dark→transparent looks bad on light bg) */
+:root:not(.dark) .portfolio-img-overlay {
+  background: linear-gradient(to top, rgba(240,238,255,0.80), transparent) !important;
+}
+
+/* Light mode: portfolio GitHub icon button */
+:root:not(.dark) .portfolio-github-btn {
+  background: rgba(13,10,30,0.06) !important;
+  border-color: rgba(13,10,30,0.12) !important;
+}
+:root:not(.dark) .portfolio-github-btn:hover {
+  background: rgba(13,10,30,0.10) !important;
+}
+:root:not(.dark) .portfolio-github-btn svg,
+:root:not(.dark) .portfolio-github-btn [style*="color"] {
+  color: rgba(13,10,30,0.65) !important;
+}
+
+
+/* Light mode: about capabilities panel */
+:root:not(.dark) .about-capabilities-panel {
+  background: rgba(13,10,30,0.04) !important;
+  border-color: rgba(13,10,30,0.08) !important;
+}
+
+/* Light mode: footer — bump muted text contrast */
+:root:not(.dark) footer {
+  --text-muted: rgba(13, 10, 30, 0.62);
+}
+
+/* Light mode: about CTA strip */
+:root:not(.dark) .about-cta-strip {
+  background: rgba(255,255,255,0.88) !important;
+  border-color: rgba(244,63,94,0.18) !important;
+  box-shadow: 0 4px 24px rgba(13,10,30,0.07);
+}
+
+/* Light mode: socials card */
+:root:not(.dark) .soc-card {
+  backdrop-filter: blur(16px) !important;
+  background: rgba(255,255,255,0.82) !important;
+}
+
+/* Light mode: navbar text colors */
+:root:not(.dark) .navbar-link-text { color: rgba(13,10,30,0.72) !important; }
+:root:not(.dark) .navbar-brand-text { color: rgba(13,10,30,0.90) !important; }
+:root:not(.dark) .navbar-pill-bg { border-color: rgba(13,10,30,0.10) !important; }
+:root:not(.dark) .navbar-brand-name { color: rgba(22,14,55,0.80) !important; }
+
+/* Light mode: TikTok icon (black on light background) */
+:root:not(.dark) .soc-tiktok-icon { color: #1a1a1a !important; }
+
+/* Light mode: X/Twitter icon (dark on light background) */
+:root:not(.dark) .soc-x-icon { color: #0f1729 !important; }
+
+/* Light mode: X/Twitter "Follow" pill (white text invisible on light bg) */
+:root:not(.dark) .soc-x-follow {
+  color: #0f1729 !important;
+  border-color: rgba(13,10,30,0.28) !important;
+  background: rgba(13,10,30,0.07) !important;
+}
+
+/* Light mode: about section identity banner */
+:root:not(.dark) .about-banner {
+  background: linear-gradient(135deg, rgba(244,63,94,0.07) 0%, rgba(245,243,255,0.88) 40%, rgba(124,58,237,0.05) 100%) !important;
+  border-color: rgba(244,63,94,0.15) !important;
+}
+
+/* Light mode: language switcher globe button */
+:root:not(.dark) .lang-globe-btn {
+  color: rgba(13,10,30,0.65) !important;
+  border-color: rgba(13,10,30,0.15) !important;
+  background: rgba(13,10,30,0.06) !important;
+}
+:root:not(.dark) .lang-globe-btn:hover {
+  background: rgba(13,10,30,0.10) !important;
+  border-color: rgba(13,10,30,0.22) !important;
+}
+
+/* ============================================================
+   BASE STYLES
+   ============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Cursor: pointer on all interactive elements */
+button,
+a,
+[role="button"],
+[role="tab"],
+[role="option"],
+select,
+label[for],
+input[type="checkbox"],
+input[type="radio"],
+input[type="file"],
+input[type="submit"],
+input[type="reset"],
+summary,
+.cursor-pointer {
+  cursor: pointer;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-montserrat), var(--font-sans);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+[dir="rtl"] body {
+  font-family: var(--font-arabic), var(--font-sans);
+}
+
+/* Keep Arabic-script text naturally connected in RTL locales while preserving force-LTR elements. */
+[dir="rtl"] .tracking-wide:not(.force-ltr),
+[dir="rtl"] .tracking-wider:not(.force-ltr),
+[dir="rtl"] .tracking-widest:not(.force-ltr),
+[dir="rtl"] [class*="tracking-["]:not(.force-ltr) {
+  letter-spacing: normal !important;
+}
+
+[dir="rtl"] .uppercase:not(.force-ltr) {
+  text-transform: none;
+}
+
+.force-ltr {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+/* Selection */
+::selection {
+  background: rgba(252, 0, 42, 0.25);
+  color: #fff;
+}
+
+/* ============================================================
+   CUSTOM SCROLLBAR
+   ============================================================ */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 9999px;
+  transition: background 0.2s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+/* ============================================================
+   GLASS MORPHISM UTILITY CLASSES
+   ============================================================ */
+.glass-card {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1rem;
+  box-shadow: 0 4px 24px rgba(255,255,255,0.04), inset 0 1px 0 rgba(255,255,255,0.10);
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+  background: rgba(22, 16, 52, 0.72);
+  border-color: var(--border-hover);
+  box-shadow: 0 8px 40px rgba(252, 0, 42, 0.12);
+}
+
+:root:not(.dark) .glass-card {
+  background: rgba(255, 255, 255, 0.82);
+}
+
+:root:not(.dark) .glass-card:hover {
+  background: rgba(255, 255, 255, 0.96);
+}
+
+/* ============================================================
+   SECTION BASE + SEAMLESS TRANSITIONS
+   ============================================================ */
+.section-wrapper {
+  position: relative;
+  overflow: hidden;
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+  padding-left: clamp(1.25rem, 5vw, 5rem);
+  padding-right: clamp(1.25rem, 5vw, 5rem);
+}
+
+/* Section vertical fade — same left/right mask technique as the portfolio carousel */
+.section-wrapper {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 5rem,
+    black calc(100% - 5rem),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 5rem,
+    black calc(100% - 5rem),
+    transparent 100%
+  );
+}
+
+.section-inner {
+  max-width: 90rem;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  z-index: 10;
+}
+
+/* ============================================================
+   GRADIENT TEXT
+   IMPORTANT: When GSAP SplitText wraps chars, each char becomes
+   its own inline element — gradient is re-applied per char.
+   We add the gradient directly on each .char span too.
+   ============================================================ */
+.gradient-text,
+.gradient-text .char,
+.gradient-text .word {
+  background: linear-gradient(135deg, #FC002A 0%, #C9A84C 50%, #FC002A 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: aurora 4s linear infinite;
+  color: #FC002A; /* fallback for browsers without gradient-clip */
+}
+
+/* Section heading — subtle lavender-glass tint (plain color works with SplitText) */
+/* Fully opaque to prevent alpha-stacking artifact on Arabic connecting letter joints */
+.heading-glass {
+  color: rgb(218, 213, 255);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+:root:not(.dark) .heading-glass {
+  color: rgb(22, 14, 55);
+}
+
+.gradient-text-gold {
+  background: linear-gradient(135deg, #C9A84C, #F5D47B, #C9A84C);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================================
+   NOISE TEXTURE OVERLAY
+   ============================================================ */
+.noise-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ============================================================
+   LANGUAGE SWITCH TRANSITION
+   Gives a gentle cross-fade when Next.js performs a locale swap
+   via View Transitions (supported browsers) or opacity transition.
+   ============================================================ */
+@supports (view-transition-name: none) {
+  ::view-transition-old(root) {
+    animation: locale-fade-out 0.22s ease forwards;
+  }
+  ::view-transition-new(root) {
+    animation: locale-fade-in 0.22s ease forwards;
+  }
+}
+
+@keyframes locale-fade-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+@keyframes locale-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ============================================================
+   LOADING SCREEN
+   ============================================================ */
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-primary);
+  overflow: hidden;
+}
+
+/* ============================================================
+   MARQUEE (portfolio auto-scroll)
+   ============================================================ */
+.marquee-container {
+  overflow: hidden;
+  width: 100%;
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 40s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* ============================================================
+   EMBLA CAROUSEL OVERRIDES
+   ============================================================ */
+.embla {
+  overflow: visible;
+}
+
+.embla__viewport {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black clamp(3rem, 8vw, 7rem),
+    black calc(100% - clamp(3rem, 8vw, 7rem)),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black clamp(3rem, 8vw, 7rem),
+    black calc(100% - clamp(3rem, 8vw, 7rem)),
+    transparent 100%
+  );
+}
+
+.embla__container {
+  display: flex;
+  margin-left: -1.25rem;
+}
+
+.embla__slide {
+  flex: 0 0 clamp(300px, 26vw, 420px);
+  min-width: 0;
+  padding-left: 1.25rem;
+}
+
+/* ============================================================
+   ANIMATED BUTTON BASE
+   ============================================================ */
+.btn-primary {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.75rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  letter-spacing: 0.02em;
+  transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  overflow: hidden;
+  border: none;
+  outline: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+
+.btn-primary:hover::before {
+  opacity: 1;
+}
+
+.btn-primary:active {
+  transform: scale(0.97);
+}
+
+/* ============================================================
+   STACK BADGE
+   ============================================================ */
+.stack-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.625rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  position: relative;
+  overflow: hidden;
+  /* Color handled by Framer whileHover — no CSS color transition to avoid conflicts */
+}
+
+/* ============================================================
+   SECTION BACKGROUNDS
+   ============================================================ */
+
+/* Moving grid pattern */
+.bg-grid-pattern {
+  background-image:
+    radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: gradient-shift 10s ease-in-out infinite;
+}
+
+/* Aurora gradient background */
+.bg-aurora {
+  background: linear-gradient(
+    -45deg,
+    rgba(252,0,42,0.08),
+    rgba(13,10,30,0.9),
+    rgba(26,15,60,0.9),
+    rgba(201,168,76,0.08),
+    rgba(123,58,237,0.08)
+  );
+  background-size: 400% 400%;
+  animation: aurora 15s ease infinite;
+}
+
+/* ============================================================
+   SHARED CARD BORDER RING
+   Idle orbit: GSAP drives rotation via transform (GPU-composited).
+   Hover: useCardBorder snaps rotation to cursor perimeter angle.
+   ============================================================ */
+
+.card-border-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: 0;
+  pointer-events: none;
+  /* Spotlight: soft radial glow follows --mx/--my set by useCardBorder JS */
+  background: radial-gradient(
+    ellipse 220px 180px at var(--mx, -400px) var(--my, -400px),
+    var(--ring-color, rgba(139,92,246,0.95)) 0%,
+    transparent 70%
+  );
+  /* Mask to show ONLY the 1.5px border edge (not the card interior) */
+  padding: 1.5px;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  transition: opacity 0.35s ease;
+}
+
+/* Light mode: darker spotlight on light backgrounds */
+:root:not(.dark) .card-border-ring {
+  background: radial-gradient(
+    ellipse 220px 180px at var(--mx, -400px) var(--my, -400px),
+    var(--ring-color-light, rgba(13,10,30,0.55)) 0%,
+    transparent 70%
+  );
+}
+
+/* ============================================================
+   CARD ORBIT GLOW + CURSOR GLOW (GSAP-driven)
+   ============================================================ */
+.card-orbit-glow {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--orbit-color, rgba(255,255,255,0.06)) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+  will-change: transform;
+}
+
+.card-cursor-glow {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--cursor-color, rgba(255,255,255,0.18)) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 1;
+  will-change: transform;
+  opacity: 0;
+}
+
+:root:not(.dark) .card-orbit-glow  { opacity: 0.55; }
+:root:not(.dark) .card-cursor-glow { opacity: 0 !important; }
+
+/* ============================================================
+   RTL SUPPORT + Arabic / Kurdish font
+   ============================================================ */
+[dir="rtl"] {
+  font-family: var(--font-arabic), var(--font-sans), system-ui, sans-serif;
+  letter-spacing: 0;          /* Arabic script needs 0 letter-spacing */
+  word-spacing: 0.05em;
+}
+
+[dir="rtl"] .rtl-flip {
+  transform: scaleX(-1);
+}
+
+[dir="rtl"] .embla__container {
+  direction: rtl;
+}
+
+/* RTL: flip left/right arrow icons inline (without displacing siblings) */
+[dir="rtl"] .rtl-arrow {
+  display: inline-flex;
+  transform: scaleX(-1);
+}
+
+/* RTL: embla carousel scrolls right to left */
+[dir="rtl"] .embla__container {
+  flex-direction: row-reverse;
+}
+
+/* RTL: text alignment for card content */
+[dir="rtl"] .section-inner h1,
+[dir="rtl"] .section-inner h2,
+[dir="rtl"] .section-inner h3,
+[dir="rtl"] .section-inner p {
+  text-align: inherit;
+}
+
+/* RTL: flex row reversal for aligned groups */
+[dir="rtl"] .rtl-row-reverse {
+  flex-direction: row-reverse;
+}
+
+/* RTL: navbar pill – keep internal layout correct */
+[dir="rtl"] .navbar-pill-bg {
+  direction: rtl;
+}
+
+/* ============================================================
+   FOCUS STYLES (accessibility)
+   ============================================================ */
+:focus-visible {
+  outline: 2px solid #FC002A;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ============================================================
+   UTILITY OVERRIDES
+   ============================================================ */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* ============================================================
+   CSS-ONLY BACKGROUND DRIFT ANIMATIONS
+   Replace Framer Motion repeat:Infinity on decorative bg elements
+   ============================================================ */
+@keyframes bg-drift-y {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-20px); }
+}
+
+@keyframes bg-drift-xy {
+  0%, 100% { transform: translate(0, 0); }
+  50%       { transform: translate(12px, -20px); }
+}
+
+@keyframes bg-scale-pulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.12); }
+}
+
+.bg-drift-y    { animation: bg-drift-y    var(--dur, 18s) ease-in-out infinite var(--delay, 0s); }
+.bg-drift-xy   { animation: bg-drift-xy   var(--dur, 15s) ease-in-out infinite var(--delay, 0s); }
+.bg-scale-pulse{ animation: bg-scale-pulse var(--dur, 12s) ease-in-out infinite var(--delay, 0s); }
+
+/* ============================================================
+   CSS-ONLY TILT CARD (replaces react-parallax-tilt)
+   Note: transform-style is intentionally "flat" (default) so that
+   child elements are NOT placed in 3D space — this prevents the
+   preserve-3d stacking-context bug that blocks pointer events on
+   interactive children (e.g. Portfolio stack badges & buttons).
+   ============================================================ */
+/* .tilt-card — flat stacking context, children are NOT in 3D space (intentional) */
+.tilt-card-inner {
+  will-change: transform;
+}
+
+/* ============================================================
+   PERFORMANCE: will-change HINTS
+   ============================================================ */
+.stack-badge      { will-change: transform; }
+.bg-drift-y, .bg-drift-xy, .bg-scale-pulse { will-change: transform; }
+
+/* ============================================================
+   THEME TRANSITION SMOOTHING
+   When .theme-switching is on <html>, suppress every CSS transition
+   so nothing lags behind the clip-path overlay reveal.
+   ============================================================ */
+.navbar-pill-bg   { transition: none !important; }
+
+html.theme-switching *,
+html.theme-switching *::before,
+html.theme-switching *::after {
+  transition: none !important;
+  animation-play-state: paused !important;
+}
+
+/* ============================================================
+   SCROLL VIGNETTE — fades section content at viewport edges
+   Creates smooth visual transition between adjacent sections
+   z-index 90 is above section content (z-10) but below navbar (z-8000)
+   ============================================================ */
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  left: 0; right: 0;
+  height: 13rem;
+  pointer-events: none;
+  z-index: 90;
+}
+body::before {
+  top: 0;
+  background: linear-gradient(to bottom, var(--bg-primary) 0%, transparent 100%);
+}
+body::after {
+  bottom: 0;
+  background: linear-gradient(to top, var(--bg-primary) 0%, transparent 100%);
+}
+
+/* ============================================================
+   VIEW TRANSITIONS — theme ripple (supported browsers)
+   ============================================================ */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-new(root) {
+  z-index: 1;
+}
+::view-transition-old(root) {
+  z-index: 0;
+}
