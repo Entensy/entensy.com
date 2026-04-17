@@ -1,0 +1,317 @@
+{
+  "nav": {
+    "home": "Home",
+    "services": "Services",
+    "solutions": "Solutions",
+    "stacks": "Stacks",
+    "portfolio": "Portfolio",
+    "about": "About Us",
+    "contact": "Contact",
+    "socials": "Socials",
+    "get_started": "Get Started",
+    "brand": "ENTENSY"
+  },
+  "home": {
+    "badge": "Software Development & Tech Consulting",
+    "headline_1": "",
+    "headline_2": "Products",
+    "headline_3": "Built To Last And Scale",
+    "subheadline": "We design and build robust, scalable digital products — from custom software to full-stack platforms — that deliver measurable impact for your business.",
+    "cta_primary": "View Our Work",
+    "cta_secondary": "Get in Touch",
+    "floating_1": "10+ Services",
+    "floating_2": "Strategic Tech Partner",
+    "floating_3": "5+ Years",
+    "floating_4": "50+ Success Stories",
+    "scroll_hint": "Discover More",
+    "stats": {
+      "projects": "Projects",
+      "years": "Years",
+      "services": "Services",
+      "languages": "Languages"
+    }
+  },
+  "services": {
+    "badge": "What We Do",
+    "title": "Our Services",
+    "subtitle": "From concept to deployment, we offer end-to-end software development and technology consulting services tailored to your business needs.",
+    "items": {
+      "custom_software": {
+        "title": "Custom Software Development",
+        "desc": "Tailored software solutions built from scratch to match your exact business requirements, processes, and goals."
+      },
+      "web_app": {
+        "title": "Web Application Development",
+        "desc": "High-performance, scalable web applications with modern architectures, clean code, and exceptional user experiences."
+      },
+      "mobile_app": {
+        "title": "Mobile App Development",
+        "desc": "Native and cross-platform mobile applications for iOS and Android, built for speed, reliability, and engagement."
+      },
+      "ui_ux": {
+        "title": "UI/UX & Product Design",
+        "desc": "Human-centered design that blends aesthetics with functionality — from wireframes to pixel-perfect production interfaces."
+      },
+      "tech_consulting": {
+        "title": "Tech Consulting & Architecture",
+        "desc": "Strategic technology guidance, solution architecture, and expert advisory to align your tech stack with your business vision."
+      },
+      "agile_pm": {
+        "title": "Agile Project Management",
+        "desc": "Structured, iterative product delivery using agile methodologies that ensure on-time, on-budget, and on-scope results."
+      },
+      "maintenance": {
+        "title": "Software Maintenance & Support",
+        "desc": "Long-term support, performance optimization, security patches, and feature updates to keep your software running smoothly."
+      },
+      "business_analysis": {
+        "title": "Business Analysis & Advisory",
+        "desc": "In-depth business analysis, requirement gathering, and technical advisory to ensure your digital investments deliver real value."
+      },
+      "modernization": {
+        "title": "System Modernization & Transformation",
+        "desc": "Legacy system upgrades, cloud migration, and digital transformation strategies to bring your technology into the modern era."
+      },
+      "mvp": {
+        "title": "MVP Development & Startup Support",
+        "desc": "Rapid MVP development for startups and new ventures — validate your idea fast, launch lean, and scale with confidence."
+      }
+    }
+  },
+  "solutions": {
+    "badge": "What We Deliver",
+    "title": "Our Solutions",
+    "subtitle": "Comprehensive digital solutions spanning every industry and use case — built to solve real problems and drive real results.",
+    "featured": "Featured",
+    "items": {
+      "business_websites": {
+        "title": "Business Websites",
+        "desc": "Professional, SEO-optimized business websites that represent your brand and convert visitors into clients."
+      },
+      "company_portals": {
+        "title": "Company Portals",
+        "desc": "Secure internal portals for managing employees, resources, documents, and workflows in one central hub."
+      },
+      "ecommerce": {
+        "title": "E-Commerce Platforms",
+        "desc": "Full-featured online stores with inventory management, payment gateways, and seamless shopping experiences."
+      },
+      "booking": {
+        "title": "Booking & Reservation Systems",
+        "desc": "Smart booking platforms for appointments, events, services, or accommodations with real-time availability."
+      },
+      "dashboards": {
+        "title": "Admin Dashboards",
+        "desc": "Powerful admin interfaces with data visualization, analytics, and full control over your digital operations."
+      },
+      "crm_erp": {
+        "title": "CRM / ERP Systems",
+        "desc": "Custom relationship management and enterprise resource planning systems to streamline and scale your operations."
+      },
+      "saas": {
+        "title": "SaaS Products",
+        "desc": "Cloud-based software products built for subscription delivery — scalable, multi-tenant, and market-ready."
+      },
+      "mobile_apps": {
+        "title": "Mobile Apps",
+        "desc": "Polished mobile applications for startups and enterprises, targeting iOS, Android, or both platforms."
+      },
+      "internal_tools": {
+        "title": "Internal Business Tools",
+        "desc": "Custom-built tools to automate internal workflows, processes, and repetitive operations within your organization."
+      },
+      "government": {
+        "title": "Government & Local Digital Systems",
+        "desc": "Civic tech and local-market digital systems tailored for government agencies and community service platforms."
+      },
+      "branding": {
+        "title": "Branding + Web + Dev Packages",
+        "desc": "End-to-end packages combining brand identity, visual design, and full-stack web development in one cohesive offering."
+      },
+      "mvp_startup": {
+        "title": "MVPs for Startups",
+        "desc": "Minimum viable products that let you test your idea in the market quickly, with room to grow and iterate."
+      },
+      "maintenance": {
+        "title": "Maintenance & Feature Expansion",
+        "desc": "Ongoing development, bug fixing, and feature additions for existing software products to keep them competitive."
+      }
+    }
+  },
+  "stacks": {
+    "badge": "Our Tech Stack",
+    "title": "Tools & Technologies",
+    "subtitle": "We work with the most powerful and modern technologies to deliver exceptional results across every layer of the stack.",
+    "categories": {
+      "languages": "Languages",
+      "frontend": "Frontend",
+      "backend": "Backend",
+      "databases": "Databases",
+      "mobile": "Mobile",
+      "devops": "DevOps & Cloud",
+      "design": "Design"
+    }
+  },
+  "portfolio": {
+    "badge": "Our Work",
+    "title": "Portfolio",
+    "subtitle": "A selection of projects we've built — each one a testament to our commitment to quality, innovation, and impact.",
+    "visit": "Visit",
+    "unavailable": "Unavailable",
+    "source_code": "Source Code",
+    "projects": {
+      "ecommerce": {
+        "title": "E-Commerce Platform",
+        "desc": "A full-featured online retail platform with advanced product management, real-time inventory, and seamless checkout."
+      },
+      "dashboard": {
+        "title": "Admin Dashboard",
+        "desc": "A comprehensive admin interface with data analytics, user management, and real-time reporting capabilities."
+      },
+      "banking": {
+        "title": "Mobile Banking App",
+        "desc": "A secure cross-platform banking application with real-time transactions, biometric auth, and financial analytics."
+      },
+      "analytics": {
+        "title": "SaaS Analytics Tool",
+        "desc": "A multi-tenant SaaS platform providing advanced business intelligence and data visualization for enterprises."
+      },
+      "portal": {
+        "title": "Company Portal",
+        "desc": "An internal company portal centralizing HR, operations, and communications with role-based access control."
+      },
+      "booking": {
+        "title": "Booking System",
+        "desc": "A full-stack reservation platform with dynamic scheduling, payment processing, and automated notifications."
+      },
+      "crm": {
+        "title": "CRM System",
+        "desc": "A custom customer relationship management system streamlining sales, support, and client interactions."
+      }
+    }
+  },
+  "about": {
+    "badge": "Our Story",
+    "title": "About Entensy",
+    "subtitle": "We build software and design systems that blend creativity, precision, and long-term business impact.",
+    "motto": "Enhancement · Extensiveness · Efficiency",
+    "labels": {
+      "approach": "Our Approach",
+      "capabilities": "Capabilities",
+      "tag_quality": "Premium Quality",
+      "tag_tailored": "Tailored Solutions",
+      "tag_global": "Global Standards",
+      "kp_agile": "Agile-first methodology",
+      "kp_tailored": "Tailored to every client",
+      "kp_partnership": "Long-term partnerships",
+      "kp_excellence": "Excellence as a promise"
+    },
+    "capabilities": {
+      "agile": "Agile Methodology",
+      "architecture": "Clean Architecture",
+      "fullstack": "Full-Stack Expertise",
+      "cloud": "Cloud-Native",
+      "user_centered": "User-Centered Design",
+      "performance": "Performance-First",
+      "security": "Security-Focused",
+      "delivery": "Continuous Delivery",
+      "communication": "Open Communication",
+      "data_driven": "Data-Driven Decisions"
+    },
+    "stats": {
+      "years": "5+",
+      "years_label": "Years of Excellence",
+      "projects": "50+",
+      "projects_label": "Projects Delivered",
+      "services": "10+",
+      "services_label": "Core Services",
+      "satisfaction": "100%",
+      "satisfaction_label": "Client Satisfaction"
+    },
+    "pillars": {
+      "who": {
+        "title": "Who We Are",
+        "desc": "Entensy delivers cutting-edge software solutions and design innovation. We are more than an agency, we are your long-term partner in success. Every engagement is built to exceed expectations through a balance of creativity, technical depth, and practical execution. Our motto, Enhancement, Extensiveness, and Efficiency, guides how we build dependable and scalable digital products that stand out."
+      },
+      "how": {
+        "title": "How We Work",
+        "desc": "We embrace continuous evolution through agile delivery. Our process is built on clear milestones, short feedback loops, and adaptive planning that keeps projects moving forward with confidence. We do not just meet deadlines, we refine continuously, learn from every sprint, and align execution with modern industry standards so your roadmap stays relevant and resilient."
+      },
+      "why": {
+        "title": "Why Choose Us",
+        "desc": "We tailor every solution to your goals, constraints, and market context. Beyond implementation, we provide deep technical advisory, careful problem analysis, and competitive delivery that protects your budget while increasing value. We future-proof your operations with current best practices so your business stays innovative, efficient, and ready to scale."
+      }
+    },
+    "cta_title": "Ready to Build Something Great?",
+    "cta_subtitle": "Tell us about your project and let's start the conversation.",
+    "cta_action": "Start a Project"
+  },
+  "contact": {
+    "badge": "Get In Touch",
+    "title": "Contact Us",
+    "subtitle": "Have a project in mind? Let's talk. We're here to help you build something exceptional.",
+    "form": {
+      "name": "Full Name",
+      "name_placeholder": "Your full name",
+      "email": "Email Address",
+      "email_placeholder": "your@email.com",
+      "message": "Message",
+      "message_placeholder": "Tell us about your project...",
+      "send": "Send Message",
+      "sending": "Sending...",
+      "success": "Message sent! We'll get back to you within 24 hours.",
+      "error": "Something went wrong. Please try again or email us directly.",
+      "error_name": "Name must be at least 2 characters",
+      "error_email": "Please enter a valid email address",
+      "error_message": "Message must be at least 10 characters"
+    },
+    "cta_card_title": "Let's Build Something Amazing",
+    "cta_card_desc": "We respond to every inquiry within 24 hours. Your project matters to us.",
+    "info": {
+      "email_label": "Email",
+      "email_value": "contact@entensy.com",
+      "phone_label": "Phone",
+      "phone_value": "+964 770 862 50 08",
+      "hours_label": "Working Hours",
+      "hours_value": "Sat – Thu, 9:00 AM – 6:00 PM",
+      "response_label": "Response Time",
+      "response_value": "Within 24 hours"
+    }
+  },
+  "socials": {
+    "badge": "Follow Us",
+    "title": "Find Us on Socials",
+    "subtitle": "Stay connected and follow our journey across all platforms.",
+    "handle": "@entensy",
+    "follow": "Follow"
+  },
+  "footer": {
+    "tagline": "Enhancement. Extensiveness. Efficiency.",
+    "rights": "All rights reserved.",
+    "built_with": "Built with passion by Entensy"
+  },
+  "meta": {
+    "title": "ENTENSY — Software Development & Tech Consulting",
+    "title_template": "%s | ENTENSY",
+    "description": "Entensy provides cutting-edge software solutions and breathtaking design innovations. Premium custom software development, web & mobile apps, UI/UX design, and tech consulting.",
+    "og_description": "Premium software solutions and breathtaking design innovations."
+  },
+  "loading": {
+    "tagline": "Crafting Excellence..."
+  },
+  "theme": {
+    "dark": "Dark Mode",
+    "light": "Light Mode"
+  },
+  "lang": {
+    "en": "English",
+    "ar": "العربية",
+    "ckb": "کوردی"
+  },
+  "notFound": {
+    "title": "Page Not Found",
+    "subtitle": "The page you're looking for doesn't exist or has been moved. Let's get you back on track.",
+    "go_home": "Back to Home",
+    "contact": "Contact Us"
+  }
+}
