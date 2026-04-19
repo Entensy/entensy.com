@@ -1,0 +1,329 @@
+"use client";
+
+import { useRef } from "react";
+import { motion } from "framer-motion";
+import { useTranslations, useLocale } from "next-intl";
+import {
+  FiGlobe, FiLayers, FiShoppingCart, FiCalendar, FiGrid,
+  FiDatabase, FiCloud, FiSmartphone, FiTool, FiFlag,
+  FiBriefcase, FiZap, FiSettings,
+} from "react-icons/fi";
+import TiltCard from "@/components/ui/TiltCard";
+import SectionHeading from "@/components/ui/SectionHeading";
+import { solutions } from "@/lib/solutions-data";
+import { useCardBorder } from "@/hooks/useCardBorder";
+import { staggerContainerVariant, cardEntranceVariant, viewportOnce } from "@/lib/animations";
+
+type IconComponent = React.FC<{ style?: React.CSSProperties; className?: string }>;
+
+const iconMap: Record<string, IconComponent> = {
+  FiGlobe, FiLayers, FiShoppingCart, FiCalendar, FiGrid,
+  FiDatabase, FiCloud, FiSmartphone, FiTool, FiFlag,
+  FiBriefcase, FiZap, FiSettings,
+};
+
+const solutionTagMap: Record<string, string> = {
+  "business-websites": "Web",
+  "company-portals": "Portal",
+  "ecommerce": "Commerce",
+  "booking": "Booking",
+  "dashboards": "Dashboard",
+  "crm-erp": "CRM",
+  "saas": "SaaS",
+  "mobile-apps": "Mobile",
+  "internal-tools": "Internal",
+  "government": "Civic",
+  "branding": "Brand",
+  "mvp-startup": "MVP",
+  "maintenance": "Support",
+};
+
+const CSS = `
+  .sol-shell .card-border-ring {
+    opacity: 0.45;
+    transition: opacity 0.25s ease, filter 0.25s ease;
+  }
+  .sol-shell:hover .card-border-ring {
+    opacity: 1;
+    filter: saturate(1.5) brightness(1.4);
+  }
+`;
+
+const WATERMARK_POSITIONS = [
+  { left: "4%",  top: "8%",  dur: "18s", delay: "0s"   },
+  { left: "20%", top: "4%",  dur: "22s", delay: "1.2s" },
+  { left: "38%", top: "14%", dur: "16s", delay: "3s"   },
+  { left: "58%", top: "6%",  dur: "20s", delay: "0.8s" },
+  { left: "76%", top: "12%", dur: "24s", delay: "2.2s" },
+  { left: "92%", top: "30%", dur: "17s", delay: "4s"   },
+  { left: "88%", top: "60%", dur: "19s", delay: "1s"   },
+  { left: "68%", top: "80%", dur: "21s", delay: "3.5s" },
+  { left: "44%", top: "88%", dur: "15s", delay: "5s"   },
+  { left: "22%", top: "76%", dur: "23s", delay: "2s"   },
+  { left: "6%",  top: "55%", dur: "18s", delay: "0.5s" },
+  { left: "32%", top: "42%", dur: "20s", delay: "4.5s" },
+];
+
+function SolutionCard({
+  solution,
+  index,
+  tag,
+  padded,
+  centerClass,
+  isRtl,
+  t,
+}: {
+  solution: (typeof solutions)[number];
+  index: number;
+  tag: string;
+  padded: string;
+  centerClass: string;
+  isRtl: boolean;
+  t: ReturnType<typeof useTranslations>;
+}) {
+  const Icon = iconMap[solution.icon];
+  const shellRef = useRef<HTMLDivElement>(null);
+  const { handleBorderMouseMove, handleBorderMouseLeave } = useCardBorder(
+    shellRef as React.RefObject<HTMLElement | null>
+  );
+
+  const colSpan = solution.size === "large" ? "lg:col-span-2" : "col-span-1";
+
+  return (
+    <motion.div
+      variants={cardEntranceVariant}
+      custom={index}
+      className={`${colSpan} ${centerClass} h-full`}
+    >
+      <TiltCard tiltMaxAngle={8}>
+        <div
+          ref={shellRef}
+          className="sol-shell relative rounded-2xl p-px overflow-hidden h-full"
+          style={{ background: "transparent" }}
+          onMouseMove={handleBorderMouseMove}
+          onMouseLeave={handleBorderMouseLeave}
+        >
+          {/* JS-driven border ring */}
+          <div
+            className="card-border-ring rounded-2xl"
+            style={{ "--ring-color": solution.color + "60", "--ring-color-light": solution.color + "38" } as React.CSSProperties}
+          />
+
+          {/* Card body */}
+          <div
+            className="sol-card relative h-62 p-5 pb-12 rounded-2xl overflow-hidden flex flex-col gap-3 transition-[box-shadow,border-color] duration-300"
+            style={{
+              background: "rgba(13, 10, 30, 0.88)",
+              border: `1px solid ${solution.color}10`,
+            } as React.CSSProperties}
+          >
+            <div
+              className="card-cursor-glow"
+              style={{
+                width: "210px", height: "210px",
+                top: "calc(50% - 105px)", left: "calc(50% - 105px)",
+                "--cursor-color": solution.color + "28",
+              } as React.CSSProperties}
+            />
+
+            {/* Diagonal corner accent — top-left in LTR, top-right in RTL */}
+            <div
+              className={`absolute top-0 pointer-events-none overflow-hidden ${isRtl ? "right-0 rounded-tr-2xl" : "left-0 rounded-tl-2xl"}`}
+              style={{ width: "68%", height: "60%" }}
+            >
+              {/* Main fill */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  background: `linear-gradient(${isRtl ? "225deg" : "135deg"}, ${solution.color}32 0%, ${solution.color}14 38%, transparent 60%)`,
+                  clipPath: isRtl ? "polygon(0 0, 100% 0, 100% 100%)" : "polygon(0 0, 100% 0, 0 100%)",
+                }}
+              />
+              {/* Bright edge shimmer */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  background: `linear-gradient(${isRtl ? "225deg" : "135deg"}, ${solution.color}65 0%, ${solution.color}18 10%, transparent 22%)`,
+                  clipPath: isRtl ? "polygon(0 0, 100% 0, 100% 100%)" : "polygon(0 0, 100% 0, 0 100%)",
+                }}
+              />
+            </div>
+
+            {/* Icon + featured badge row */}
+            <div className="flex items-start justify-between gap-3 relative z-10">
+              <motion.div
+                whileHover={{ scale: 1.1, rotate: -5 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
+                style={{
+                  background: `${solution.color}18`,
+                  border: `1px solid ${solution.color}30`,
+                }}
+              >
+                {Icon && (
+                  <Icon style={{ color: solution.color, fontSize: "1.2rem" }} />
+                )}
+              </motion.div>
+
+              {solution.size === "large" && (
+                <span
+                  className="text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-full"
+                  style={{
+                    background: `${solution.color}15`,
+                    color: solution.color,
+                    border: `1px solid ${solution.color}28`,
+                  }}
+                >
+                  {t("solutions.featured")}
+                </span>
+              )}
+            </div>
+
+            {/* Content */}
+            <div className="flex flex-col gap-2 flex-1 relative z-10">
+              <h3
+                className="text-sm font-bold leading-snug"
+                style={{ color: "var(--text-primary)" }}
+              >
+                {t(solution.titleKey as Parameters<typeof t>[0])}
+              </h3>
+              <p
+                className="text-xs leading-relaxed"
+                style={{
+                  color: "var(--text-muted)",
+                  display: "-webkit-box",
+                  WebkitLineClamp: 3,
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden",
+                }}
+              >
+                {t(solution.descKey as Parameters<typeof t>[0])}
+              </p>
+            </div>
+
+            {/* Decorative index number */}
+            <span
+              className="absolute bottom-3 right-4 text-5xl font-black leading-none pointer-events-none select-none z-10"
+              style={{ color: solution.color, opacity: 0.07 }}
+            >
+              {padded}
+            </span>
+
+            {/* Tag pill */}
+            {tag && (
+              <span
+                className="absolute bottom-4 left-5 text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full z-10 force-ltr"
+                dir="ltr"
+                style={{
+                  background: `${solution.color}18`,
+                  color: solution.color,
+                  border: `1px solid ${solution.color}35`,
+                }}
+              >
+                {tag}
+              </span>
+            )}
+
+            {/* Bottom accent line */}
+            <motion.div
+              className="absolute bottom-0 left-0 h-0.5 rounded-full z-10"
+              initial={{ width: "0%" }}
+              whileHover={{ width: "100%" }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              style={{ background: solution.color, opacity: 0.7 }}
+            />
+          </div>
+        </div>
+      </TiltCard>
+    </motion.div>
+  );
+}
+
+// Computed once at module level — solutions is a static constant
+const lgAlone: boolean[] = solutions.reduce<{ result: boolean[]; cols: number }>(
+  ({ result, cols }, s, i) => {
+    const w = s.size === "large" ? 2 : 1;
+    const next = cols + w > 3 ? w : cols + w;
+    result.push(i === solutions.length - 1 && next === w && w === 1);
+    return { result, cols: next };
+  },
+  { result: [], cols: 0 }
+).result;
+
+export default function SolutionsSection() {
+  const t = useTranslations();
+  const locale = useLocale();
+  const isRtlLocale = locale === "ar" || locale === "ckb";
+
+  return (
+    <>
+      <style>{CSS}</style>
+      <section
+        id="solutions"
+        className="section-wrapper relative"
+        style={{ background: "var(--bg-primary)" }}
+        dir={isRtlLocale ? "rtl" : "ltr"}
+      >
+        {/* ── Background ── */}
+        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+          {/* Dot grid */}
+          <div className="absolute inset-0 bg-grid-pattern opacity-20" />
+
+          {/* Ambient orbs */}
+          <div className="absolute bg-drift-xy" style={{ top: "-15%", left: "-10%", width: "55vw", height: "55vw", background: "radial-gradient(circle, rgba(225,29,72,0.09) 0%, transparent 65%)", filter: "blur(50px)", borderRadius: "50%", "--dur": "18s", "--delay": "0s" } as React.CSSProperties} />
+          <div className="absolute bg-drift-y" style={{ bottom: "-10%", right: "-8%", width: "50vw", height: "50vw", background: "radial-gradient(circle, rgba(124,58,237,0.10) 0%, transparent 65%)", filter: "blur(50px)", borderRadius: "50%", "--dur": "15s", "--delay": "4s" } as React.CSSProperties} />
+          <div className="absolute bg-scale-pulse" style={{ top: "25%", left: "38%", width: "38vw", height: "38vw", background: "radial-gradient(circle, rgba(217,119,6,0.07) 0%, transparent 65%)", filter: "blur(60px)", borderRadius: "50%", "--dur": "12s", "--delay": "7s" } as React.CSSProperties} />
+
+          {/* Floating icon watermarks */}
+          {WATERMARK_POSITIONS.map((pos, idx) => {
+            const icons = [FiGlobe, FiLayers, FiShoppingCart, FiCalendar, FiCloud, FiSmartphone];
+            const colors = ["#E11D48", "#7C3AED", "#D97706", "#0EA5E9", "#10B981", "#F59E0B"];
+            const Icon = icons[idx % icons.length];
+            const color = colors[idx % colors.length];
+            return (
+              <div key={idx} className="absolute bg-drift-y pointer-events-none" style={{ left: pos.left, top: pos.top, opacity: 0.045, color, fontSize: "3.75rem", "--dur": pos.dur, "--delay": pos.delay } as React.CSSProperties}>
+                <Icon />
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="section-inner relative z-10">
+          <SectionHeading
+            badge={t("solutions.badge")}
+            title={t("solutions.title")}
+            subtitle={t("solutions.subtitle")}
+          />
+
+          <motion.div
+            variants={staggerContainerVariant}
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportOnce}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 auto-rows-auto"
+          >
+            {solutions.map((solution, index) => {
+              const tag = solutionTagMap[solution.id] ?? "";
+              const padded = String(index + 1).padStart(2, "0");
+              const centerClass = lgAlone[index]
+                ? "sm:col-span-2 sm:max-w-xs sm:mx-auto lg:col-span-1 lg:max-w-none lg:mx-0 lg:col-start-2 xl:col-start-auto"
+                : "";
+              return (
+                <SolutionCard
+                  key={solution.id}
+                  solution={solution}
+                  index={index}
+                  tag={tag}
+                  padded={padded}
+                  centerClass={centerClass}
+                  isRtl={isRtlLocale}
+                  t={t}
+                />
+              );
+            })}
+          </motion.div>
+        </div>
+      </section>
+    </>
+  );
+}
