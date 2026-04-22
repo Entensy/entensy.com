@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e ' *)",
+      "Bash(npx tsc *)",
+      "Bash(cmd /c \"cd C:\\\\Andra\\\\code\\\\claudev1\\\\entensy.com && npx tsc --noEmit 2>&1\")",
+      "Read(//c/Andra/code/claudev1/entensy.com/**)",
+      "Bash(npm run *)"
+    ]
+  }
+}
