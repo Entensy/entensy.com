@@ -50,7 +50,7 @@ export default function Footer() {
                 height={30}
                 className="h-5 w-auto object-contain"
               />
-              <span className="text-lg font-black tracking-tight" style={{ color: "var(--text-primary)" }}>
+              <span className="text-lg font-black tracking-tight heading-glass">
                 {tNav("brand")}
               </span>
             </div>

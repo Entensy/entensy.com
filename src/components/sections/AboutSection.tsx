@@ -367,8 +367,7 @@ export default function AboutSection() {
                 />
                 <div className="text-center">
                   <p
-                    className="text-xl md:text-2xl font-black tracking-[0.28em] uppercase force-ltr"
-                    style={{ color: "var(--text-primary)" }}
+                    className="text-xl md:text-2xl font-black tracking-[0.28em] uppercase force-ltr heading-glass"
                   >
                     {tNav("brand")}
                   </p>
@@ -550,7 +549,7 @@ export default function AboutSection() {
               >
                 <Layers size={14} style={{ color: "#F43F5E" }} strokeWidth={2} />
               </div>
-              <span className="text-sm font-bold" style={{ color: "var(--text-primary)" }}>
+              <span className="text-sm font-bold heading-glass">
                 {t("labels.capabilities")}
               </span>
             </div>
@@ -654,7 +653,7 @@ export default function AboutSection() {
                 <ArrowRight size={22} style={{ color: "#F43F5E" }} strokeWidth={2.5} className="rtl-arrow" />
               </div>
               <div>
-                <p className="text-xl md:text-2xl font-black" style={{ color: "var(--text-primary)" }}>
+                <p className="text-xl md:text-2xl font-black heading-glass">
                   {t("cta_title")}
                 </p>
                 <p className="text-sm mt-1" style={{ color: "var(--text-muted)" }}>

@@ -481,15 +481,13 @@ export default function ContactSection() {
                     {href ? (
                       <a
                         href={href}
-                        className={`text-sm font-medium hover:text-brand transition-colors truncate block${isRtlLocale && href.startsWith("tel:") ? " force-ltr" : ""}`}
-                        style={{ color: "var(--text-primary)" }}
+                        className={`text-sm font-medium hover:text-brand transition-colors truncate block heading-glass${isRtlLocale && href.startsWith("tel:") ? " force-ltr" : ""}`}
                       >
                         {t(valueKey as Parameters<typeof t>[0])}
                       </a>
                     ) : (
                       <p
-                        className="text-sm font-medium"
-                        style={{ color: "var(--text-primary)" }}
+                        className="text-sm font-medium heading-glass"
                       >
                         {t(valueKey as Parameters<typeof t>[0])}
                       </p>
@@ -521,8 +519,7 @@ export default function ContactSection() {
               />
               <div className="relative z-10">
                 <h3
-                  className="text-2xl font-black mb-2"
-                  style={{ color: "var(--text-primary)" }}
+                  className="text-2xl font-black mb-2 heading-glass"
                 >
                   {t("cta_card_title")}
                 </h3>

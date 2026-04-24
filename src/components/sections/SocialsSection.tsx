@@ -292,7 +292,7 @@ function SocialCard({
 
         {/* Label */}
         <div className="flex flex-col gap-0.5 relative z-10">
-          <span className="text-xs font-bold" style={{ color: "var(--text-primary)" }}>
+          <span className="text-xs font-bold heading-glass">
             {social.label}
           </span>
           <span className="text-[10px] font-medium" style={{ color: "var(--text-muted)" }}>

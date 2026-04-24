@@ -184,8 +184,7 @@ function PortfolioCard({
               dir={isRtlLocale ? "rtl" : "ltr"}
             >
               <h3
-                className="text-sm font-bold leading-tight"
-                style={{ color: "var(--text-primary)" }}
+                className="text-sm font-bold leading-tight heading-glass"
               >
                 {t(project.titleKey as Parameters<typeof t>[0])}
               </h3>

@@ -160,8 +160,7 @@ function ServiceCard({
             {/* Content */}
             <div className="flex flex-col gap-2 flex-1 relative z-10">
               <h3
-                className="text-sm font-bold leading-snug"
-                style={{ color: "var(--text-primary)" }}
+                className="text-sm font-bold leading-snug heading-glass"
               >
                 {t(service.titleKey as Parameters<typeof t>[0])}
               </h3>
