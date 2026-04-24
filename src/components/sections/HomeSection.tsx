@@ -117,7 +117,7 @@ export default function HomeSection() {
         .map((badge) => (
         <motion.div
           key={badge.key}
-          className="absolute hidden lg:flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold glass-card z-10 bg-drift-y"
+          className="absolute hidden lg:flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold glass-card z-20 bg-drift-y"
           style={{
             left: isRtlLocale ? badge.rtlX! : badge.x,
             top: badge.y,
@@ -279,7 +279,7 @@ export default function HomeSection() {
 
       {/* Scroll indicator */}
       <motion.button
-        className="absolute bottom-4 md:bottom-5 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 px-3 py-2 rounded-full"
+        className="absolute bottom-4 md:bottom-5 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2 px-3 py-2 rounded-full"
         style={{ color: "var(--text-muted)" }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 0.52 }}
