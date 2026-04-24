@@ -65,6 +65,7 @@ export default function StacksSection() {
       ref={sectionRef}
       className="section-wrapper stacks-section-wrapper relative"
       style={{ background: "var(--bg-secondary)" }}
+      dir={isRtlLocale ? "rtl" : "ltr"}
     >
       {/* ── Radial gradient pulse at section center — CSS-driven ── */}
       <div
