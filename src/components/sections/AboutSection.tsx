@@ -362,7 +362,7 @@ export default function AboutSection() {
                   alt="ENTENSY"
                   width={180}
                   height={54}
-                  className="h-16 md:h-20 w-auto object-contain"
+                  className="h-12 md:h-14 w-auto object-contain"
                   priority
                 />
                 <div className="text-center">

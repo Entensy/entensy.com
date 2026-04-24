@@ -48,7 +48,7 @@ export default function Footer() {
                 alt="ENTENSY"
                 width={100}
                 height={30}
-                className="h-7 w-auto object-contain"
+                className="h-5 w-auto object-contain"
               />
               <span className="text-lg font-black tracking-tight" style={{ color: "var(--text-primary)" }}>
                 {tNav("brand")}

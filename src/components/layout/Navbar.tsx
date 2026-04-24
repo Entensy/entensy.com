@@ -135,7 +135,7 @@ export default function Navbar() {
                 alt="ENTENSY"
                 width={120}
                 height={36}
-                className="h-7 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                className="h-5 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
                 priority
               />
               <span
