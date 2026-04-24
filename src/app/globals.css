@@ -836,13 +836,17 @@ body {
 .svc-shell,
 .sol-shell,
 .soc-shell,
-.portfolio-shell {
+.portfolio-shell,
+.svc-card,
+.sol-card,
+.soc-card,
+.portfolio-card-body {
   transform: translateZ(0);
 }
 
 .card-border-ring {
   position: absolute;
-  inset: 0;
+  inset: 1px;
   border-radius: inherit;
   z-index: 0;
   pointer-events: none;
