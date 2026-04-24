@@ -65,8 +65,7 @@ export default function Footer() {
               <a
                 key={link.key}
                 href={link.href}
-                className="text-xs font-medium transition-colors duration-200 hover:text-brand"
-                style={{ color: "var(--text-muted)" }}
+                className="text-xs font-medium transition-colors duration-200 text-(--text-muted) hover:text-brand active:text-brand-dark"
               >
                 {tNav(link.key as Parameters<typeof tNav>[0])}
               </a>
