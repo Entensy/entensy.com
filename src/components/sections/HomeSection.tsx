@@ -136,11 +136,8 @@ export default function HomeSection() {
             scale: { delay: badge.delay + 1.5, duration: 0.6 },
           }}
         >
-          {isRtlLocale ? (
-            <>{t(badge.key as Parameters<typeof t>[0])} <span className="w-1.5 h-1.5 rounded-full bg-brand animate-pulse" /></>
-          ) : (
-            <><span className="w-1.5 h-1.5 rounded-full bg-brand animate-pulse" /> {t(badge.key as Parameters<typeof t>[0])}</>
-          )}
+          <span className="w-1.5 h-1.5 rounded-full bg-brand animate-pulse shrink-0" />
+          {t(badge.key as Parameters<typeof t>[0])}
         </motion.div>
       ))}
 
