@@ -30,7 +30,9 @@ export function useCardBorder(shellRef: React.RefObject<HTMLElement | null>) {
         repeat: -1,
         ease: "none",
         onUpdate() {
-          const perim = 2 * (shell.offsetWidth + shell.offsetHeight);
+          const W = shell.offsetWidth;
+          const H = shell.offsetHeight;
+          const perim = 2 * (W + H);
           const dist = proxy.t % 1;
           const pos = dist * perim;
           let mx: number, my: number;
