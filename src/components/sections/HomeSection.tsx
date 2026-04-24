@@ -93,6 +93,7 @@ export default function HomeSection() {
       id="home"
       className="relative min-h-svh flex flex-col items-center justify-center overflow-hidden"
       style={{ background: "var(--bg-primary)" }}
+      dir={isRtlLocale ? "rtl" : "ltr"}
     >
       {/* Globe background — only mounted while section is visible */}
       {globeVisible && (

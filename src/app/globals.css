@@ -373,9 +373,8 @@ body {
   overflow-x: hidden;
 }
 
-html[dir="rtl"],
-html[dir="rtl"] body,
-html[dir="rtl"] * {
+[dir="rtl"],
+[dir="rtl"] * {
   font-family: var(--font-arabic), system-ui, sans-serif !important;
 }
 
