@@ -170,7 +170,14 @@ export default function StacksSection() {
             dir="ltr"
           >
             {currentCategory.items.map((tech, index) => {
-              const Icon = SiIconsAny[tech.icon];
+              const Icon = tech.icon ? SiIconsAny[tech.icon] : undefined;
+              // Next.js icon is white by design; swap to near-black in light mode
+              const techColor = tech.name === "Next.js"
+                ? (isDark ? "#FFFFFF" : "#111111")
+                : tech.color;
+              const techBgColor = tech.name === "Next.js"
+                ? (isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)")
+                : tech.bgColor;
 
               return (
                 <motion.div
@@ -182,10 +189,10 @@ export default function StacksSection() {
                   whileHover={{
                     scale: 1.09,
                     y: -3,
-                    color: tech.color,
-                    background: tech.bgColor,
-                    borderColor: `${tech.color}55`,
-                    boxShadow: `0 0 18px ${tech.color}70, 0 4px 22px ${tech.color}35`,
+                    color: techColor,
+                    background: techBgColor,
+                    borderColor: `${techColor}55`,
+                    boxShadow: `0 0 18px ${techColor}70, 0 4px 22px ${techColor}35`,
                     transition: {
                       color: { duration: 0.18, ease: "easeOut" },
                       background: { duration: 0.18, ease: "easeOut" },
@@ -199,7 +206,7 @@ export default function StacksSection() {
                   {Icon && (
                     <Icon
                       style={{
-                        color: tech.color,
+                        color: techColor,
                         fontSize: "1.1rem",
                         flexShrink: 0,
                       }}

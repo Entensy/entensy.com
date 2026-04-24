@@ -348,7 +348,13 @@ export default function PortfolioSection() {
         </div>
 
         {/* ── Full-width carousel with CSS mask fade ── */}
-        <div className="relative z-10 w-full mt-2 embla">
+        <motion.div
+          className="relative z-10 w-full mt-2 embla"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, margin: "-80px", amount: 0.1 }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        >
           <div ref={emblaRef} className="embla__viewport">
             <div className="embla__container">
               {allProjects.map((project, index) => (
@@ -369,7 +375,7 @@ export default function PortfolioSection() {
               ))}
             </div>
           </div>
-        </div>
+        </motion.div>
       </section>
     </>
   );

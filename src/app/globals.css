@@ -709,15 +709,15 @@ body {
   -webkit-mask-image: linear-gradient(
     to right,
     transparent 0%,
-    black clamp(3rem, 8vw, 7rem),
-    black calc(100% - clamp(3rem, 8vw, 7rem)),
+    black clamp(5rem, 12vw, 9rem),
+    black calc(100% - clamp(5rem, 12vw, 9rem)),
     transparent 100%
   );
   mask-image: linear-gradient(
     to right,
     transparent 0%,
-    black clamp(3rem, 8vw, 7rem),
-    black calc(100% - clamp(3rem, 8vw, 7rem)),
+    black clamp(5rem, 12vw, 9rem),
+    black calc(100% - clamp(5rem, 12vw, 9rem)),
     transparent 100%
   );
 }
@@ -725,6 +725,7 @@ body {
 .embla__container {
   display: flex;
   margin-left: -1.25rem;
+  will-change: transform;
 }
 
 .embla__slide {
@@ -922,6 +923,21 @@ body {
 /* ============================================================
    RTL SUPPORT + Arabic / Kurdish font
    ============================================================ */
+
+/* Pre-mixed opaque equivalents of the semi-transparent CSS vars.
+   Arabic connecting letters darken at joints when color has alpha;
+   using fully opaque computed values eliminates the artifact. */
+[dir="rtl"] {
+  --text-primary:   rgb(252, 252, 255);
+  --text-secondary: rgb(172, 168, 204);
+  --text-muted:     rgb(112, 109, 138);
+}
+:root:not(.dark) [dir="rtl"] {
+  --text-primary:   rgb(14, 10, 40);
+  --text-secondary: rgb(60,  54,  100);
+  --text-muted:     rgb(110, 104, 148);
+}
+
 [dir="rtl"] {
   letter-spacing: 0;
   word-spacing: 0.05em;

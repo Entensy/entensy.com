@@ -63,4 +63,6 @@ export const scalePopVariant: Variants = {
 };
 
 // Viewport defaults for whileInView
-export const viewportOnce = { once: false, margin: "-80px" };
+// amount:0.15 = 15% of element must be visible before triggering,
+// preventing rapid toggling when an element sits right at the boundary
+export const viewportOnce = { once: false, margin: "-80px", amount: 0.15 };

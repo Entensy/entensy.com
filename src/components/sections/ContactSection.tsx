@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import SectionHeading from "@/components/ui/SectionHeading";
 import AnimatedButton from "@/components/ui/AnimatedButton";
+import Turnstile from "@/components/ui/Turnstile";
 import {
   fadeUpVariant,
   slideInLeftVariant,
@@ -70,6 +71,7 @@ export default function ContactSection() {
   const isRtlLocale = locale === "ar" || locale === "ckb";
   const [status, setStatus] = useState<FormStatus>("idle");
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
   const {
     register,
@@ -92,7 +94,7 @@ export default function ContactSection() {
       const res = await fetch("/api/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, turnstileToken }),
       });
       if (!res.ok) throw new Error();
       setStatus("success");
@@ -359,10 +361,20 @@ export default function ContactSection() {
                 )}
               </div>
 
+              {/* Turnstile CAPTCHA — only rendered when site key is configured */}
+              {process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && (
+                <Turnstile
+                  siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+                  onToken={setTurnstileToken}
+                  onExpire={() => setTurnstileToken(null)}
+                  theme="auto"
+                />
+              )}
+
               {/* Submit — styled exactly like navbar "Get Started" */}
               <motion.button
                 type="submit"
-                disabled={status === "sending"}
+                disabled={status === "sending" || (!!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && !turnstileToken)}
                 className="w-full flex items-center justify-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold text-white"
                 style={{
                   background: "#FC002A",

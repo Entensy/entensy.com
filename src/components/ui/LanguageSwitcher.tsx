@@ -159,7 +159,9 @@ export default function LanguageSwitcher() {
                     }
                   }}
                 >
-                  <span>{tLang(lang.code as Parameters<typeof tLang>[0])}</span>
+                  <span style={{ fontFamily: "var(--font-arabic), system-ui, sans-serif" }}>
+                    {tLang(lang.code as Parameters<typeof tLang>[0])}
+                  </span>
                   {lang.code === locale && (
                     <span
                       className="w-1.5 h-1.5 rounded-full"

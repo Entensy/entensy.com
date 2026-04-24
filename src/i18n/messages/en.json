@@ -255,7 +255,7 @@
       "name_placeholder": "Your full name",
       "email": "Email Address",
       "email_placeholder": "your@email.com",
-      "message": "Message",
+      "message": "Description",
       "message_placeholder": "Tell us about your project...",
       "send": "Send Message",
       "sending": "Sending...",

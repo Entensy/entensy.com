@@ -1,6 +1,6 @@
 export interface TechItem {
   name: string;
-  icon: string; // react-icons/si icon name
+  icon: string; // react-icons/si icon name, or "" for no icon
   color: string;
   bgColor: string;
 }
@@ -18,7 +18,8 @@ export const stackCategories: StackCategory[] = [
     labelKey: "stacks.categories.languages",
     color: "#3178C6",
     items: [
-      { name: "C#", icon: "SiCsharp", color: "#239120", bgColor: "rgba(35,145,32,0.1)" },
+      // SiDotnet is the best available substitute for C# in react-icons v5
+      { name: "C#", icon: "SiDotnet", color: "#512BD4", bgColor: "rgba(81,43,212,0.1)" },
       { name: "Java", icon: "SiJava", color: "#ED8B00", bgColor: "rgba(237,139,0,0.1)" },
       { name: "Python", icon: "SiPython", color: "#3776AB", bgColor: "rgba(55,118,171,0.1)" },
       { name: "C", icon: "SiC", color: "#A8B9CC", bgColor: "rgba(168,185,204,0.1)" },
@@ -36,8 +37,9 @@ export const stackCategories: StackCategory[] = [
     items: [
       { name: "React", icon: "SiReact", color: "#61DAFB", bgColor: "rgba(97,218,251,0.1)" },
       { name: "Vue.js", icon: "SiVuedotjs", color: "#4FC08D", bgColor: "rgba(79,192,141,0.1)" },
+      // color is theme-aware: overridden in StacksSection (white dark / black light)
       { name: "Next.js", icon: "SiNextdotjs", color: "#FFFFFF", bgColor: "rgba(255,255,255,0.08)" },
-      { name: "Nuxt.js", icon: "SiNuxtdotjs", color: "#00DC82", bgColor: "rgba(0,220,130,0.1)" },
+      { name: "Nuxt.js", icon: "SiNuxt", color: "#00DC82", bgColor: "rgba(0,220,130,0.1)" },
       { name: "Astro", icon: "SiAstro", color: "#FF5D01", bgColor: "rgba(255,93,1,0.1)" },
       { name: "Tailwind CSS", icon: "SiTailwindcss", color: "#06B6D4", bgColor: "rgba(6,182,212,0.1)" },
       { name: "SASS/SCSS", icon: "SiSass", color: "#CC6699", bgColor: "rgba(204,102,153,0.1)" },
@@ -66,7 +68,8 @@ export const stackCategories: StackCategory[] = [
       { name: "MariaDB", icon: "SiMariadb", color: "#003545", bgColor: "rgba(0,53,69,0.15)" },
       { name: "Cassandra", icon: "SiApachecassandra", color: "#1287B1", bgColor: "rgba(18,135,177,0.1)" },
       { name: "SQLite", icon: "SiSqlite", color: "#003B57", bgColor: "rgba(0,59,87,0.15)" },
-      { name: "SQL Server", icon: "SiMicrosoftsqlserver", color: "#CC2927", bgColor: "rgba(204,41,39,0.1)" },
+      // No react-icons/si icon exists for SQL Server; badge shows name only
+      { name: "SQL Server", icon: "", color: "#CC2927", bgColor: "rgba(204,41,39,0.1)" },
     ],
   },
   {
@@ -85,7 +88,8 @@ export const stackCategories: StackCategory[] = [
       { name: "Docker", icon: "SiDocker", color: "#2496ED", bgColor: "rgba(36,150,237,0.1)" },
       { name: "Kubernetes", icon: "SiKubernetes", color: "#326CE5", bgColor: "rgba(50,108,229,0.1)" },
       { name: "Terraform", icon: "SiTerraform", color: "#7B42BC", bgColor: "rgba(123,66,188,0.1)" },
-      { name: "AWS", icon: "SiAmazonwebservices", color: "#FF9900", bgColor: "rgba(255,153,0,0.1)" },
+      // No react-icons/si icon exists for AWS; badge shows name only
+      { name: "AWS", icon: "", color: "#FF9900", bgColor: "rgba(255,153,0,0.1)" },
       { name: "Nginx", icon: "SiNginx", color: "#009639", bgColor: "rgba(0,150,57,0.1)" },
       { name: "Apache Kafka", icon: "SiApachekafka", color: "#231F20", bgColor: "rgba(100,100,100,0.1)" },
       { name: "Ansible", icon: "SiAnsible", color: "#EE0000", bgColor: "rgba(238,0,0,0.1)" },
@@ -100,7 +104,8 @@ export const stackCategories: StackCategory[] = [
     color: "#F24E1E",
     items: [
       { name: "Figma", icon: "SiFigma", color: "#F24E1E", bgColor: "rgba(242,78,30,0.1)" },
-      { name: "Illustrator", icon: "SiAdobeillustrator", color: "#FF9A00", bgColor: "rgba(255,154,0,0.1)" },
+      // No react-icons/si icon exists for Adobe Illustrator; badge shows name only
+      { name: "Illustrator", icon: "", color: "#FF9A00", bgColor: "rgba(255,154,0,0.1)" },
     ],
   },
 ];
