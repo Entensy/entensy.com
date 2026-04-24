@@ -5,7 +5,8 @@ import { gsap } from "gsap";
 
 /**
  * Card border spotlight + cursor glow hook.
- * Idle: spotlight orbits the perimeter (10 s/rev) via CSS --mx/--my.
+ * Idle: spotlight orbits the perimeter (8 s/rev) via CSS --mx/--my.
+ * Fixed duration keeps all cards in phase with each other.
  * Hover: orbit pauses, spotlight snaps to cursor; cursor glow follows mouse.
  * Leave: orbit resumes; cursor glow fades.
  */
@@ -20,11 +21,8 @@ export function useCardBorder(shellRef: React.RefObject<HTMLElement | null>) {
 
     // Border spotlight: orbits the card perimeter via CSS custom properties
     if (ring) {
-      const W = shell.offsetWidth;
-      const H = shell.offsetHeight;
-      const perim = 2 * (W + H);
-      // Normalize to ~60 px/s so all card sizes orbit at the same angular speed
-      const duration = Math.max(6, perim / 60);
+      // Fixed duration so all cards stay in phase with each other
+      const duration = 8;
       const proxy = { t: 0 };
       idleAnimRef.current = gsap.to(proxy, {
         t: 1,
