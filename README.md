@@ -1,6 +1,5 @@
 # ENTENSY — Official Company Website
 
-> **Built solely by [Andra](https://github.com/andra7).**
 
 The official website for **ENTENSY** — a software development and tech consulting company. A fully animated, multilingual, dark/light-mode, RTL-aware marketing site built with Next.js 16, React 19, and Tailwind CSS v4.
 
@@ -323,4 +322,4 @@ Before deploying:
 
 ---
 
-*Built solely by **Andra**.*
+*Built solely by [Andra](https://github.com/AndraXO7).*
