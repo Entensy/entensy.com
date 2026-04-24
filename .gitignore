@@ -23,6 +23,19 @@
 # misc
 .DS_Store
 *.pem
+Thumbs.db
+
+# editors / IDE
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# claude code
+.claude/
 
 # debug
 npm-debug.log*
