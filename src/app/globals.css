@@ -850,12 +850,14 @@ body {
   border-radius: inherit;
   z-index: 0;
   pointer-events: none;
-  /* Spotlight: soft radial glow follows --mx/--my set by useCardBorder JS */
-  background: radial-gradient(
-    ellipse 220px 180px at var(--mx, -400px) var(--my, -400px),
-    var(--ring-color, rgba(139, 92, 246, 0.95)) 0%,
-    transparent 70%
-  );
+  /* Traveling bead (tight ellipse) + persistent dim base color around full border */
+  background:
+    radial-gradient(
+      ellipse 90px 70px at var(--mx, -400px) var(--my, -400px),
+      var(--ring-color, rgba(139, 92, 246, 0.95)) 0%,
+      transparent 70%
+    ),
+    color-mix(in srgb, var(--ring-color, rgba(139, 92, 246, 0.95)) 18%, transparent);
   /* Mask to show ONLY the 1.5px border edge (not the card interior) */
   padding: 1.5px;
   mask:
@@ -871,11 +873,13 @@ body {
 
 /* Light mode: darker spotlight on light backgrounds */
 :root:not(.dark) .card-border-ring {
-  background: radial-gradient(
-    ellipse 220px 180px at var(--mx, -400px) var(--my, -400px),
-    var(--ring-color-light, rgba(13, 10, 30, 0.55)) 0%,
-    transparent 70%
-  );
+  background:
+    radial-gradient(
+      ellipse 90px 70px at var(--mx, -400px) var(--my, -400px),
+      var(--ring-color-light, rgba(13, 10, 30, 0.55)) 0%,
+      transparent 70%
+    ),
+    color-mix(in srgb, var(--ring-color-light, rgba(13, 10, 30, 0.55)) 18%, transparent);
 }
 
 /* ============================================================
