@@ -373,8 +373,10 @@ body {
   overflow-x: hidden;
 }
 
-[dir="rtl"] body {
-  font-family: var(--font-arabic), var(--font-sans);
+html[dir="rtl"],
+html[dir="rtl"] body,
+html[dir="rtl"] * {
+  font-family: var(--font-arabic), system-ui, sans-serif !important;
 }
 
 /* Keep Arabic-script text naturally connected in RTL locales while preserving force-LTR elements. */
@@ -784,8 +786,7 @@ body {
    RTL SUPPORT + Arabic / Kurdish font
    ============================================================ */
 [dir="rtl"] {
-  font-family: var(--font-arabic), var(--font-sans), system-ui, sans-serif;
-  letter-spacing: 0;          /* Arabic script needs 0 letter-spacing */
+  letter-spacing: 0;
   word-spacing: 0.05em;
 }
 
