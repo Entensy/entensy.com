@@ -17,7 +17,7 @@ The official website for **ENTENSY** — a software development and tech consult
 | 3D | Three.js + React Three Fiber |
 | i18n | next-intl 4 |
 | Forms | React Hook Form + Zod |
-| Email | EmailJS |
+| Email | Resend |
 | Carousel | Embla Carousel |
 | Particles | tsParticles Slim |
 | Package Manager | pnpm |
@@ -49,12 +49,10 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 Create a `.env.local` file in the project root:
 
 ```env
-NEXT_PUBLIC_EMAILJS_SERVICE_ID=your_service_id
-NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=your_template_id
-NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=your_public_key
+RESEND_API_KEY=re_your_api_key
 ```
 
-Get these from your [EmailJS dashboard](https://www.emailjs.com/).
+Get your API key from the [Resend dashboard](https://resend.com/api-keys). Verify the `entensy.com` domain in Resend before going live so emails can be sent from `contact@entensy.com`.
 
 ---
 
@@ -296,7 +294,7 @@ The site fully supports **right-to-left** layouts for Arabic (`ar`) and Kurdish 
 | Portfolio | `PortfolioSection.tsx` | `lib/portfolio-data.ts` + translations |
 | About | `AboutSection.tsx` | Translation files |
 | Socials | `SocialsSection.tsx` | Hardcoded links inside the component |
-| Contact | `ContactSection.tsx` | Translation files + EmailJS |
+| Contact | `ContactSection.tsx` | Translation files + Resend |
 
 ---
 
@@ -320,7 +318,7 @@ The site fully supports **right-to-left** layouts for Arabic (`ar`) and Kurdish 
 The site targets **Vercel**. Push to `main` and Vercel auto-deploys.
 
 Before deploying:
-1. Add the three EmailJS env vars in the Vercel dashboard under **Settings → Environment Variables**
+1. Add `RESEND_API_KEY` in the Vercel dashboard under **Settings → Environment Variables**
 2. Run `pnpm build` locally to confirm no TypeScript or build errors
 
 ---

@@ -250,18 +250,17 @@ The hook normalizes orbit speed so all card sizes animate at ~60 px/s regardless
 
 ---
 
-## EmailJS Integration
+## Resend Integration
 
-The contact form uses EmailJS. Keys come from environment variables:
+The contact form posts to `POST /api/send` (`src/app/api/send/route.ts`), which uses the Resend SDK server-side.
 
 ```
-NEXT_PUBLIC_EMAILJS_SERVICE_ID
-NEXT_PUBLIC_EMAILJS_TEMPLATE_ID
-NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
+RESEND_API_KEY=re_...    # server-side only — never NEXT_PUBLIC_ prefix
 ```
 
-All mail goes to `contact@entensy.com`. The template variables expected are:
-`from_name`, `from_email`, `message`, `to_email`.
+- Domain `entensy.com` must be verified in the Resend dashboard before sending
+- All mail delivered to `contact@entensy.com`; `replyTo` is the sender's address
+- Add `RESEND_API_KEY` to Vercel → Settings → Environment Variables
 
 ---
 

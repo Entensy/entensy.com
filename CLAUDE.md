@@ -243,7 +243,7 @@ Group commits by feature, not by file. Examples:
 - `feat: add portfolio project card for X`
 - `fix: phone number rendering in RTL mode`
 - `feat: add French locale`
-- `chore: update EmailJS service ID`
+- `chore: update Resend API key`
 
 Always append:
 ```
