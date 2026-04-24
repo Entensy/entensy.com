@@ -850,10 +850,10 @@ body {
   border-radius: inherit;
   z-index: 0;
   pointer-events: none;
-  /* Traveling bead (tight ellipse) + persistent dim base color around full border */
+  /* Large spread glow travels the perimeter + persistent dim base around full border */
   background:
     radial-gradient(
-      ellipse 90px 70px at var(--mx, -400px) var(--my, -400px),
+      ellipse 220px 180px at var(--mx, -400px) var(--my, -400px),
       var(--ring-color, rgba(139, 92, 246, 0.95)) 0%,
       transparent 70%
     ),
@@ -875,7 +875,7 @@ body {
 :root:not(.dark) .card-border-ring {
   background:
     radial-gradient(
-      ellipse 90px 70px at var(--mx, -400px) var(--my, -400px),
+      ellipse 220px 180px at var(--mx, -400px) var(--my, -400px),
       var(--ring-color-light, rgba(13, 10, 30, 0.55)) 0%,
       transparent 70%
     ),
