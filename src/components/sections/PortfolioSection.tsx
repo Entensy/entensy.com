@@ -1,74 +1,36 @@
 "use client";
 
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
 import useEmblaCarousel from "embla-carousel-react";
 import AutoScroll from "embla-carousel-auto-scroll";
 import { useTranslations, useLocale } from "next-intl";
 import { ExternalLink } from "lucide-react";
-import {
-  SiGithub,
-  SiReact,
-  SiNextdotjs,
-  SiVuedotjs,
-  SiTypescript,
-  SiNodedotjs,
-  SiLaravel,
-  SiGraphql,
-  SiPostgresql,
-  SiMysql,
-  SiDocker,
-  SiTailwindcss,
-  SiPrisma,
-} from "react-icons/si";
-import { FiServer } from "react-icons/fi";
+import { SiGithub } from "react-icons/si";
 import SectionHeading from "@/components/ui/SectionHeading";
 import TiltCard from "@/components/ui/TiltCard";
 import AnimatedButton from "@/components/ui/AnimatedButton";
 import { useCardBorder } from "@/hooks/useCardBorder";
 import { portfolioProjects } from "@/lib/portfolio-data";
+import { stackCategories } from "@/lib/stacks-data";
+import { iconRegistry } from "@/lib/icon-registry";
 
-// Per-technology color map — normalized to avoid invisible whites/near-blacks
-const stackColors: Record<string, string> = {
-  "React":         "#61DAFB",
-  "Next.js":       "#A8A8B8",
-  "Vue.js":        "#4FC08D",
-  "TypeScript":    "#4A90D9",
-  "Node.js":       "#4CAF50",
-  "Laravel":       "#FF4D4D",
-  "GraphQL":       "#E10098",
-  "PostgreSQL":    "#4A8DB5",
-  "MySQL":         "#5B96C2",
-  "Docker":        "#2496ED",
-  "Tailwind CSS":  "#06B6D4",
-  "Prisma":        "#5FC9BE",
-  "React Native":  "#61DAFB",
-  "REST API":      "#FF7A50",
-  "Python":        "#5A9FD4",
-  "Java":          "#F09030",
-  "Go":            "#29BCD8",
-  "PHP":           "#9090D0",
-  "Kubernetes":    "#4A8FE0",
-  "AWS":           "#FF9900",
-};
-const getStackColor = (name: string) => stackColors[name] ?? "#8B5CF6";
+type IconComp = React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
 
-const stackIcons: Record<string, React.ComponentType<{ className?: string; style?: React.CSSProperties }>> = {
-  "React": SiReact,
-  "Next.js": SiNextdotjs,
-  "Vue.js": SiVuedotjs,
-  "TypeScript": SiTypescript,
-  "Node.js": SiNodedotjs,
-  "Laravel": SiLaravel,
-  "GraphQL": SiGraphql,
-  "PostgreSQL": SiPostgresql,
-  "MySQL": SiMysql,
-  "Docker": SiDocker,
-  "Tailwind CSS": SiTailwindcss,
-  "Prisma": SiPrisma,
-  "React Native": SiReact,
-  "REST API": FiServer,
-};
+const stackMeta: Record<string, { color: string; bgColor: string; icon?: IconComp }> = {};
+for (const cat of stackCategories) {
+  for (const item of cat.items) {
+    stackMeta[item.name] = {
+      color: item.color,
+      bgColor: item.bgColor,
+      icon: item.icon ? iconRegistry[item.icon] : undefined,
+    };
+  }
+}
+
+const getStackColor  = (name: string) => stackMeta[name]?.color   ?? "#8B5CF6";
+const getStackBgColor = (name: string) => stackMeta[name]?.bgColor ?? "rgba(139,92,246,0.1)";
+const getStackIcon   = (name: string) => stackMeta[name]?.icon;
 
 const CSS = `
   .portfolio-shell .card-border-ring {
@@ -198,14 +160,15 @@ function PortfolioCard({
               {/* Stack tags */}
               <div className="flex flex-wrap gap-1.5 force-ltr" dir="ltr">
                 {project.stacks.map((stack) => {
-                  const StackIcon = stackIcons[stack];
-                  const color = getStackColor(stack);
+                  const StackIcon = getStackIcon(stack);
+                  const color   = getStackColor(stack);
+                  const bgColor = getStackBgColor(stack);
                   return (
                     <motion.span
                       key={stack}
                       className="inline-flex items-center gap-1.5 text-[10px] font-semibold px-2.5 py-1 rounded-full cursor-default"
                       style={{
-                        background: `${color}12`,
+                        background: bgColor,
                         border: `1px solid ${color}28`,
                         color,
                       }}
@@ -283,7 +246,7 @@ export default function PortfolioSection() {
 
   const autoScrollPlugin = useRef(
     AutoScroll({
-      speed: 0.6,
+      speed: 0.25,
       startDelay: 0,
       stopOnInteraction: false,
       stopOnMouseEnter: false,
@@ -301,6 +264,23 @@ export default function PortfolioSection() {
 
   const startScroll = useCallback(() => {
     emblaApi?.plugins()?.autoScroll?.play();
+  }, [emblaApi]);
+
+  // Pause auto-scroll when the section is not visible — no rAF cost when off-screen
+  useEffect(() => {
+    const section = document.getElementById("portfolio");
+    if (!section || !emblaApi) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const plugin = emblaApi.plugins()?.autoScroll;
+        if (!plugin) return;
+        if (entry.isIntersecting) plugin.play();
+        else plugin.stop();
+      },
+      { threshold: 0.05 }
+    );
+    observer.observe(section);
+    return () => observer.disconnect();
   }, [emblaApi]);
 
   // Triple the projects so Embla has enough slides for seamless looping
@@ -327,7 +307,7 @@ export default function PortfolioSection() {
 
           {/* Floating icon watermarks */}
           {WATERMARK_POSITIONS.map((pos, idx) => {
-            const icons = [SiReact, SiNextdotjs, SiTypescript, SiNodedotjs, SiDocker, SiTailwindcss, SiGraphql];
+            const icons = [iconRegistry.SiReact, iconRegistry.SiNextdotjs, iconRegistry.SiTypescript, iconRegistry.SiNodedotjs, iconRegistry.SiDocker, iconRegistry.SiTailwindcss, iconRegistry.SiGraphql];
             const colors = ["#61DAFB", "#A8A8B8", "#4A90D9", "#4CAF50", "#2496ED", "#06B6D4", "#E10098"];
             const Icon = icons[idx % icons.length];
             const color = colors[idx % colors.length];
