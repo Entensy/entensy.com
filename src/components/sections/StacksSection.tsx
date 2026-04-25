@@ -120,7 +120,7 @@ export default function StacksSection() {
                 className="relative px-5 py-2.5 rounded-full text-sm font-semibold transition-colors duration-200"
                 initial={{ opacity: 0, y: -12 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false, margin: "-60px" }}
+                viewport={{ once: false, margin: "-10px" }}
                 transition={{ delay: stackCategories.indexOf(cat) * 0.06, duration: 0.35, ease: "easeOut" }}
                 style={{
                   color: isActive ? cat.color : "var(--text-muted)",
@@ -139,7 +139,17 @@ export default function StacksSection() {
                         transition: { type: "spring", stiffness: 400, damping: 26 },
                       }
                 }
-                whileTap={{ scale: 0.96, transition: { type: "spring", stiffness: 400, damping: 26 } }}
+                whileTap={
+                  isActive
+                    ? { scale: 0.97 }
+                    : {
+                        scale: 0.96,
+                        background: `${cat.color}18`,
+                        color: cat.color,
+                        borderColor: `${cat.color}40`,
+                        transition: { type: "spring", stiffness: 400, damping: 26 },
+                      }
+                }
               >
                 {t(`categories.${cat.id}` as Parameters<typeof t>[0])}
                 {isActive && (
@@ -184,7 +194,7 @@ export default function StacksSection() {
                   key={tech.name}
                   initial={{ opacity: 0, scale: 0.8, y: 20, color: badgeBaseColor, background: badgeBaseBg, borderColor: badgeBaseBorder }}
                   whileInView={{ opacity: 1, scale: 1, y: 0, color: badgeBaseColor, background: badgeBaseBg, borderColor: badgeBaseBorder }}
-                  viewport={{ once: false, margin: "-80px" }}
+                  viewport={{ once: false, margin: "-10px" }}
                   className="stack-badge"
                   transition={{ delay: index * 0.05, duration: 0.4, ease: "easeOut" }}
                   whileHover={{
@@ -202,6 +212,14 @@ export default function StacksSection() {
                       scale: { type: "spring", stiffness: 500, damping: 22 },
                       y: { type: "spring", stiffness: 500, damping: 22 },
                     },
+                  }}
+                  whileTap={{
+                    scale: 1.05,
+                    color: techColor,
+                    background: techBgColor,
+                    borderColor: `${techColor}55`,
+                    boxShadow: `0 0 18px ${techColor}70, 0 4px 22px ${techColor}35`,
+                    transition: { duration: 0.15, ease: "easeOut" },
                   }}
                 >
                   {Icon && (

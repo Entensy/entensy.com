@@ -178,6 +178,12 @@ function PortfolioCard({
                         background: `${color}22`,
                         borderColor: `${color}55`,
                       }}
+                      whileTap={{
+                        scale: 1.05,
+                        boxShadow: `0 0 10px ${color}80, 0 0 20px ${color}30`,
+                        background: `${color}22`,
+                        borderColor: `${color}55`,
+                      }}
                       transition={{ type: "spring", stiffness: 320, damping: 18 }}
                     >
                       {StackIcon && <StackIcon style={{ fontSize: "0.72rem" }} />}
@@ -332,7 +338,7 @@ export default function PortfolioSection() {
           className="relative z-10 w-full mt-2 embla"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, margin: "-80px", amount: 0.1 }}
+          viewport={{ once: false, margin: "-10px", amount: 0 }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         >
           <div ref={emblaRef} className="embla__viewport">
