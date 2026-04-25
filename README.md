@@ -1,7 +1,27 @@
 # ENTENSY — Official Company Website
 
-
 The official website for **ENTENSY** — a software development and tech consulting company. A fully animated, multilingual, dark/light-mode, RTL-aware marketing site built with Next.js 16, React 19, and Tailwind CSS v4.
+
+---
+
+## Table of Contents
+
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+- [Environment Variables](#environment-variables)
+- [Project Structure](#project-structure)
+- [Content Editing Guide](#content-editing-guide)
+  - [Add or Edit a Portfolio Project](#add-or-edit-a-portfolio-project)
+  - [Add or Edit a Service](#add-or-edit-a-service)
+  - [Add or Edit a Solution](#add-or-edit-a-solution)
+  - [Edit Translations / Add a Language](#edit-translations--add-a-language)
+  - [Edit the Navbar](#edit-the-navbar)
+  - [Edit the Footer](#edit-the-footer)
+  - [Edit Brand Colors](#edit-brand-colors)
+- [Internationalization & RTL Support](#internationalization--rtl-support)
+- [Sections Overview](#sections-overview)
+- [Brand Reference](#brand-reference)
+- [Deployment](#deployment)
 
 ---
 
@@ -18,6 +38,7 @@ The official website for **ENTENSY** — a software development and tech consult
 | Forms | React Hook Form + Zod |
 | Email | Resend |
 | Carousel | Embla Carousel |
+| Icons | react-icons + devicon (via @iconify-json/devicon) |
 | Particles | tsParticles Slim |
 | Package Manager | pnpm |
 
@@ -112,6 +133,7 @@ src/
     ├── animations.ts               # Shared Framer Motion variants
     ├── utils.ts                    # cn(), clamp(), lerp(), mapRange()
     ├── card-border.ts              # Card border effect helpers
+    ├── icon-registry.ts            # Icon imports + devicon SVGs for stacks/portfolio
     ├── services-data.ts            # Services content data
     ├── solutions-data.ts           # Solutions content data
     ├── stacks-data.ts              # Technology stacks data

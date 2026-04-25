@@ -106,7 +106,8 @@ All content data is **separated from components** into `src/lib/`:
 |---|---|---|
 | `services-data.ts` | 10 services | `icon` (Lucide name), `color`, `gradientFrom/To`, `titleKey`, `descKey` |
 | `solutions-data.ts` | 13 solutions | `icon` (react-icons/fi name), `color`, `size` (`small`/`medium`/`large`), `titleKey`, `descKey` |
-| `stacks-data.ts` | 39 tech items in 7 categories | `icon` (react-icons/si name), `color`, `level` |
+| `stacks-data.ts` | 39 tech items in 7 categories | `icon` (key in `icon-registry.ts`), `color`, `level` |
+| `icon-registry.ts` | Explicit icon imports + custom devicon SVGs | Used by StacksSection and PortfolioSection |
 | `portfolio-data.ts` | 7 portfolio projects | `image?`, `gradient`, `stacks[]`, `visitUrl?`, `githubUrl?`, `titleKey`, `descKey` |
 
 When adding a new item to any of these files, **also add translation keys** to all three `messages/*.json` files.
@@ -167,7 +168,7 @@ Wrap any card in `<TiltCard tiltMaxAngle={8}>` for 3D tilt on hover. Uses CSS tr
 ### Always do these
 - Run `pnpm build` after non-trivial changes — catches TypeScript errors that dev server misses
 - When adding a translation key, add it to **all three** message files immediately
-- When adding an icon to a card section, also add it to the `iconMap` object at the top of that section component
+- When adding a tech stack icon, add the import and registry entry to `src/lib/icon-registry.ts`, then use the key in `stacks-data.ts`. For icons missing from react-icons, use a devicon inline SVG via `makeSvg()` in the registry.
 - When a card changes size (large vs normal), verify the `lgAlone` / last-row centering logic still works
 - Keep data in `src/lib/*-data.ts` files — never inline content arrays inside section components
 

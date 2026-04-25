@@ -102,6 +102,7 @@ src/
     ├── animations.ts               Shared Framer Motion variants
     ├── utils.ts                    cn(), clamp(), lerp(), mapRange()
     ├── card-border.ts              Card border helpers
+    ├── icon-registry.ts            Explicit icon imports + devicon SVGs (used by Stacks/Portfolio)
     ├── services-data.ts            Services content (10 items)
     ├── solutions-data.ts           Solutions content (13 items)
     ├── stacks-data.ts              Tech stacks content (39 items, 7 categories)
@@ -241,6 +242,11 @@ The hook normalizes orbit speed so all card sizes animate at ~60 px/s regardless
 2. Add to `iconMap` in `SolutionsSection.tsx`
 3. Add id → tag mapping in `solutionTagMap` in `SolutionsSection.tsx`
 4. Add `solutions.items.my_key.title` and `.desc` to all three message files
+
+### New tech stack icon
+1. If the icon exists in `react-icons/si` or `react-icons/fa`, import it in `src/lib/icon-registry.ts` and add to the registry object
+2. If the icon is missing or wrong, use devicon: extract the SVG body from `node_modules/@iconify-json/devicon/icons.json` and create a component with `makeSvg()` in the registry
+3. Use the registry key as the `icon` field in `stacks-data.ts`
 
 ### New locale
 1. `src/i18n/routing.ts` — add locale code to `locales` array
