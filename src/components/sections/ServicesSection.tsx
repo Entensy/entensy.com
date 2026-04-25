@@ -98,6 +98,7 @@ function ServiceCard({
           style={{ background: "transparent" }}
           onMouseMove={handleBorderMouseMove}
           onMouseLeave={handleBorderMouseLeave}
+          onTouchEnd={handleBorderMouseLeave}
         >
           {/* JS-driven border ring */}
           <div
