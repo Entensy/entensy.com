@@ -71,6 +71,7 @@ export default function ContactSection() {
   const isRtlLocale = locale === "ar" || locale === "ckb";
   const [status, setStatus] = useState<FormStatus>("idle");
   const [ctaCardHovered, setCtaCardHovered] = useState(false);
+  const [hoveredInfoCard, setHoveredInfoCard] = useState<number | null>(null);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [turnstileResetKey, setTurnstileResetKey] = useState(0);
   const statusTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -283,6 +284,7 @@ export default function ContactSection() {
           0%, 100% { transform: rotate(45deg) translateY(0px); }
           50% { transform: rotate(45deg) translateY(-14px); }
         }
+        :root:not(.dark) .contact-card-orb { opacity: 0.35 !important; }
       `}</style>
 
       <div className="section-inner relative z-10">
@@ -500,18 +502,26 @@ export default function ContactSection() {
                     cursor: clickable ? "pointer" : "default",
                   }}
                   whileHover={{
-                    y: -5,
-                    borderColor: "rgba(252,0,42,0.40)",
+                    scale: 1.01,
+                    y: -1,
                     boxShadow: "0 16px 44px rgba(252,0,42,0.12)",
                   }}
+                  whileTap={{ scale: 1.01, boxShadow: "0 16px 44px rgba(252,0,42,0.28)", transition: { duration: 0.15, ease: "easeOut" } }}
                   transition={{ type: "spring", stiffness: 300, damping: 22 }}
+                  onMouseEnter={() => setHoveredInfoCard(i)}
+                  onMouseLeave={() => setHoveredInfoCard(null)}
+                  onTouchStart={() => setHoveredInfoCard(i)}
+                  onTouchEnd={() => setHoveredInfoCard(null)}
                 >
-                  {/* Corner orb — mirrors the CTA card */}
+                  {/* Corner orb */}
                   <motion.div
-                    className="absolute -bottom-6 -right-6 w-20 h-20 rounded-full pointer-events-none"
-                    style={{ background: "radial-gradient(circle, #FC002A 0%, transparent 70%)" }}
-                    initial={{ scale: 1, opacity: 0.18 }}
-                    whileHover={{ scale: 1.6, opacity: 0.38 }}
+                    className="contact-card-orb absolute -bottom-10 -right-10 w-32 h-32 rounded-full pointer-events-none"
+                    style={{ background: "radial-gradient(ellipse at 100% 100%, rgba(252,0,42,1) 0%, rgba(252,0,42,0.3) 50%, transparent 75%)" }}
+                    animate={{
+                      scale: hoveredInfoCard === i ? 1.5 : 1,
+                      opacity: hoveredInfoCard === i ? 0.6 : 0.3,
+                    }}
+                    whileTap={{ scale: 2.2, opacity: 0.70 }}
                     transition={{ type: "spring", stiffness: 200, damping: 20 }}
                   />
                   <div
@@ -559,10 +569,11 @@ export default function ContactSection() {
                 minHeight: "160px",
               }}
               whileHover={{
-                y: -5,
-                borderColor: "rgba(252,0,42,0.42)",
+                scale: 1.01,
+                y: -1,
                 boxShadow: "0 16px 44px rgba(252,0,42,0.13)",
               }}
+              whileTap={{ scale: 1.01, boxShadow: "0 16px 44px rgba(252,0,42,0.28)", transition: { duration: 0.15, ease: "easeOut" } }}
               transition={{ type: "spring", stiffness: 300, damping: 22 }}
               onMouseEnter={() => setCtaCardHovered(true)}
               onMouseLeave={() => setCtaCardHovered(false)}
@@ -587,13 +598,13 @@ export default function ContactSection() {
 
               {/* Bottom-right orb — grows on hover */}
               <motion.div
-                className="absolute -bottom-8 -right-8 w-32 h-32 rounded-full pointer-events-none"
+                className="contact-card-orb absolute -bottom-8 -right-8 w-32 h-32 rounded-full pointer-events-none"
                 animate={{
                   scale: ctaCardHovered ? 1.5 : 1,
-                  opacity: ctaCardHovered ? 0.45 : 0.30,
+                  opacity: ctaCardHovered ? 0.6 : 0.3,
                 }}
                 transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                style={{ background: "radial-gradient(circle, #FC002A 0%, transparent 70%)" }}
+                style={{ background: "radial-gradient(ellipse at 100% 100%, rgba(252,0,42,1) 0%, rgba(252,0,42,0.3) 50%, transparent 75%)" }}
               />
             </motion.div>
           </motion.div>
