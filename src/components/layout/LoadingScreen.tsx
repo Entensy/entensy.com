@@ -118,7 +118,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
                   alt="ENTENSY"
                   width={240}
                   height={72}
-                  className="h-16 md:h-20 w-auto object-contain"
+                  className="h-10 md:h-12 w-auto object-contain"
                   priority
                 />
               </div>
