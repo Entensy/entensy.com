@@ -11,7 +11,6 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import TiltCard from "@/components/ui/TiltCard";
 import AnimatedButton from "@/components/ui/AnimatedButton";
 import { useCardBorder } from "@/hooks/useCardBorder";
-import { useHoverCapable } from "@/hooks/useHoverCapable";
 import { portfolioProjects } from "@/lib/portfolio-data";
 import { stackCategories } from "@/lib/stacks-data";
 import { iconRegistry } from "@/lib/icon-registry";
@@ -78,7 +77,6 @@ function PortfolioCard({
 }) {
   const [hoveredGithub, setHoveredGithub] = useState(false);
   const shellRef = useRef<HTMLDivElement>(null);
-  const canHover = useHoverCapable();
   const { handleBorderMouseMove, handleBorderMouseLeave } = useCardBorder(
     shellRef as React.RefObject<HTMLElement | null>
   );
@@ -86,8 +84,8 @@ function PortfolioCard({
   return (
     <div
       className="py-3"
-      onPointerEnter={onScrollStop}
-      onPointerLeave={onScrollPlay}
+      onMouseEnter={onScrollStop}
+      onMouseLeave={onScrollPlay}
     >
       <TiltCard tiltMaxAngle={8} scale={1.01}>
         <div
@@ -176,12 +174,12 @@ function PortfolioCard({
                         border: `1px solid ${color}28`,
                         color,
                       }}
-                      whileHover={canHover ? {
+                      whileHover={{
                         scale: 1.08,
                         boxShadow: `0 0 10px ${color}80, 0 0 20px ${color}30`,
                         background: `${color}22`,
                         borderColor: `${color}55`,
-                      } : {}}
+                      }}
                       whileTap={{
                         scale: 1.05,
                         boxShadow: `0 0 10px ${color}80, 0 0 20px ${color}30`,

@@ -8,7 +8,6 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import { stackCategories } from "@/lib/stacks-data";
 import { iconRegistry } from "@/lib/icon-registry";
 import { staggerContainerVariant, viewportOnce } from "@/lib/animations";
-import { useHoverCapable } from "@/hooks/useHoverCapable";
 
 // 21 evenly distributed watermark positions covering 0–95% range in both axes
 const WATERMARK_POSITIONS: { left: string; top: string }[] = [
@@ -41,7 +40,6 @@ export default function StacksSection() {
   const isRtlLocale = locale === "ar" || locale === "ckb";
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
-  const canHover = useHoverCapable();
   const [activeCategory, setActiveCategory] = useState(stackCategories[0].id);
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -131,7 +129,7 @@ export default function StacksSection() {
                   boxShadow: isActive ? `0 0 12px ${cat.color}30` : "0 0 0px rgba(0,0,0,0)",
                 }}
                 whileHover={
-                  isActive || !canHover
+                  isActive
                     ? {}
                     : {
                         scale: 1.04,
@@ -199,7 +197,7 @@ export default function StacksSection() {
                   viewport={{ once: false, margin: "-10px" }}
                   className="stack-badge"
                   transition={{ delay: index * 0.05, duration: 0.4, ease: "easeOut" }}
-                  whileHover={canHover ? {
+                  whileHover={{
                     scale: 1.09,
                     y: -3,
                     color: techColor,
@@ -214,7 +212,7 @@ export default function StacksSection() {
                       scale: { type: "spring", stiffness: 500, damping: 22 },
                       y: { type: "spring", stiffness: 500, damping: 22 },
                     },
-                  } : {}}
+                  }}
                   whileTap={{
                     scale: 1.05,
                     color: techColor,
