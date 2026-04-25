@@ -1,18 +1,21 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import HomeSection from "@/components/sections/HomeSection";
-import ServicesSection from "@/components/sections/ServicesSection";
-import SolutionsSection from "@/components/sections/SolutionsSection";
-import StacksSection from "@/components/sections/StacksSection";
-import PortfolioSection from "@/components/sections/PortfolioSection";
-import AboutSection from "@/components/sections/AboutSection";
-import ContactSection from "@/components/sections/ContactSection";
-import SocialsSection from "@/components/sections/SocialsSection";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import LoadingScreen from "@/components/layout/LoadingScreen";
+
+// Below-fold sections — split into separate JS chunks, fetched in parallel on load
+const ServicesSection  = dynamic(() => import("@/components/sections/ServicesSection"));
+const SolutionsSection = dynamic(() => import("@/components/sections/SolutionsSection"));
+const StacksSection    = dynamic(() => import("@/components/sections/StacksSection"));
+const PortfolioSection = dynamic(() => import("@/components/sections/PortfolioSection"));
+const AboutSection     = dynamic(() => import("@/components/sections/AboutSection"));
+const ContactSection   = dynamic(() => import("@/components/sections/ContactSection"));
+const SocialsSection   = dynamic(() => import("@/components/sections/SocialsSection"));
 
 const SESSION_LOADED_KEY = "entensy:first-load-complete";
 
