@@ -14,7 +14,7 @@ declare global {
           "expired-callback"?: () => void;
           "error-callback"?: () => void;
           theme?: "light" | "dark" | "auto";
-          size?: "normal" | "compact";
+          size?: "normal" | "compact" | "invisible";
         }
       ) => string;
       remove: (widgetId: string) => void;
@@ -29,9 +29,10 @@ interface TurnstileProps {
   onExpire?: () => void;
   onScriptError?: () => void;
   theme?: "light" | "dark" | "auto";
+  size?: "normal" | "compact" | "invisible";
 }
 
-export default function Turnstile({ siteKey, onToken, onExpire, onScriptError, theme = "auto" }: TurnstileProps) {
+export default function Turnstile({ siteKey, onToken, onExpire, onScriptError, theme = "auto", size = "invisible" }: TurnstileProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);
 
@@ -52,8 +53,9 @@ export default function Turnstile({ siteKey, onToken, onExpire, onScriptError, t
         sitekey: siteKey,
         callback: (token: string) => onTokenRef.current(token),
         "expired-callback": () => onExpireRef.current?.(),
+        "error-callback": () => onScriptErrorRef.current?.(),
         theme,
-        size: "normal",
+        size,
       });
     };
 
@@ -79,7 +81,8 @@ export default function Turnstile({ siteKey, onToken, onExpire, onScriptError, t
     };
   // Callbacks are intentionally excluded — they're read through refs above
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [siteKey, theme]);
+  }, [siteKey, theme, size]);
 
-  return <div ref={containerRef} className="mt-1" />;
+  // Invisible mode renders no visible UI — keep in DOM so Cloudflare can attach its iframe
+  return <div ref={containerRef} aria-hidden="true" style={size === "invisible" ? { display: "none" } : { marginTop: "0.25rem" }} />;
 }
