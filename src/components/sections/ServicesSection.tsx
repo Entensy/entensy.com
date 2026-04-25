@@ -42,6 +42,7 @@ const CSS = `
     .svc-shell:hover .svc-icon { transform: scale(1.1) rotate(4deg); }
   }
   .svc-icon { transition: transform 0.25s cubic-bezier(0.22,1,0.36,1); }
+  .svc-shell.is-pressed .svc-icon { transform: scale(1.1) rotate(4deg); }
 `;
 
 const WATERMARK_POSITIONS = [
@@ -79,7 +80,7 @@ function ServiceCard({
 }) {
   const Icon = iconMap[service.icon];
   const shellRef = useRef<HTMLDivElement>(null);
-  const { handleBorderMouseMove, handleBorderMouseLeave } = useCardBorder(
+  const { handleBorderMouseMove, handleBorderMouseLeave, handleTouchStart, handleTouchEnd } = useCardBorder(
     shellRef as React.RefObject<HTMLElement | null>
   );
 
@@ -98,7 +99,9 @@ function ServiceCard({
           style={{ background: "transparent" }}
           onMouseMove={handleBorderMouseMove}
           onMouseLeave={handleBorderMouseLeave}
-          onTouchEnd={handleBorderMouseLeave}
+          onTouchStart={(e) => { shellRef.current?.classList.add("is-pressed"); handleTouchStart(e); }}
+          onTouchEnd={(e) => { shellRef.current?.classList.remove("is-pressed"); handleTouchEnd(e as unknown as React.TouchEvent<HTMLElement>); }}
+          onTouchCancel={() => shellRef.current?.classList.remove("is-pressed")}
         >
           {/* JS-driven border ring */}
           <div
