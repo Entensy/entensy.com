@@ -3,15 +3,11 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations, useLocale } from "next-intl";
-import * as SiIcons from "react-icons/si";
 import { useTheme } from "@/components/layout/ThemeContext";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { stackCategories } from "@/lib/stacks-data";
+import { iconRegistry } from "@/lib/icon-registry";
 import { staggerContainerVariant, viewportOnce } from "@/lib/animations";
-
-type IconComp = React.FC<{ style?: React.CSSProperties; className?: string; fontSize?: string }>;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const SiIconsAny = SiIcons as Record<string, IconComp>;
 
 // 21 evenly distributed watermark positions covering 0–95% range in both axes
 const WATERMARK_POSITIONS: { left: string; top: string }[] = [
@@ -82,7 +78,7 @@ export default function StacksSection() {
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         {WATERMARK_POSITIONS.map((pos, idx) => {
           const item = allItems[idx % allItems.length];
-          const Icon = SiIconsAny[item.icon];
+          const Icon = iconRegistry[item.icon];
           if (!Icon) return null;
           const dur = `${7 + (idx % 5)}s`;
           const delay = `${(idx * 0.37) % 4}s`;
@@ -122,6 +118,10 @@ export default function StacksSection() {
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
                 className="relative px-5 py-2.5 rounded-full text-sm font-semibold transition-colors duration-200"
+                initial={{ opacity: 0, y: -12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, margin: "-60px" }}
+                transition={{ delay: stackCategories.indexOf(cat) * 0.06, duration: 0.35, ease: "easeOut" }}
                 style={{
                   color: isActive ? cat.color : "var(--text-muted)",
                   background: isActive ? `${cat.color}20` : "rgba(255,255,255,0)",
@@ -136,10 +136,10 @@ export default function StacksSection() {
                         background: `${cat.color}12`,
                         color: cat.color,
                         borderColor: `${cat.color}30`,
+                        transition: { type: "spring", stiffness: 400, damping: 26 },
                       }
                 }
-                transition={{ type: "spring", stiffness: 400, damping: 26 }}
-                whileTap={{ scale: 0.96 }}
+                whileTap={{ scale: 0.96, transition: { type: "spring", stiffness: 400, damping: 26 } }}
               >
                 {t(`categories.${cat.id}` as Parameters<typeof t>[0])}
                 {isActive && (
@@ -170,7 +170,7 @@ export default function StacksSection() {
             dir="ltr"
           >
             {currentCategory.items.map((tech, index) => {
-              const Icon = tech.icon ? SiIconsAny[tech.icon] : undefined;
+              const Icon = tech.icon ? iconRegistry[tech.icon] : undefined;
               // Next.js icon is white by design; swap to near-black in light mode
               const techColor = tech.name === "Next.js"
                 ? (isDark ? "#FFFFFF" : "#111111")
@@ -183,7 +183,8 @@ export default function StacksSection() {
                 <motion.div
                   key={tech.name}
                   initial={{ opacity: 0, scale: 0.8, y: 20, color: badgeBaseColor, background: badgeBaseBg, borderColor: badgeBaseBorder }}
-                  animate={{ opacity: 1, scale: 1, y: 0, color: badgeBaseColor, background: badgeBaseBg, borderColor: badgeBaseBorder }}
+                  whileInView={{ opacity: 1, scale: 1, y: 0, color: badgeBaseColor, background: badgeBaseBg, borderColor: badgeBaseBorder }}
+                  viewport={{ once: false, margin: "-80px" }}
                   className="stack-badge"
                   transition={{ delay: index * 0.05, duration: 0.4, ease: "easeOut" }}
                   whileHover={{
