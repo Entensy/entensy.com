@@ -285,6 +285,19 @@ export default function AboutSection() {
   const dividerBg    = isDark ? "rgba(255,255,255,0.05)"    : "rgba(13,10,30,0.06)";
   const cellBg       = isDark ? "rgba(13,10,30,0.88)"       : "rgba(255,255,255,0.82)";
 
+  const ctaCardRef = useRef<HTMLDivElement>(null);
+  const [ctaHovered, setCtaHovered] = useState(false);
+  const [ctaMouse, setCtaMouse] = useState({ x: 50, y: 50 });
+
+  const handleCtaMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!ctaCardRef.current) return;
+    const rect = ctaCardRef.current.getBoundingClientRect();
+    setCtaMouse({
+      x: ((e.clientX - rect.left) / rect.width) * 100,
+      y: ((e.clientY - rect.top) / rect.height) * 100,
+    });
+  };
+
   return (
     <section
         id="about"
@@ -622,15 +635,27 @@ export default function AboutSection() {
 
           {/* ── CTA Strip ── */}
           <motion.div
+            ref={ctaCardRef}
             variants={fadeUpVariant}
             initial="hidden"
             whileInView="visible"
             viewport={viewportOnce}
-            className="about-cta-strip mt-12 flex flex-col sm:flex-row items-center justify-between gap-6 rounded-3xl p-8 md:p-10 relative overflow-hidden"
+            className="about-cta-strip mt-12 flex flex-col sm:flex-row items-center justify-between gap-6 rounded-3xl p-8 md:p-10 relative overflow-hidden cursor-default"
             style={{
               background: "rgba(13,10,30,0.88)",
-              border: "1px solid rgba(244,63,94,0.22)",
+              borderWidth: "1px",
+              borderStyle: "solid",
+              borderColor: "rgba(244,63,94,0.22)",
             }}
+            whileHover={{
+              y: -6,
+              borderColor: "rgba(244,63,94,0.62)",
+              boxShadow: "0 28px 64px rgba(244,63,94,0.22), 0 8px 32px rgba(244,63,94,0.14)",
+            }}
+            transition={{ type: "spring", stiffness: 280, damping: 24 }}
+            onMouseEnter={() => setCtaHovered(true)}
+            onMouseLeave={() => setCtaHovered(false)}
+            onMouseMove={handleCtaMouseMove}
           >
             {/* Multi-layered gradient mesh */}
             <div className="absolute inset-0 pointer-events-none rounded-3xl overflow-hidden">
@@ -640,18 +665,36 @@ export default function AboutSection() {
               <div className="absolute inset-0 bg-grid-pattern opacity-8" />
             </div>
 
+            {/* Cursor-following spotlight — pure CSS transition, no Framer needed */}
+            <div
+              className="absolute inset-0 pointer-events-none rounded-3xl"
+              style={{
+                opacity: ctaHovered ? 1 : 0,
+                transition: "opacity 0.25s ease",
+                background: `radial-gradient(circle 380px at ${ctaMouse.x}% ${ctaMouse.y}%, rgba(244,63,94,0.13) 0%, rgba(124,58,237,0.07) 45%, transparent 70%)`,
+              }}
+            />
+
             {/* Left side: icon + text */}
             <div className="relative z-10 flex items-center gap-5">
-              <div
+              <motion.div
                 className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0"
-                style={{
-                  background: "rgba(244,63,94,0.14)",
-                  border: "1px solid rgba(244,63,94,0.32)",
-                  boxShadow: "0 0 28px rgba(244,63,94,0.18)",
+                animate={{
+                  background: ctaHovered ? "rgba(244,63,94,0.24)" : "rgba(244,63,94,0.14)",
+                  boxShadow: ctaHovered
+                    ? "0 0 42px rgba(244,63,94,0.40), 0 0 16px rgba(244,63,94,0.22)"
+                    : "0 0 28px rgba(244,63,94,0.18)",
                 }}
+                transition={{ type: "spring", stiffness: 280, damping: 22 }}
+                style={{ border: "1px solid rgba(244,63,94,0.32)" }}
               >
-                <ArrowRight size={22} style={{ color: "#F43F5E" }} strokeWidth={2.5} className="rtl-arrow" />
-              </div>
+                <motion.div
+                  animate={{ x: ctaHovered ? (isRtlLocale ? -4 : 4) : 0 }}
+                  transition={{ type: "spring", stiffness: 320, damping: 16 }}
+                >
+                  <ArrowRight size={22} style={{ color: "#F43F5E" }} strokeWidth={2.5} className="rtl-arrow" />
+                </motion.div>
+              </motion.div>
               <div>
                 <p className="text-xl md:text-2xl font-black heading-glass">
                   {t("cta_title")}
