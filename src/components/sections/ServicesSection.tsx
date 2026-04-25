@@ -38,15 +38,15 @@ const CSS = `
     transition: opacity 0.25s ease, filter 0.25s ease;
   }
   @media (hover: hover) {
-    .svc-shell:hover .card-border-ring {
-      opacity: 1;
-      filter: saturate(1.5) brightness(1.4);
-    }
+    .svc-shell:hover .card-border-ring { opacity: 1; filter: saturate(1.5) brightness(1.4); }
+    .svc-shell:hover .svc-icon { transform: scale(1.1) rotate(4deg); }
+    .svc-shell:hover .svc-line { width: 100%; }
   }
-  .svc-shell:active .card-border-ring {
-    opacity: 1;
-    filter: saturate(1.5) brightness(1.4);
-  }
+  .svc-shell:active .card-border-ring { opacity: 1; filter: saturate(1.5) brightness(1.4); }
+  .svc-shell:active .svc-icon { transform: scale(1.1) rotate(4deg); }
+  .svc-shell:active .svc-line { width: 100%; }
+  .svc-icon { transition: transform 0.25s cubic-bezier(0.22,1,0.36,1); }
+  .svc-line { width: 0; transition: width 0.4s ease-out; }
 `;
 
 const WATERMARK_POSITIONS = [
@@ -151,11 +151,8 @@ function ServiceCard({
             </div>
 
             {/* Icon */}
-            <motion.div
-              whileHover={{ scale: 1.1, rotate: 4 }}
-              whileTap={{ scale: 1.1, rotate: 4 }}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 relative z-10"
+            <div
+              className="svc-icon w-12 h-12 rounded-xl flex items-center justify-center shrink-0 relative z-10"
               style={{
                 background: `${service.color}18`,
                 border: `1px solid ${service.color}35`,
@@ -164,7 +161,7 @@ function ServiceCard({
               {Icon && (
                 <Icon size={22} style={{ color: service.color }} strokeWidth={1.8} />
               )}
-            </motion.div>
+            </div>
 
             {/* Content */}
             <div className="flex flex-col gap-2 flex-1 relative z-10">
@@ -211,12 +208,8 @@ function ServiceCard({
             )}
 
             {/* Bottom accent line */}
-            <motion.div
-              className="absolute bottom-0 left-0 h-0.5 rounded-full z-10"
-              initial={{ width: "0%" }}
-              whileHover={{ width: "100%" }}
-              whileTap={{ width: "100%" }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
+            <div
+              className="svc-line absolute bottom-0 left-0 h-0.5 rounded-full z-10"
               style={{
                 background: `linear-gradient(90deg, ${service.gradientFrom}, ${service.gradientTo})`,
               }}

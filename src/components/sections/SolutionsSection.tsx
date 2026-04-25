@@ -44,15 +44,15 @@ const CSS = `
     transition: opacity 0.25s ease, filter 0.25s ease;
   }
   @media (hover: hover) {
-    .sol-shell:hover .card-border-ring {
-      opacity: 1;
-      filter: saturate(1.5) brightness(1.4);
-    }
+    .sol-shell:hover .card-border-ring { opacity: 1; filter: saturate(1.5) brightness(1.4); }
+    .sol-shell:hover .sol-icon { transform: scale(1.1) rotate(-5deg); }
+    .sol-shell:hover .sol-line { width: 100%; }
   }
-  .sol-shell:active .card-border-ring {
-    opacity: 1;
-    filter: saturate(1.5) brightness(1.4);
-  }
+  .sol-shell:active .card-border-ring { opacity: 1; filter: saturate(1.5) brightness(1.4); }
+  .sol-shell:active .sol-icon { transform: scale(1.1) rotate(-5deg); }
+  .sol-shell:active .sol-line { width: 100%; }
+  .sol-icon { transition: transform 0.25s cubic-bezier(0.22,1,0.36,1); }
+  .sol-line { width: 0; transition: width 0.4s ease-out; }
 `;
 
 const WATERMARK_POSITIONS = [
@@ -159,11 +159,8 @@ function SolutionCard({
 
             {/* Icon + featured badge row */}
             <div className="flex items-start justify-between gap-3 relative z-10">
-              <motion.div
-                whileHover={{ scale: 1.1, rotate: -5 }}
-                whileTap={{ scale: 1.1, rotate: -5 }}
-                transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
+              <div
+                className="sol-icon w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
                 style={{
                   background: `${solution.color}18`,
                   border: `1px solid ${solution.color}30`,
@@ -172,7 +169,7 @@ function SolutionCard({
                 {Icon && (
                   <Icon style={{ color: solution.color, fontSize: "1.2rem" }} />
                 )}
-              </motion.div>
+              </div>
 
               {solution.size === "large" && (
                 <span
@@ -233,12 +230,8 @@ function SolutionCard({
             )}
 
             {/* Bottom accent line */}
-            <motion.div
-              className="absolute bottom-0 left-0 h-0.5 rounded-full z-10"
-              initial={{ width: "0%" }}
-              whileHover={{ width: "100%" }}
-              whileTap={{ width: "100%" }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
+            <div
+              className="sol-line absolute bottom-0 left-0 h-0.5 rounded-full z-10"
               style={{ background: solution.color, opacity: 0.7 }}
             />
           </div>

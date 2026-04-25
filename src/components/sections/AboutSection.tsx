@@ -29,6 +29,22 @@ const GlobeBackground = dynamic(
 
 gsap.registerPlugin(ScrollTrigger);
 
+const CSS = `
+  .cap-tile-glow { opacity: 0; transition: opacity 0.25s ease; }
+  .cap-tile-line { width: 0; transition: width 0.35s ease-out; }
+  @media (hover: hover) {
+    .cap-tile:hover .cap-tile-glow { opacity: 1; }
+    .cap-tile:hover .cap-tile-line { width: 100%; }
+  }
+  .cap-tile:active .cap-tile-glow { opacity: 1; }
+  .cap-tile:active .cap-tile-line { width: 100%; }
+  .pillar-line { width: 0; transition: width 0.4s ease-out; }
+  @media (hover: hover) {
+    .pillar-card:hover .pillar-line { width: 100%; }
+  }
+  .pillar-card:active .pillar-line { width: 100%; }
+`;
+
 // ─── Data ────────────────────────────────────────────────────────────────────
 
 const stats = [
@@ -132,18 +148,16 @@ function PillarCard({
 
   return (
       <motion.div
-        className="relative rounded-2xl overflow-hidden flex flex-col h-full cursor-default"
+        className="pillar-card relative rounded-2xl overflow-hidden flex flex-col h-full cursor-default"
         style={{ background: cardBg, boxShadow: shadowBase }}
         animate={{
           boxShadow: hovered ? shadowHover : shadowBase,
           y: hovered ? -4 : 0,
         }}
         transition={{ type: "spring", stiffness: 280, damping: 22 }}
+        whileTap={{ y: -4, boxShadow: shadowHover }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        onTouchStart={() => setHovered(true)}
-        onTouchEnd={() => setHovered(false)}
-        onTouchCancel={() => setHovered(false)}
       >
         {/* Diagonal top-left slash */}
         <div className="absolute top-0 left-0 pointer-events-none rounded-tl-2xl overflow-hidden" style={{ width: "68%", height: "55%" }}>
@@ -211,11 +225,9 @@ function PillarCard({
             {t(`pillars.${pillar.key}.desc` as Parameters<typeof t>[0])}
           </p>
 
-          {/* Bottom line — animates width on hover */}
-          <motion.div
-            className="h-px rounded-full"
-            animate={{ width: hovered ? "100%" : "0%" }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
+          {/* Bottom line — animates width on hover/active */}
+          <div
+            className="pillar-line h-px rounded-full"
             style={{ background: `linear-gradient(90deg, ${pillar.color}, ${pillar.color}50, transparent)` }}
           />
         </div>
@@ -302,6 +314,8 @@ export default function AboutSection() {
   };
 
   return (
+    <>
+    <style>{CSS}</style>
     <section
         id="about"
         className="section-wrapper relative overflow-hidden"
@@ -591,7 +605,7 @@ export default function AboutSection() {
                   <motion.div
                     key={cap.key}
                     variants={fadeUpVariant}
-                    className={`rounded-xl px-3 py-4 flex flex-col items-center gap-2 text-center cursor-default relative overflow-hidden ${capCenter}`}
+                    className={`cap-tile rounded-xl px-3 py-4 flex flex-col items-center gap-2 text-center cursor-default relative overflow-hidden ${capCenter}`}
                     whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 1.03, y: -1 }}
                     transition={{ type: "spring", stiffness: 320, damping: 18 }}
@@ -601,12 +615,8 @@ export default function AboutSection() {
                     }}
                   >
                     {/* Hover glow */}
-                    <motion.div
-                      className="absolute inset-0 rounded-xl pointer-events-none"
-                      initial={{ opacity: 0 }}
-                      whileHover={{ opacity: 1 }}
-                      whileTap={{ opacity: 1 }}
-                      transition={{ duration: 0.25 }}
+                    <div
+                      className="cap-tile-glow absolute inset-0 rounded-xl pointer-events-none"
                       style={{
                         background: `radial-gradient(circle at 50% 50%, ${capColor}18 0%, transparent 70%)`,
                       }}
@@ -625,12 +635,8 @@ export default function AboutSection() {
                       {t(cap.key as Parameters<typeof t>[0])}
                     </span>
                     {/* Bottom accent line on hover */}
-                    <motion.div
-                      className="absolute bottom-0 left-0 h-0.5 rounded-full z-10"
-                      initial={{ width: "0%" }}
-                      whileHover={{ width: "100%" }}
-                      whileTap={{ width: "100%" }}
-                      transition={{ duration: 0.35, ease: "easeOut" }}
+                    <div
+                      className="cap-tile-line absolute bottom-0 left-0 h-0.5 rounded-full z-10"
                       style={{ background: capColor }}
                     />
                   </motion.div>
@@ -736,5 +742,6 @@ export default function AboutSection() {
           </motion.div>
         </div>
     </section>
+    </>
   );
 }
