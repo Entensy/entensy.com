@@ -149,6 +149,7 @@
       "databases": "Databases",
       "mobile": "Mobile",
       "devops": "DevOps & Cloud",
+      "gamedev": "Game Dev",
       "design": "Design"
     }
   },
@@ -263,7 +264,8 @@
       "error": "Something went wrong. Please try again or email us directly.",
       "error_name": "Name must be at least 2 characters",
       "error_email": "Please enter a valid email address",
-      "error_message": "Message must be at least 10 characters"
+      "error_message": "Message must be at least 10 characters",
+      "error_captcha": "CAPTCHA verification failed. Please complete the security check and try again."
     },
     "cta_card_title": "Let's Build Something Amazing",
     "cta_card_desc": "We respond to every inquiry within 24 hours. Your project matters to us.",

@@ -27,12 +27,22 @@ interface TurnstileProps {
   siteKey: string;
   onToken: (token: string) => void;
   onExpire?: () => void;
+  onScriptError?: () => void;
   theme?: "light" | "dark" | "auto";
 }
 
-export default function Turnstile({ siteKey, onToken, onExpire, theme = "auto" }: TurnstileProps) {
+export default function Turnstile({ siteKey, onToken, onExpire, onScriptError, theme = "auto" }: TurnstileProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);
+
+  // Keep latest callbacks in refs so the widget always calls the current version
+  // without the effect having to re-run (and tear down the widget) on every render.
+  const onTokenRef = useRef(onToken);
+  const onExpireRef = useRef(onExpire);
+  const onScriptErrorRef = useRef(onScriptError);
+  onTokenRef.current = onToken;
+  onExpireRef.current = onExpire;
+  onScriptErrorRef.current = onScriptError;
 
   useEffect(() => {
     const render = () => {
@@ -40,8 +50,8 @@ export default function Turnstile({ siteKey, onToken, onExpire, theme = "auto" }
       if (widgetIdRef.current) return; // already rendered
       widgetIdRef.current = window.turnstile.render(containerRef.current, {
         sitekey: siteKey,
-        callback: onToken,
-        "expired-callback": onExpire,
+        callback: (token: string) => onTokenRef.current(token),
+        "expired-callback": () => onExpireRef.current?.(),
         theme,
         size: "normal",
       });
@@ -49,24 +59,27 @@ export default function Turnstile({ siteKey, onToken, onExpire, theme = "auto" }
 
     if (window.turnstile) {
       render();
-      return;
+    } else {
+      // Lazy-load the Turnstile script only when the form is in view
+      const script = document.createElement("script");
+      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+      script.async = true;
+      script.defer = true;
+      script.onload = render;
+      script.onerror = () => onScriptErrorRef.current?.();
+      document.head.appendChild(script);
     }
 
-    // Lazy-load the Turnstile script only when the form is in view
-    const script = document.createElement("script");
-    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
-    script.async = true;
-    script.defer = true;
-    script.onload = render;
-    document.head.appendChild(script);
-
+    // Always clean up — whether the widget was rendered immediately or after script load
     return () => {
       if (widgetIdRef.current && window.turnstile) {
         window.turnstile.remove(widgetIdRef.current);
         widgetIdRef.current = null;
       }
     };
-  }, [siteKey, onToken, onExpire, theme]);
+  // Callbacks are intentionally excluded — they're read through refs above
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [siteKey, theme]);
 
   return <div ref={containerRef} className="mt-1" />;
 }
