@@ -276,7 +276,7 @@ export default function HomeSection() {
 
       {/* Scroll indicator */}
       <motion.button
-        className="absolute bottom-4 md:bottom-5 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2 px-3 py-2 rounded-full"
+        className="absolute bottom-1 md:bottom-2 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2 px-3 py-2 rounded-full"
         style={{ color: "var(--text-muted)" }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 0.52 }}
