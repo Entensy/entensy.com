@@ -15,42 +15,58 @@ export default function ThemeToggle() {
     const newTheme = isDark ? "light" : "dark";
     const newBg = newTheme === "dark" ? "#0D0A1E" : "#F5F5F8";
 
-    const rect = btn?.getBoundingClientRect();
-    const x = rect ? Math.round(rect.left + rect.width / 2) : window.innerWidth - 40;
-    const y = rect ? Math.round(rect.top + rect.height / 2) : window.innerHeight - 40;
+    if (!btn || !document.startViewTransition) {
+      // Fallback: ripple via DOM overlay
+      const rect = btn?.getBoundingClientRect();
+      const x = rect ? Math.round(rect.left + rect.width / 2) : window.innerWidth - 40;
+      const y = rect ? Math.round(rect.top + rect.height / 2) : window.innerHeight - 40;
 
-    // Ripple overlay expands from the button, theme swap happens beneath it
-    const overlay = document.createElement("div");
-    overlay.style.cssText = `
-      position:fixed;inset:0;z-index:99997;
-      background:${newBg};
-      clip-path:circle(0px at ${x}px ${y}px);
-      pointer-events:none;
-      will-change:clip-path;
-    `;
-    document.body.appendChild(overlay);
+      const overlay = document.createElement("div");
+      overlay.style.cssText = `
+        position:fixed;inset:0;z-index:99997;
+        background:${newBg};
+        clip-path:circle(0px at ${x}px ${y}px);
+        pointer-events:none;
+        will-change:clip-path;
+      `;
+      document.body.appendChild(overlay);
 
-    requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        overlay.style.transition = "clip-path 0.55s cubic-bezier(0.22,1,0.36,1)";
-        overlay.style.clipPath = `circle(200vmax at ${x}px ${y}px)`;
+        requestAnimationFrame(() => {
+          overlay.style.transition = "clip-path 0.55s cubic-bezier(0.22,1,0.36,1)";
+          overlay.style.clipPath = `circle(200vmax at ${x}px ${y}px)`;
+        });
+      });
+
+      overlay.addEventListener(
+        "transitionend",
+        () => {
+          // Freeze all CSS transitions so nothing lags behind the reveal
+          document.documentElement.classList.add("theme-switching");
+          setTheme(newTheme);
+          // Two rAF: first lets React apply the new class, second lets browser paint
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              document.documentElement.classList.remove("theme-switching");
+              overlay.remove();
+            });
+          });
+        },
+        { once: true }
+      );
+      return;
+    }
+
+    // Native View Transitions API — smoother in supported browsers
+    document.startViewTransition(() => {
+      document.documentElement.classList.add("theme-switching");
+      setTheme(newTheme);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          document.documentElement.classList.remove("theme-switching");
+        });
       });
     });
-
-    overlay.addEventListener(
-      "transitionend",
-      () => {
-        document.documentElement.classList.add("theme-switching");
-        setTheme(newTheme);
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            document.documentElement.classList.remove("theme-switching");
-            overlay.remove();
-          });
-        });
-      },
-      { once: true }
-    );
   };
 
   return (
@@ -69,18 +85,16 @@ export default function ThemeToggle() {
       transition={{ delay: 1, type: "spring", stiffness: 270, damping: 20 }}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
     >
-      {/* popLayout: exit and enter animate simultaneously — no visibility gap */}
-      <AnimatePresence mode="popLayout" initial={false}>
+      <AnimatePresence mode="wait">
         {isDark ? (
           <motion.div
             key="moon"
             initial={{ rotate: -90, opacity: 0, scale: 0.5 }}
             animate={{ rotate: 0, opacity: 1, scale: 1 }}
             exit={{ rotate: 90, opacity: 0, scale: 0.5 }}
-            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-            style={{ color: "#C9A84C", display: "flex" }}
+            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
           >
-            <Moon size={18} />
+            <Moon size={18} className="text-gold" />
           </motion.div>
         ) : (
           <motion.div
@@ -88,10 +102,9 @@ export default function ThemeToggle() {
             initial={{ rotate: 90, opacity: 0, scale: 0.5 }}
             animate={{ rotate: 0, opacity: 1, scale: 1 }}
             exit={{ rotate: -90, opacity: 0, scale: 0.5 }}
-            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-            style={{ color: "#C9A84C", display: "flex" }}
+            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
           >
-            <Sun size={18} />
+            <Sun size={18} className="text-gold" />
           </motion.div>
         )}
       </AnimatePresence>
