@@ -46,13 +46,8 @@ const CSS = `
   @media (hover: hover) {
     .sol-shell:hover .card-border-ring { opacity: 1; filter: saturate(1.5) brightness(1.4); }
     .sol-shell:hover .sol-icon { transform: scale(1.1) rotate(-5deg); }
-    .sol-shell:hover .sol-line { width: 100%; }
   }
-  .sol-shell:active .card-border-ring { opacity: 1; filter: saturate(1.5) brightness(1.4); }
-  .sol-shell:active .sol-icon { transform: scale(1.1) rotate(-5deg); }
-  .sol-shell:active .sol-line { width: 100%; }
   .sol-icon { transition: transform 0.25s cubic-bezier(0.22,1,0.36,1); }
-  .sol-line { width: 0; transition: width 0.4s ease-out; }
 `;
 
 const WATERMARK_POSITIONS = [
@@ -230,10 +225,6 @@ function SolutionCard({
             )}
 
             {/* Bottom accent line */}
-            <div
-              className="sol-line absolute bottom-0 left-0 h-0.5 rounded-full z-10"
-              style={{ background: solution.color, opacity: 0.7 }}
-            />
           </div>
         </div>
       </TiltCard>

@@ -40,13 +40,8 @@ const CSS = `
   @media (hover: hover) {
     .svc-shell:hover .card-border-ring { opacity: 1; filter: saturate(1.5) brightness(1.4); }
     .svc-shell:hover .svc-icon { transform: scale(1.1) rotate(4deg); }
-    .svc-shell:hover .svc-line { width: 100%; }
   }
-  .svc-shell:active .card-border-ring { opacity: 1; filter: saturate(1.5) brightness(1.4); }
-  .svc-shell:active .svc-icon { transform: scale(1.1) rotate(4deg); }
-  .svc-shell:active .svc-line { width: 100%; }
   .svc-icon { transition: transform 0.25s cubic-bezier(0.22,1,0.36,1); }
-  .svc-line { width: 0; transition: width 0.4s ease-out; }
 `;
 
 const WATERMARK_POSITIONS = [
@@ -208,12 +203,6 @@ function ServiceCard({
             )}
 
             {/* Bottom accent line */}
-            <div
-              className="svc-line absolute bottom-0 left-0 h-0.5 rounded-full z-10"
-              style={{
-                background: `linear-gradient(90deg, ${service.gradientFrom}, ${service.gradientTo})`,
-              }}
-            />
           </div>
         </div>
       </TiltCard>

@@ -31,18 +31,9 @@ gsap.registerPlugin(ScrollTrigger);
 
 const CSS = `
   .cap-tile-glow { opacity: 0; transition: opacity 0.25s ease; }
-  .cap-tile-line { width: 0; transition: width 0.35s ease-out; }
   @media (hover: hover) {
     .cap-tile:hover .cap-tile-glow { opacity: 1; }
-    .cap-tile:hover .cap-tile-line { width: 100%; }
   }
-  .cap-tile:active .cap-tile-glow { opacity: 1; }
-  .cap-tile:active .cap-tile-line { width: 100%; }
-  .pillar-line { width: 0; transition: width 0.4s ease-out; }
-  @media (hover: hover) {
-    .pillar-card:hover .pillar-line { width: 100%; }
-  }
-  .pillar-card:active .pillar-line { width: 100%; }
 `;
 
 // ─── Data ────────────────────────────────────────────────────────────────────
@@ -225,11 +216,6 @@ function PillarCard({
             {t(`pillars.${pillar.key}.desc` as Parameters<typeof t>[0])}
           </p>
 
-          {/* Bottom line — animates width on hover/active */}
-          <div
-            className="pillar-line h-px rounded-full"
-            style={{ background: `linear-gradient(90deg, ${pillar.color}, ${pillar.color}50, transparent)` }}
-          />
         </div>
       </motion.div>
   );
@@ -634,11 +620,6 @@ export default function AboutSection() {
                     <span className="text-xs font-semibold leading-snug relative z-10" style={{ color: "var(--text-muted)" }}>
                       {t(cap.key as Parameters<typeof t>[0])}
                     </span>
-                    {/* Bottom accent line on hover */}
-                    <div
-                      className="cap-tile-line absolute bottom-0 left-0 h-0.5 rounded-full z-10"
-                      style={{ background: capColor }}
-                    />
                   </motion.div>
                 );
               })}

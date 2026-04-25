@@ -43,10 +43,6 @@ const CSS = `
       filter: saturate(1.3) brightness(1.25);
     }
   }
-  .portfolio-shell:active .card-border-ring {
-    opacity: 0.9;
-    filter: saturate(1.3) brightness(1.25);
-  }
 `;
 
 const WATERMARK_POSITIONS = [
