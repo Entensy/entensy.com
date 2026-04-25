@@ -122,104 +122,100 @@ export default function Navbar() {
             }}
             transition={SPRING}
           >
-            {/* Logo */}
-            <motion.a
-              href="#home"
-              onClick={(e) => { e.preventDefault(); handleNavClick("#home"); }}
-              className="flex items-center gap-2 shrink-0 group"
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.99 }}
-            >
-              <Image
-                src="/images/logo.png"
-                alt="ENTENSY"
-                width={120}
-                height={36}
-                className="h-5 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
-                priority
-              />
-              <span
-                className="navbar-brand-name text-sm font-black select-none"
-                style={{ color: "rgba(218, 213, 255, 0.82)", letterSpacing: "0.18em" }}
+              {/* Logo */}
+              <motion.a
+                href="#home"
+                onClick={(e) => { e.preventDefault(); handleNavClick("#home"); }}
+                className="flex items-center gap-2 shrink-0 group"
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.99 }}
               >
-                {t("brand")}
-              </span>
-            </motion.a>
+                <Image
+                  src="/images/logo.png"
+                  alt="ENTENSY"
+                  width={120}
+                  height={36}
+                  className="h-5 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                  priority
+                />
+                <span
+                  className="navbar-brand-name text-sm font-black select-none"
+                  style={{ color: "rgba(218, 213, 255, 0.82)", letterSpacing: "0.18em" }}
+                >
+                  {t("brand")}
+                </span>
+              </motion.a>
 
-            {/* Desktop Links */}
-            <ul
-              ref={linksListRef}
-              className={cn(desktopLinksClass, "items-center gap-2 flex-nowrap")}
-              style={{ display: linksOverflow ? "none" : undefined }}
-            >
-              {navLinks.map((link) => (
-                <li key={link.key}>
-                  <button
-                    onClick={() => handleNavClick(link.href)}
-                    className={cn(
-                      "navbar-link-text relative px-3.5 py-2 text-sm font-medium rounded-full transition-colors duration-200 whitespace-nowrap",
-                      activeSection === link.href.replace("#", "")
-                        ? "text-brand"
-                        : "hover:text-[rgba(230,226,255,0.88)]"
+              {/* Desktop Links */}
+              <ul
+                ref={linksListRef}
+                className={cn(desktopLinksClass, "items-center gap-2 flex-nowrap")}
+                style={{ display: linksOverflow ? "none" : undefined }}
+              >
+                {navLinks.map((link) => (
+                  <li key={link.key}>
+                    <button
+                      onClick={() => handleNavClick(link.href)}
+                      className={cn(
+                        "navbar-link-text relative px-3.5 py-2 text-sm font-medium rounded-full transition-colors duration-200 whitespace-nowrap hover:text-brand",
+                        activeSection === link.href.replace("#", "")
+                          ? "text-brand"
+                          : "text-(--text-muted)"
+                      )}
+                    >
+                      {t(link.key as Parameters<typeof t>[0])}
+                      {activeSection === link.href.replace("#", "") && (
+                        <motion.span
+                          layoutId="nav-indicator"
+                          className="absolute inset-0 rounded-full bg-brand/10"
+                          transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                        />
+                      )}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+
+              {/* Right side — always LTR so buttons never flip outside the nav in RTL pages */}
+              <div className="flex items-center gap-2.5 shrink-0" dir="ltr">
+                {isRtlLocale && <LanguageSwitcher />}
+                <motion.button
+                  onClick={() => handleNavClick("#contact")}
+                  className="hidden md:flex items-center gap-2 px-5 py-2 rounded-full text-sm font-semibold text-white whitespace-nowrap"
+                  style={{ background: "#FC002A", boxShadow: "0 0 18px rgba(252,0,42,0.22)" }}
+                  whileHover={{ scale: 1.03, y: -1, background: "#D4001F", boxShadow: "0 0 24px rgba(252,0,42,0.38)" }}
+                  whileTap={{ scale: 0.97, y: 0 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                >
+                  {t("get_started")}
+                </motion.button>
+                {!isRtlLocale && <LanguageSwitcher />}
+
+                {/* Hamburger — also shown when desktop links overflow */}
+                <motion.button
+                  className={cn(hamburgerHideClass, "w-9 h-9 flex items-center justify-center rounded-full")}
+                  style={{
+                    display: linksOverflow ? "flex" : undefined,
+                    background: "rgba(255,255,255,0.06)",
+                    border: "1px solid rgba(255,255,255,0.09)",
+                  }}
+                  onClick={() => setMobileOpen((v) => !v)}
+                  whileTap={{ scale: 0.96 }}
+                  aria-label="Toggle mobile menu"
+                >
+                  <AnimatePresence mode="wait">
+                    {mobileOpen ? (
+                      <motion.div key="x" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.18 }}>
+                        <X size={16} />
+                      </motion.div>
+                    ) : (
+                      <motion.div key="menu" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.18 }}>
+                        <Menu size={16} />
+                      </motion.div>
                     )}
-                    style={{
-                      color: activeSection === link.href.replace("#", "")
-                        ? "#FC002A"
-                        : "rgba(200, 196, 240, 0.62)",
-                    }}
-                  >
-                    {t(link.key as Parameters<typeof t>[0])}
-                    {activeSection === link.href.replace("#", "") && (
-                      <motion.span
-                        layoutId="nav-indicator"
-                        className="absolute inset-0 rounded-full bg-brand/10"
-                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                      />
-                    )}
-                  </button>
-                </li>
-              ))}
-            </ul>
-
-            {/* Right side — always LTR so buttons never flip outside the nav in RTL pages */}
-            <div className="flex items-center gap-2.5 shrink-0" dir="ltr">
-              <motion.button
-                onClick={() => handleNavClick("#contact")}
-                className="hidden md:flex items-center gap-2 px-5 py-2 rounded-full text-sm font-semibold text-white whitespace-nowrap"
-                style={{ background: "#FC002A", boxShadow: "0 0 18px rgba(252,0,42,0.22)" }}
-                whileHover={{ scale: 1.03, y: -1, background: "#D4001F", boxShadow: "0 0 24px rgba(252,0,42,0.38)" }}
-                whileTap={{ scale: 0.97, y: 0 }}
-                transition={{ type: "spring", stiffness: 400, damping: 20 }}
-              >
-                {t("get_started")}
-              </motion.button>
-              <LanguageSwitcher />
-
-              {/* Hamburger — also shown when desktop links overflow */}
-              <motion.button
-                className={cn(hamburgerHideClass, "w-9 h-9 flex items-center justify-center rounded-full")}
-                style={{
-                  display: linksOverflow ? "flex" : undefined,
-                  background: "rgba(255,255,255,0.06)",
-                  border: "1px solid rgba(255,255,255,0.09)",
-                }}
-                onClick={() => setMobileOpen((v) => !v)}
-                whileTap={{ scale: 0.96 }}
-                aria-label="Toggle mobile menu"
-              >
-                <AnimatePresence mode="wait">
-                  {mobileOpen ? (
-                    <motion.div key="x" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.18 }}>
-                      <X size={16} />
-                    </motion.div>
-                  ) : (
-                    <motion.div key="menu" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.18 }}>
-                      <Menu size={16} />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.button>
-            </div>
+                  </AnimatePresence>
+                </motion.button>
+              </div>
           </motion.nav>
         </motion.div>
       </header>
