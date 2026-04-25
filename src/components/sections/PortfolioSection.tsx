@@ -37,7 +37,13 @@ const CSS = `
     opacity: 0.28;
     transition: opacity 0.3s ease, filter 0.3s ease;
   }
-  .portfolio-shell:hover .card-border-ring {
+  @media (hover: hover) {
+    .portfolio-shell:hover .card-border-ring {
+      opacity: 0.9;
+      filter: saturate(1.3) brightness(1.25);
+    }
+  }
+  .portfolio-shell:active .card-border-ring {
     opacity: 0.9;
     filter: saturate(1.3) brightness(1.25);
   }

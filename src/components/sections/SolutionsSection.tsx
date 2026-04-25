@@ -43,7 +43,13 @@ const CSS = `
     opacity: 0.45;
     transition: opacity 0.25s ease, filter 0.25s ease;
   }
-  .sol-shell:hover .card-border-ring {
+  @media (hover: hover) {
+    .sol-shell:hover .card-border-ring {
+      opacity: 1;
+      filter: saturate(1.5) brightness(1.4);
+    }
+  }
+  .sol-shell:active .card-border-ring {
     opacity: 1;
     filter: saturate(1.5) brightness(1.4);
   }
@@ -94,6 +100,8 @@ function SolutionCard({
       variants={cardEntranceVariant}
       custom={index}
       className={`${colSpan} ${centerClass} h-full`}
+      whileTap={{ scale: 0.97 }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
     >
       <TiltCard tiltMaxAngle={8}>
         <div
@@ -153,6 +161,7 @@ function SolutionCard({
             <div className="flex items-start justify-between gap-3 relative z-10">
               <motion.div
                 whileHover={{ scale: 1.1, rotate: -5 }}
+                whileTap={{ scale: 1.1, rotate: -5 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
                 className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
                 style={{
@@ -228,6 +237,7 @@ function SolutionCard({
               className="absolute bottom-0 left-0 h-0.5 rounded-full z-10"
               initial={{ width: "0%" }}
               whileHover={{ width: "100%" }}
+              whileTap={{ width: "100%" }}
               transition={{ duration: 0.4, ease: "easeOut" }}
               style={{ background: solution.color, opacity: 0.7 }}
             />

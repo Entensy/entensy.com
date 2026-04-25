@@ -141,6 +141,9 @@ function PillarCard({
         transition={{ type: "spring", stiffness: 280, damping: 22 }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
+        onTouchStart={() => setHovered(true)}
+        onTouchEnd={() => setHovered(false)}
+        onTouchCancel={() => setHovered(false)}
       >
         {/* Diagonal top-left slash */}
         <div className="absolute top-0 left-0 pointer-events-none rounded-tl-2xl overflow-hidden" style={{ width: "68%", height: "55%" }}>
@@ -590,6 +593,7 @@ export default function AboutSection() {
                     variants={fadeUpVariant}
                     className={`rounded-xl px-3 py-4 flex flex-col items-center gap-2 text-center cursor-default relative overflow-hidden ${capCenter}`}
                     whileHover={{ scale: 1.05, y: -2 }}
+                    whileTap={{ scale: 1.03, y: -1 }}
                     transition={{ type: "spring", stiffness: 320, damping: 18 }}
                     style={{
                       background: `${capColor}0a`,
@@ -601,6 +605,7 @@ export default function AboutSection() {
                       className="absolute inset-0 rounded-xl pointer-events-none"
                       initial={{ opacity: 0 }}
                       whileHover={{ opacity: 1 }}
+                      whileTap={{ opacity: 1 }}
                       transition={{ duration: 0.25 }}
                       style={{
                         background: `radial-gradient(circle at 50% 50%, ${capColor}18 0%, transparent 70%)`,
@@ -624,6 +629,7 @@ export default function AboutSection() {
                       className="absolute bottom-0 left-0 h-0.5 rounded-full z-10"
                       initial={{ width: "0%" }}
                       whileHover={{ width: "100%" }}
+                      whileTap={{ width: "100%" }}
                       transition={{ duration: 0.35, ease: "easeOut" }}
                       style={{ background: capColor }}
                     />
@@ -651,6 +657,11 @@ export default function AboutSection() {
               y: -6,
               borderColor: "rgba(244,63,94,0.62)",
               boxShadow: "0 28px 64px rgba(244,63,94,0.22), 0 8px 32px rgba(244,63,94,0.14)",
+            }}
+            whileTap={{
+              scale: 0.98,
+              borderColor: "rgba(244,63,94,0.62)",
+              boxShadow: "0 12px 40px rgba(244,63,94,0.20), 0 4px 16px rgba(244,63,94,0.12)",
             }}
             transition={{ type: "spring", stiffness: 280, damping: 24 }}
             onMouseEnter={() => setCtaHovered(true)}
