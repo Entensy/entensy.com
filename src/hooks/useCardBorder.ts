@@ -32,10 +32,15 @@ function releaseOrbit() {
   }
 }
 
+const SPOTLIGHT_SPEED_IN  = 600; // px/s — snappy approach to tap point
+const SPOTLIGHT_SPEED_OUT = 280; // px/s — slower, relaxed return to orbit
+
 // ─── Hook ─────────────────────────────────────────────────────────────────────
 
 export function useCardBorder(shellRef: React.RefObject<HTMLElement | null>) {
   const isHoveringRef = useRef(false);
+  const lastTouchRef = useRef(0);
+  const returnTweenRef = useRef<gsap.core.Tween | null>(null);
 
   useEffect(() => {
     const shell = shellRef.current;
@@ -75,6 +80,8 @@ export function useCardBorder(shellRef: React.RefObject<HTMLElement | null>) {
 
   const handleBorderMouseMove = useCallback(
     (e: React.MouseEvent<HTMLElement>) => {
+      // iOS fires fake mousemove after touchend — ignore events within 600 ms of a touch
+      if (Date.now() - lastTouchRef.current < 600) return;
       const shell = shellRef.current;
       if (!shell) return;
       isHoveringRef.current = true;
@@ -120,5 +127,113 @@ export function useCardBorder(shellRef: React.RefObject<HTMLElement | null>) {
     }
   }, [shellRef]);
 
-  return { handleBorderMouseMove, handleBorderMouseLeave };
+  // Reads the current orbit position from sharedProxy so we can animate to/from it.
+  const getOrbitPos = useCallback((shell: HTMLElement) => {
+    const W = shell.offsetWidth;
+    const H = shell.offsetHeight;
+    const perim = 2 * (W + H);
+    const pos = (sharedProxy.t % 1) * perim;
+    if (pos < W)           return { mx: pos,           my: 0             };
+    if (pos < W + H)       return { mx: W,             my: pos - W       };
+    if (pos < 2 * W + H)   return { mx: W - (pos - W - H), my: H        };
+    return                        { mx: 0,             my: H - (pos - 2 * W - H) };
+  }, []);
+
+  // Smoothly animates the spotlight from its current orbit position to the touch point.
+  const handleTouchStart = useCallback((e: React.TouchEvent<HTMLElement>) => {
+    const shell = shellRef.current;
+    if (!shell) return;
+    const touch = e.touches[0];
+    const rect = shell.getBoundingClientRect();
+    const targetMx = touch.clientX - rect.left;
+    const targetMy = touch.clientY - rect.top;
+
+    // Kill any in-progress return animation so its onComplete never fires
+    if (returnTweenRef.current) {
+      returnTweenRef.current.kill();
+      returnTweenRef.current = null;
+    }
+
+    // Pause orbit tick immediately
+    isHoveringRef.current = true;
+
+    const ring = shell.querySelector<HTMLElement>(".card-border-ring");
+    const cursorGlow = shell.querySelector<HTMLElement>(".card-cursor-glow");
+
+    if (ring) {
+      // Start from wherever the orbit is right now
+      const { mx: fromMx, my: fromMy } = getOrbitPos(shell);
+      const dist = Math.hypot(targetMx - fromMx, targetMy - fromMy);
+      const duration = Math.max(0.18, Math.min(0.55, dist / SPOTLIGHT_SPEED_IN));
+      const proxy = { mx: fromMx, my: fromMy };
+      gsap.to(proxy, {
+        mx: targetMx,
+        my: targetMy,
+        duration,
+        ease: "power2.out",
+        overwrite: "auto",
+        onUpdate: () => {
+          ring.style.setProperty("--mx", proxy.mx + "px");
+          ring.style.setProperty("--my", proxy.my + "px");
+        },
+      });
+    }
+
+    if (cursorGlow) {
+      const dist = Math.hypot(targetMx - rect.width / 2, targetMy - rect.height / 2);
+      const duration = Math.max(0.18, Math.min(0.55, dist / SPOTLIGHT_SPEED_IN));
+      gsap.to(cursorGlow, {
+        x: targetMx - rect.width / 2,
+        y: targetMy - rect.height / 2,
+        opacity: 1,
+        duration,
+        ease: "power2.out",
+        overwrite: "auto",
+      });
+    }
+  }, [shellRef, getOrbitPos]);
+
+  // Smoothly animates the spotlight back to the current orbit position, then hands off to the tick.
+  // Also records the timestamp to block iOS's simulated mousemove.
+  const handleTouchEnd = useCallback(() => {
+    lastTouchRef.current = Date.now();
+    const shell = shellRef.current;
+    if (!shell) return;
+
+    const ring = shell.querySelector<HTMLElement>(".card-border-ring");
+    const cursorGlow = shell.querySelector<HTMLElement>(".card-cursor-glow");
+
+    if (cursorGlow) {
+      gsap.to(cursorGlow, { opacity: 0, duration: 0.35, ease: "power1.in", overwrite: "auto" });
+    }
+
+    if (ring) {
+      // Animate back to wherever the orbit is right now, then resume the tick
+      const { mx: toMx, my: toMy } = getOrbitPos(shell);
+      const fromMx = parseFloat(ring.style.getPropertyValue("--mx") || String(toMx));
+      const fromMy = parseFloat(ring.style.getPropertyValue("--my") || String(toMy));
+      const dist = Math.hypot(toMx - fromMx, toMy - fromMy);
+      const duration = Math.max(0.5, Math.min(1.0, dist / SPOTLIGHT_SPEED_OUT));
+      const proxy = { mx: fromMx, my: fromMy };
+      returnTweenRef.current = gsap.to(proxy, {
+        mx: toMx,
+        my: toMy,
+        duration,
+        ease: "power2.inOut",
+        overwrite: "auto",
+        onUpdate: () => {
+          ring.style.setProperty("--mx", proxy.mx + "px");
+          ring.style.setProperty("--my", proxy.my + "px");
+        },
+        onComplete: () => {
+          returnTweenRef.current = null;
+          isHoveringRef.current = false;
+        },
+      });
+    } else {
+      isHoveringRef.current = false;
+    }
+  }, [shellRef, getOrbitPos]);
+
+  return { handleBorderMouseMove, handleBorderMouseLeave, handleTouchStart, handleTouchEnd };
 }

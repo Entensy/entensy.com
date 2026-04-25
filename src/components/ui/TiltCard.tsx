@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { cn } from "@/lib/utils";
 
@@ -11,6 +11,17 @@ interface TiltCardProps {
   scale?: number;
 }
 
+const reset = (el: HTMLDivElement | null) => {
+  gsap.to(el, {
+    rotateY: 0,
+    rotateX: 0,
+    scale: 1,
+    duration: 0.5,
+    ease: "power3.out",
+    overwrite: "auto",
+  });
+};
+
 export default function TiltCard({
   children,
   className,
@@ -18,11 +29,14 @@ export default function TiltCard({
   scale = 1.02,
 }: TiltCardProps) {
   const innerRef = useRef<HTMLDivElement>(null);
+  const isTouching = useRef(false);
+  const touchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const cx = (e.clientX - rect.left) / rect.width - 0.5;
-    const cy = (e.clientY - rect.top) / rect.height - 0.5;
+  useEffect(() => () => { if (touchTimer.current) clearTimeout(touchTimer.current); }, []);
+
+  const tiltTo = (rect: DOMRect, clientX: number, clientY: number) => {
+    const cx = (clientX - rect.left) / rect.width - 0.5;
+    const cy = (clientY - rect.top) / rect.height - 0.5;
     gsap.to(innerRef.current, {
       rotateY: cx * tiltMaxAngle * 2,
       rotateX: -cy * tiltMaxAngle * 2,
@@ -33,15 +47,31 @@ export default function TiltCard({
     });
   };
 
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (isTouching.current) return;
+    tiltTo(e.currentTarget.getBoundingClientRect(), e.clientX, e.clientY);
+  };
+
   const handleMouseLeave = () => {
-    gsap.to(innerRef.current, {
-      rotateY: 0,
-      rotateX: 0,
-      scale: 1,
-      duration: 0.5,
-      ease: "power3.out",
-      overwrite: "auto",
-    });
+    if (isTouching.current) return;
+    reset(innerRef.current);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    isTouching.current = true;
+    const touch = e.touches[0];
+    tiltTo(e.currentTarget.getBoundingClientRect(), touch.clientX, touch.clientY);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    const touch = e.touches[0];
+    tiltTo(e.currentTarget.getBoundingClientRect(), touch.clientX, touch.clientY);
+  };
+
+  const handleTouchEnd = () => {
+    reset(innerRef.current);
+    if (touchTimer.current) clearTimeout(touchTimer.current);
+    touchTimer.current = setTimeout(() => { isTouching.current = false; }, 300);
   };
 
   return (
@@ -50,6 +80,10 @@ export default function TiltCard({
       style={{ perspective: "1000px" }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      onTouchCancel={handleTouchEnd}
     >
       <div
         ref={innerRef}
