@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { useTheme } from "@/components/layout/ThemeContext";
+import { useHoverCapable } from "@/hooks/useHoverCapable";
 import {
   staggerContainerVariant,
   fadeUpVariant,
@@ -128,6 +129,7 @@ function PillarCard({
   const [hovered, setHovered] = useState(false);
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
+  const canHover = useHoverCapable();
 
   const cardBg      = isDark ? "rgba(13,10,30,0.88)"       : "rgba(255,255,255,0.82)";
   const shadowBase  = isDark
@@ -143,12 +145,16 @@ function PillarCard({
         style={{ background: cardBg, boxShadow: shadowBase }}
         animate={{
           boxShadow: hovered ? shadowHover : shadowBase,
-          y: hovered ? -4 : 0,
+          y: hovered ? -1 : 0,
+          scale: hovered ? 1.005 : 1,
         }}
         transition={{ type: "spring", stiffness: 280, damping: 22 }}
-        whileTap={{ y: -4, boxShadow: shadowHover }}
-        onMouseEnter={() => setHovered(true)}
+        whileTap={{ scale: 1.005, boxShadow: shadowHover, transition: { duration: 0.15, ease: "easeOut" } }}
+        onMouseEnter={canHover ? () => setHovered(true) : undefined}
         onMouseLeave={() => setHovered(false)}
+        onTouchStart={() => setHovered(true)}
+        onTouchEnd={() => setHovered(false)}
+        onTouchCancel={() => setHovered(false)}
       >
         {/* Diagonal top-left slash */}
         <div className="absolute top-0 left-0 pointer-events-none rounded-tl-2xl overflow-hidden" style={{ width: "68%", height: "55%" }}>
@@ -281,23 +287,17 @@ export default function AboutSection() {
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
 
+  const canHover = useHoverCapable();
   const panelBg      = isDark ? "rgba(13,10,30,0.88)"      : "rgba(255,255,255,0.82)";
   const panelShadow  = isDark ? "0 0 0 1px rgba(255,255,255,0.05)" : "0 0 0 1px rgba(13,10,30,0.07), 0 4px 24px rgba(13,10,30,0.05)";
   const dividerBg    = isDark ? "rgba(255,255,255,0.05)"    : "rgba(13,10,30,0.06)";
   const cellBg       = isDark ? "rgba(13,10,30,0.88)"       : "rgba(255,255,255,0.82)";
 
   const ctaCardRef = useRef<HTMLDivElement>(null);
+  const ctaBtnRef = useRef<HTMLButtonElement>(null);
+  const [bannerActive, setBannerActive] = useState(false);
   const [ctaHovered, setCtaHovered] = useState(false);
-  const [ctaMouse, setCtaMouse] = useState({ x: 50, y: 50 });
-
-  const handleCtaMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!ctaCardRef.current) return;
-    const rect = ctaCardRef.current.getBoundingClientRect();
-    setCtaMouse({
-      x: ((e.clientX - rect.left) / rect.width) * 100,
-      y: ((e.clientY - rect.top) / rect.height) * 100,
-    });
-  };
+  const [ctaTapped, setCtaTapped] = useState(false);
 
   return (
     <>
@@ -352,7 +352,20 @@ export default function AboutSection() {
                 "linear-gradient(135deg, rgba(244,63,94,0.08) 0%, rgba(13,10,30,0.9) 40%, rgba(124,58,237,0.08) 100%)",
               border: "1px solid rgba(244,63,94,0.18)",
             }}
+            onMouseEnter={canHover ? () => setBannerActive(true) : undefined}
+            onMouseLeave={canHover ? () => setBannerActive(false) : undefined}
+            onTouchStart={() => setBannerActive(true)}
+            onTouchEnd={() => setBannerActive(false)}
+            onTouchCancel={() => setBannerActive(false)}
           >
+            {/* Hover/tap red glow overlay */}
+            <motion.div
+              className="absolute inset-0 rounded-3xl pointer-events-none"
+              style={{ background: "linear-gradient(135deg, rgba(244,63,94,0.22) 0%, transparent 45%)" }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: bannerActive ? 1 : 0 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+            />
             {/* Inner grid pattern */}
             <div
               className="absolute inset-0 pointer-events-none"
@@ -477,8 +490,11 @@ export default function AboutSection() {
                 <motion.div
                   key={stat.valueKey}
                   variants={fadeUpVariant}
-                  className="relative flex flex-col items-center gap-3 text-center py-9 px-5"
+                  className="relative flex flex-col items-center gap-3 text-center py-9 px-5 cursor-default"
                   style={{ background: cellBg }}
+                  whileHover={canHover ? { boxShadow: `inset 0 0 40px ${stat.color}22` } : {}}
+                  whileTap={{ boxShadow: `inset 0 0 40px ${stat.color}22`, transition: { duration: 0.15, ease: "easeOut" } }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
                 >
                   {/* Per-stat radial glow from top */}
                   <div
@@ -592,7 +608,7 @@ export default function AboutSection() {
                     key={cap.key}
                     variants={fadeUpVariant}
                     className={`cap-tile rounded-xl px-3 py-4 flex flex-col items-center gap-2 text-center cursor-default relative overflow-hidden ${capCenter}`}
-                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileHover={canHover ? { scale: 1.05, y: -2 } : {}}
                     whileTap={{ scale: 1.03, y: -1 }}
                     transition={{ type: "spring", stiffness: 320, damping: 18 }}
                     style={{
@@ -640,20 +656,23 @@ export default function AboutSection() {
               borderStyle: "solid",
               borderColor: "rgba(244,63,94,0.22)",
             }}
-            whileHover={{
-              y: -6,
-              borderColor: "rgba(244,63,94,0.62)",
-              boxShadow: "0 28px 64px rgba(244,63,94,0.22), 0 8px 32px rgba(244,63,94,0.14)",
-            }}
-            whileTap={{
-              scale: 0.98,
-              borderColor: "rgba(244,63,94,0.62)",
+            animate={ctaTapped ? {
+              scale: 1.01,
               boxShadow: "0 12px 40px rgba(244,63,94,0.20), 0 4px 16px rgba(244,63,94,0.12)",
-            }}
+            } : { scale: 1 }}
+            whileHover={canHover ? {
+              y: -1,
+              borderColor: "rgba(244,63,94,0.32)",
+              boxShadow: "0 12px 32px rgba(244,63,94,0.08), 0 4px 12px rgba(244,63,94,0.05)",
+            } : {}}
             transition={{ type: "spring", stiffness: 280, damping: 24 }}
-            onMouseEnter={() => setCtaHovered(true)}
+            onMouseEnter={canHover ? () => setCtaHovered(true) : undefined}
             onMouseLeave={() => setCtaHovered(false)}
-            onMouseMove={handleCtaMouseMove}
+            onTouchStart={(e) => {
+              if (!ctaBtnRef.current?.contains(e.target as Node)) setCtaTapped(true);
+            }}
+            onTouchEnd={() => setCtaTapped(false)}
+            onTouchCancel={() => setCtaTapped(false)}
           >
             {/* Multi-layered gradient mesh */}
             <div className="absolute inset-0 pointer-events-none rounded-3xl overflow-hidden">
@@ -663,48 +682,40 @@ export default function AboutSection() {
               <div className="absolute inset-0 bg-grid-pattern opacity-8" />
             </div>
 
-            {/* Cursor-following spotlight — pure CSS transition, no Framer needed */}
-            <div
-              className="absolute inset-0 pointer-events-none rounded-3xl"
-              style={{
-                opacity: ctaHovered ? 1 : 0,
-                transition: "opacity 0.25s ease",
-                background: `radial-gradient(circle 380px at ${ctaMouse.x}% ${ctaMouse.y}%, rgba(244,63,94,0.13) 0%, rgba(124,58,237,0.07) 45%, transparent 70%)`,
-              }}
-            />
 
-            {/* Left side: icon + text */}
-            <div className="relative z-10 flex items-center gap-5">
-              <motion.div
-                className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0"
-                animate={{
-                  background: ctaHovered ? "rgba(244,63,94,0.24)" : "rgba(244,63,94,0.14)",
-                  boxShadow: ctaHovered
-                    ? "0 0 42px rgba(244,63,94,0.40), 0 0 16px rgba(244,63,94,0.22)"
-                    : "0 0 28px rgba(244,63,94,0.18)",
-                }}
-                transition={{ type: "spring", stiffness: 280, damping: 22 }}
-                style={{ border: "1px solid rgba(244,63,94,0.32)" }}
-              >
+            {/* Left side: title row (icon inline with text) + subtitle below */}
+            <div className="relative z-10 flex flex-col gap-1">
+              <div className="flex items-center gap-3">
                 <motion.div
-                  animate={{ x: ctaHovered ? (isRtlLocale ? -4 : 4) : 0 }}
-                  transition={{ type: "spring", stiffness: 320, damping: 16 }}
+                  className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                  animate={{
+                    background: ctaHovered ? "rgba(244,63,94,0.24)" : "rgba(244,63,94,0.14)",
+                    boxShadow: ctaHovered
+                      ? "0 0 42px rgba(244,63,94,0.40), 0 0 16px rgba(244,63,94,0.22)"
+                      : "0 0 28px rgba(244,63,94,0.18)",
+                  }}
+                  transition={{ type: "spring", stiffness: 280, damping: 22 }}
+                  style={{ border: "1px solid rgba(244,63,94,0.32)" }}
                 >
-                  <ArrowRight size={22} style={{ color: "#F43F5E" }} strokeWidth={2.5} className="rtl-arrow" />
+                  <motion.div
+                    animate={{ x: ctaHovered ? (isRtlLocale ? -4 : 4) : 0 }}
+                    transition={{ type: "spring", stiffness: 320, damping: 16 }}
+                  >
+                    <ArrowRight size={18} style={{ color: "#F43F5E" }} strokeWidth={2.5} className="rtl-arrow" />
+                  </motion.div>
                 </motion.div>
-              </motion.div>
-              <div>
                 <p className="text-xl md:text-2xl font-black heading-glass">
                   {t("cta_title")}
                 </p>
-                <p className="text-sm mt-1" style={{ color: "var(--text-muted)" }}>
-                  {t("cta_subtitle")}
-                </p>
               </div>
+              <p className="text-sm" style={{ color: "var(--text-muted)" }}>
+                {t("cta_subtitle")}
+              </p>
             </div>
 
             {/* Right side: CTA button */}
             <motion.button
+              ref={ctaBtnRef}
               onClick={() =>
                 document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })
               }
