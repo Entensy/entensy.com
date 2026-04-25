@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,7 +28,7 @@ import {
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type FormData = { name: string; email: string; message: string };
-type FormStatus = "idle" | "sending" | "success" | "error";
+type FormStatus = "idle" | "sending" | "success" | "error" | "captcha";
 
 // ─── Contact info ─────────────────────────────────────────────────────────────
 
@@ -70,8 +70,20 @@ export default function ContactSection() {
   const locale = useLocale();
   const isRtlLocale = locale === "ar" || locale === "ckb";
   const [status, setStatus] = useState<FormStatus>("idle");
-  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+  const [ctaCardHovered, setCtaCardHovered] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileResetKey, setTurnstileResetKey] = useState(0);
+  const statusTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Clear any pending status reset on unmount
+  useEffect(() => () => { if (statusTimerRef.current) clearTimeout(statusTimerRef.current); }, []);
+
+  const scheduleReset = (delay: number) => {
+    if (statusTimerRef.current) clearTimeout(statusTimerRef.current);
+    statusTimerRef.current = setTimeout(() => setStatus("idle"), delay);
+  };
+
+  const isDisabled = status === "sending" || (!!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && !turnstileToken);
 
   const {
     register,
@@ -96,13 +108,26 @@ export default function ContactSection() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...data, turnstileToken }),
       });
-      if (!res.ok) throw new Error();
-      setStatus("success");
-      reset();
-      setTimeout(() => setStatus("idle"), 6000);
+      if (res.ok) {
+        setStatus("success");
+        reset();
+        setTurnstileToken(null);
+        setTurnstileResetKey((k) => k + 1);
+        scheduleReset(6000);
+        return;
+      }
+      const body = (await res.json()) as { ok: boolean; error?: string };
+      if (body.error === "captcha") {
+        setStatus("captcha");
+        setTurnstileToken(null);
+        setTurnstileResetKey((k) => k + 1);
+      } else {
+        setStatus("error");
+      }
+      scheduleReset(5000);
     } catch {
       setStatus("error");
-      setTimeout(() => setStatus("idle"), 5000);
+      scheduleReset(5000);
     }
   };
 
@@ -241,9 +266,18 @@ export default function ContactSection() {
         }
         .contact-input:focus {
           border-color: rgba(252, 0, 42, 0.5) !important;
-          background: rgba(252, 0, 42, 0.04) !important;
+          background: rgba(255, 255, 255, 0.09) !important;
           box-shadow: 0 0 0 3px rgba(252, 0, 42, 0.12), 0 0 16px rgba(252, 0, 42, 0.08);
           outline: none;
+        }
+        :root:not(.dark) .contact-input:hover {
+          border-color: rgba(13, 10, 30, 0.2) !important;
+          background: rgba(255, 255, 255, 0.7) !important;
+        }
+        :root:not(.dark) .contact-input:focus {
+          border-color: rgba(252, 0, 42, 0.5) !important;
+          background: rgba(255, 255, 255, 0.95) !important;
+          box-shadow: 0 0 0 3px rgba(252, 0, 42, 0.10), 0 0 16px rgba(252, 0, 42, 0.06);
         }
         @keyframes float-contact {
           0%, 100% { transform: rotate(45deg) translateY(0px); }
@@ -364,6 +398,7 @@ export default function ContactSection() {
               {/* Turnstile CAPTCHA — only rendered when site key is configured */}
               {process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && (
                 <Turnstile
+                  key={turnstileResetKey}
                   siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
                   onToken={setTurnstileToken}
                   onExpire={() => setTurnstileToken(null)}
@@ -374,20 +409,20 @@ export default function ContactSection() {
               {/* Submit — styled exactly like navbar "Get Started" */}
               <motion.button
                 type="submit"
-                disabled={status === "sending" || (!!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && !turnstileToken)}
+                disabled={isDisabled}
                 className="w-full flex items-center justify-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold text-white"
                 style={{
                   background: "#FC002A",
                   boxShadow: "0 0 18px rgba(252,0,42,0.22)",
-                  opacity: status === "sending" ? 0.7 : 1,
-                  cursor: status === "sending" ? "not-allowed" : "pointer",
+                  opacity: isDisabled ? 0.5 : 1,
+                  cursor: isDisabled ? "not-allowed" : "pointer",
                 }}
-                whileHover={status !== "sending" ? {
+                whileHover={!isDisabled ? {
                   y: -1,
                   background: "#D4001F",
                   boxShadow: "0 0 24px rgba(252,0,42,0.38)",
                 } : {}}
-                whileTap={status !== "sending" ? { scale: 0.97, y: 0 } : {}}
+                whileTap={!isDisabled ? { scale: 0.97, y: 0 } : {}}
                 transition={{ type: "spring", stiffness: 400, damping: 20 }}
               >
                 {status === "sending" ? (
@@ -402,12 +437,13 @@ export default function ContactSection() {
               </motion.button>
 
               {/* Status feedback */}
-              <AnimatePresence>
+              <AnimatePresence mode="wait">
                 {status === "success" && (
                   <motion.div
+                    key="success"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
                     className="flex items-center gap-3 p-4 rounded-xl text-sm"
                     style={{
                       background: "rgba(16,185,129,0.1)",
@@ -419,11 +455,12 @@ export default function ContactSection() {
                     {t("form.success")}
                   </motion.div>
                 )}
-                {status === "error" && (
+                {(status === "error" || status === "captcha") && (
                   <motion.div
+                    key="error"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
                     className="flex items-center gap-3 p-4 rounded-xl text-sm"
                     style={{
                       background: "rgba(252,0,42,0.1)",
@@ -432,7 +469,7 @@ export default function ContactSection() {
                     }}
                   >
                     <AlertCircle size={16} />
-                    {t("form.error")}
+                    {status === "captcha" ? t("form.error_captcha") : t("form.error")}
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -453,30 +490,30 @@ export default function ContactSection() {
                 <motion.div
                   key={labelKey}
                   variants={fadeUpVariant}
-                  className="p-5 rounded-2xl flex items-start gap-4 overflow-hidden"
+                  className="p-5 rounded-2xl flex items-start gap-4 overflow-hidden relative"
                   style={{
                     background: "var(--glass-bg)",
                     backdropFilter: "blur(12px)",
-                    border: "1px solid var(--glass-border)",
-                    cursor: clickable ? "pointer" : "default",
-                    transformOrigin: "bottom center",
-                    transformPerspective: 800,
-                  }}
-                  animate={hoveredCard === i ? {
-                    rotateX: -4,
-                    y: -6,
-                    boxShadow: "0 16px 32px rgba(0,0,0,0.28)",
-                    borderColor: "rgba(252,0,42,0.22)",
-                  } : {
-                    rotateX: 0,
-                    y: 0,
-                    boxShadow: "0 0px 0px rgba(0,0,0,0)",
+                    borderWidth: "1px",
+                    borderStyle: "solid",
                     borderColor: "var(--glass-border)",
+                    cursor: clickable ? "pointer" : "default",
                   }}
-                  onPointerEnter={(e) => { if (e.pointerType !== "touch") setHoveredCard(i); }}
-                  onPointerLeave={() => setHoveredCard(null)}
+                  whileHover={{
+                    y: -5,
+                    borderColor: "rgba(252,0,42,0.40)",
+                    boxShadow: "0 16px 44px rgba(252,0,42,0.12)",
+                  }}
                   transition={{ type: "spring", stiffness: 300, damping: 22 }}
                 >
+                  {/* Corner orb — mirrors the CTA card */}
+                  <motion.div
+                    className="absolute -bottom-6 -right-6 w-20 h-20 rounded-full pointer-events-none"
+                    style={{ background: "radial-gradient(circle, #FC002A 0%, transparent 70%)" }}
+                    initial={{ scale: 1, opacity: 0.18 }}
+                    whileHover={{ scale: 1.6, opacity: 0.38 }}
+                    transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                  />
                   <div
                     className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-300"
                     style={{ background: "rgba(252,0,42,0.08)" }}
@@ -512,15 +549,25 @@ export default function ContactSection() {
             {/* "Let's build" decorative card */}
             <motion.div
               variants={fadeUpVariant}
-              className="flex-1 p-8 rounded-2xl flex flex-col gap-4 justify-center relative overflow-hidden"
+              className="flex-1 p-8 rounded-2xl flex flex-col gap-4 justify-center relative overflow-hidden cursor-default"
               style={{
                 background:
                   "linear-gradient(135deg, rgba(252,0,42,0.08) 0%, rgba(201,168,76,0.05) 100%)",
-                border: "1px solid rgba(252,0,42,0.15)",
+                borderWidth: "1px",
+                borderStyle: "solid",
+                borderColor: "rgba(252,0,42,0.15)",
                 minHeight: "160px",
               }}
+              whileHover={{
+                y: -5,
+                borderColor: "rgba(252,0,42,0.42)",
+                boxShadow: "0 16px 44px rgba(252,0,42,0.13)",
+              }}
+              transition={{ type: "spring", stiffness: 300, damping: 22 }}
+              onMouseEnter={() => setCtaCardHovered(true)}
+              onMouseLeave={() => setCtaCardHovered(false)}
             >
-              <div className="absolute inset-0 bg-grid-pattern opacity-20" />
+<div className="absolute inset-0 bg-grid-pattern opacity-20" />
               {/* Split ambient echo */}
               <div
                 className="absolute inset-0 pointer-events-none"
@@ -530,24 +577,23 @@ export default function ContactSection() {
                 }}
               />
               <div className="relative z-10">
-                <h3
-                  className="text-2xl font-black mb-2 heading-glass"
-                >
+                <h3 className="text-2xl font-black mb-2 heading-glass">
                   {t("cta_card_title")}
                 </h3>
-                <p
-                  className="text-sm leading-relaxed"
-                  style={{ color: "var(--text-secondary)" }}
-                >
+                <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
                   {t("cta_card_desc")}
                 </p>
               </div>
-              <div
-                className="absolute -bottom-8 -right-8 w-32 h-32 rounded-full opacity-30 pointer-events-none"
-                style={{
-                  background:
-                    "radial-gradient(circle, #FC002A 0%, transparent 70%)",
+
+              {/* Bottom-right orb — grows on hover */}
+              <motion.div
+                className="absolute -bottom-8 -right-8 w-32 h-32 rounded-full pointer-events-none"
+                animate={{
+                  scale: ctaCardHovered ? 1.5 : 1,
+                  opacity: ctaCardHovered ? 0.45 : 0.30,
                 }}
+                transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                style={{ background: "radial-gradient(circle, #FC002A 0%, transparent 70%)" }}
               />
             </motion.div>
           </motion.div>
