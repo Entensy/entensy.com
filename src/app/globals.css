@@ -168,6 +168,7 @@
 /* ============================================================
    CSS DESIGN TOKENS (for dark/light mode via next-themes)
    ============================================================ */
+
 :root {
   --bg-primary: #0d0a1e;
   --bg-secondary: #110c2a;
@@ -220,6 +221,7 @@
 }
 
 /* Navbar pill — background/shadow/blur via CSS (Framer handles geometry) */
+.navbar-pill-bg ul::-webkit-scrollbar { display: none; }
 .navbar-pill-bg {
   background: transparent;
   backdrop-filter: none;
@@ -305,8 +307,10 @@
     0 4px 20px rgba(13, 10, 30, 0.07),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
-:root:not(.dark) .glass-card:hover {
-  background: rgba(255, 255, 255, 0.78) !important;
+@media (hover: hover) and (pointer: fine) {
+  :root:not(.dark) .glass-card:hover {
+    background: rgba(255, 255, 255, 0.78) !important;
+  }
 }
 
 /* Light mode: stack badges — color set by Framer via style prop */
@@ -532,19 +536,20 @@ body {
     box-shadow 0.3s ease;
 }
 
-.glass-card:hover {
-  background: rgba(22, 16, 52, 0.72);
-  border-color: var(--border-hover);
-  box-shadow: 0 8px 40px rgba(252, 0, 42, 0.12);
+@media (hover: hover) and (pointer: fine) {
+  .glass-card:hover {
+    background: rgba(22, 16, 52, 0.72);
+    border-color: var(--border-hover);
+    box-shadow: 0 8px 40px rgba(252, 0, 42, 0.12);
+  }
+  :root:not(.dark) .glass-card:hover {
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 8px 32px rgba(252, 0, 42, 0.18);
+  }
 }
 
 :root:not(.dark) .glass-card {
   background: rgba(255, 255, 255, 0.82);
-}
-
-:root:not(.dark) .glass-card:hover {
-  background: rgba(255, 255, 255, 0.96);
-  box-shadow: 0 8px 32px rgba(252, 0, 42, 0.18);
 }
 
 /* ============================================================
@@ -553,8 +558,8 @@ body {
 .section-wrapper {
   position: relative;
   overflow: hidden;
-  padding-top: 6rem;
-  padding-bottom: 6rem;
+  padding-top: clamp(4rem, 8vw, 6rem);
+  padding-bottom: clamp(4rem, 8vw, 6rem);
   padding-left: clamp(1.25rem, 5vw, 5rem);
   padding-right: clamp(1.25rem, 5vw, 5rem);
 }
@@ -1100,6 +1105,83 @@ body {
    When .theme-switching is on <html>, suppress every CSS transition
    so nothing lags behind the clip-path overlay reveal.
    ============================================================ */
+
+/* Theme toggle button — CSS-driven so background changes with the dark class
+   instantly (no React re-render delay causing a brief wrong-color flash). */
+.navbar-icon-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  color: rgba(200, 196, 240, 0.55);
+  transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.15s cubic-bezier(0.22, 1, 0.36, 1);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .navbar-icon-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.18);
+    color: rgba(230, 226, 255, 0.92);
+    transform: scale(1.05);
+  }
+}
+.navbar-icon-btn:active {
+  transform: scale(0.94);
+  transition-duration: 0.08s;
+}
+:root:not(.dark) .navbar-icon-btn {
+  background: rgba(13, 10, 30, 0.06);
+  border-color: rgba(13, 10, 30, 0.12);
+  color: rgba(13, 10, 30, 0.55);
+}
+:root:not(.dark) .navbar-icon-btn:active {
+  background: rgba(13, 10, 30, 0.14);
+  border-color: rgba(13, 10, 30, 0.22);
+  color: rgba(13, 10, 30, 0.9);
+}
+.navbar-icon-btn--open {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  color: rgba(230, 226, 255, 0.92) !important;
+}
+:root:not(.dark) .navbar-icon-btn--open {
+  background: rgba(13, 10, 30, 0.12) !important;
+  border-color: rgba(13, 10, 30, 0.22) !important;
+  color: rgba(13, 10, 30, 0.85) !important;
+}
+@media (hover: hover) and (pointer: fine) {
+  :root:not(.dark) .navbar-icon-btn:hover {
+    background: rgba(13, 10, 30, 0.1);
+    border-color: rgba(13, 10, 30, 0.2);
+    color: rgba(13, 10, 30, 0.85);
+  }
+}
+
+.theme-toggle-btn {
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 4px 20px rgba(0, 0, 0, 0.45);
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s, transform 0.15s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@media (hover: hover) and (pointer: fine) {
+  .theme-toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(255, 255, 255, 0.18) !important;
+    box-shadow: none !important;
+    transform: scale(1.05);
+  }
+}
+.theme-toggle-btn:active {
+  transform: scale(0.94) !important;
+  box-shadow: none !important;
+  transition-duration: 0.08s;
+}
+:root:not(.dark) .theme-toggle-btn {
+  background: rgba(255, 255, 255, 0.75);
+}
+:root:not(.dark) .theme-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border-color: rgba(13, 10, 30, 0.15) !important;
+}
+
 .navbar-pill-bg {
   transition: none !important;
 }
@@ -1133,17 +1215,3 @@ body::after {
   bottom: 0;
 }
 
-/* ============================================================
-   VIEW TRANSITIONS — theme ripple (supported browsers)
-   ============================================================ */
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation: none;
-  mix-blend-mode: normal;
-}
-::view-transition-new(root) {
-  z-index: 1;
-}
-::view-transition-old(root) {
-  z-index: 0;
-}
