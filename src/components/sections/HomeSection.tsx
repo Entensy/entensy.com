@@ -56,7 +56,9 @@ export default function HomeSection() {
     const targets = [line1Ref.current, line3Ref.current].filter(Boolean);
     if (!targets.length) return;
 
-    const splits = targets.map((el) => new SplitText(el!, { type: "chars" }));
+    const splits = targets.map((el) => new SplitText(el!, { type: "chars,words" }));
+    // Prevent mid-word line breaks on the char-level inline-block spans
+    splits.forEach((s) => s.words.forEach((w) => { (w as HTMLElement).style.whiteSpace = "nowrap"; }));
     const allChars = splits.flatMap((s) => s.chars);
 
     const tl = gsap.timeline({ delay: 0.3 });
