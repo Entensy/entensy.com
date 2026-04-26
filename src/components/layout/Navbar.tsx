@@ -4,9 +4,29 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
-import { Menu, X } from "lucide-react";
 import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
+import { useHoverCapable } from "@/hooks/useHoverCapable";
 import { cn } from "@/lib/utils";
+
+// Square 14×14 viewBox — left endpoints swing, right endpoints stay put.
+// Top line left swings down  → "/" = (2,12)→(12,2)
+// Bottom line left swings up → "\" = (2,2)→(12,12)   crossing at center (7,7).
+function HamburgerIcon({ isOpen }: { isOpen: boolean }) {
+  const t = { duration: 0.35, ease: [0.22, 1, 0.36, 1] } as const;
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+      <motion.line stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"
+        initial={{ x1: 1, y1: 2,  x2: 13, y2: 2  }}
+        animate={isOpen ? { x1: 2, y1: 12, x2: 12, y2: 2  } : { x1: 1, y1: 2,  x2: 13, y2: 2  }} transition={t} />
+      <motion.line stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"
+        initial={{ opacity: 1, x1: 1, y1: 7, x2: 13, y2: 7 }}
+        animate={isOpen ? { opacity: 0, x1: 7, y1: 7, x2: 7, y2: 7 } : { opacity: 1, x1: 1, y1: 7, x2: 13, y2: 7 }} transition={{ duration: 0.2 }} />
+      <motion.line stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"
+        initial={{ x1: 1, y1: 12, x2: 13, y2: 12 }}
+        animate={isOpen ? { x1: 2, y1: 2,  x2: 12, y2: 12 } : { x1: 1, y1: 12, x2: 13, y2: 12 }} transition={t} />
+    </svg>
+  );
+}
 
 const navLinks = [
   { key: "home", href: "#home" },
@@ -24,38 +44,19 @@ export default function Navbar() {
   const t = useTranslations("nav");
   const locale = useLocale();
   const isRtlLocale = locale === "ar" || locale === "ckb";
+  const canHover = useHoverCapable();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
-  const [linksOverflow, setLinksOverflow] = useState(false);
   const navRef = useRef<HTMLDivElement>(null);
   const linksListRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 80);
+    const onScroll = () => setScrolled(window.scrollY > 1);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // RTL text is longer — use xl (1280) breakpoint; LTR uses lg (1024)
-  useEffect(() => {
-    const bp = isRtlLocale ? 1280 : 1024;
-    let rafId: number;
-    const check = () => {
-      if (window.innerWidth < bp) { setLinksOverflow(false); return; }
-      const ul = linksListRef.current;
-      if (!ul) return;
-      const saved = ul.style.display;
-      ul.style.display = "";
-      const overflows = ul.scrollWidth > ul.clientWidth + 16;
-      ul.style.display = saved;
-      setLinksOverflow(overflows);
-    };
-    const onResize = () => { cancelAnimationFrame(rafId); rafId = requestAnimationFrame(check); };
-    window.addEventListener("resize", onResize);
-    check();
-    return () => { window.removeEventListener("resize", onResize); cancelAnimationFrame(rafId); };
-  }, [isRtlLocale]);
 
   useEffect(() => {
     const sections = navLinks.map((l) => l.href.replace("#", ""));
@@ -88,12 +89,10 @@ export default function Navbar() {
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  // Desktop links breakpoint class — wider for RTL
-  const desktopLinksClass = isRtlLocale ? "hidden xl:flex" : "hidden lg:flex";
-  const hamburgerHideClass = isRtlLocale ? "xl:hidden" : "lg:hidden";
+  const hamburgerHideClass = "sm:hidden";
   return (
     <div ref={navRef} dir={isRtlLocale ? "rtl" : "ltr"}>
-      <header className="fixed inset-x-0 top-0 z-8000 pointer-events-none">
+      <header className="fixed inset-x-0 top-0 z-8001 pointer-events-none">
         {/* Outer spring-animated wrapper — drives the floating gap */}
         <motion.div
           className="pointer-events-auto flex justify-center"
@@ -107,12 +106,12 @@ export default function Navbar() {
           {/* Inner nav — spring-animates shape, size, shadow */}
           <motion.nav
             className={cn(
-              "navbar-pill-bg w-full mx-auto flex items-center justify-between gap-4",
+              "navbar-pill-bg w-full mx-auto flex items-center gap-4",
               scrolled ? "navbar-scrolled" : ""
             )}
-            initial={{ maxWidth: 1280, borderRadius: 14 }}
+            onClick={() => mobileOpen && setTimeout(() => setMobileOpen(false), 120)}
+            initial={{ maxWidth: 1280, minWidth: 0, borderRadius: 14 }}
             animate={{
-              // All padding in one place — avoids style/animate split causing RTL jumps
               maxWidth: scrolled ? (isRtlLocale ? 1260 : 1160) : 1280,
               paddingTop: scrolled ? "0.65rem" : "1rem",
               paddingBottom: scrolled ? "0.65rem" : "1rem",
@@ -139,7 +138,7 @@ export default function Navbar() {
                   priority
                 />
                 <span
-                  className="navbar-brand-name text-sm font-black select-none"
+                  className="navbar-brand-name hidden xs:inline text-sm font-black select-none"
                   style={{ color: "rgba(218, 213, 255, 0.82)", letterSpacing: "0.18em" }}
                 >
                   {t("brand")}
@@ -149,8 +148,8 @@ export default function Navbar() {
               {/* Desktop Links */}
               <ul
                 ref={linksListRef}
-                className={cn(desktopLinksClass, "items-center gap-2 flex-nowrap")}
-                style={{ display: linksOverflow ? "none" : undefined }}
+                className="hidden sm:flex items-center gap-2 flex-nowrap"
+                style={{ overflowX: "auto", scrollbarWidth: "none", msOverflowStyle: "none", flex: "1 1 0", minWidth: 0 }}
               >
                 {navLinks.map((link) => (
                   <li key={link.key}>
@@ -177,8 +176,19 @@ export default function Navbar() {
               </ul>
 
               {/* Right side — always LTR so buttons never flip outside the nav in RTL pages */}
-              <div className="flex items-center gap-2.5 shrink-0" dir="ltr">
-                {isRtlLocale && <LanguageSwitcher />}
+              <div className="flex items-center gap-2.5 shrink-0 ms-auto" dir="ltr">
+                {/* In RTL: hamburger comes first so language button stays at the far right */}
+                {isRtlLocale && (
+                  <button
+                    className={cn(hamburgerHideClass, "navbar-icon-btn w-9 h-9 flex items-center justify-center rounded-full", mobileOpen && "navbar-icon-btn--open")}
+                    style={{ display: undefined }}
+                    onClick={(e) => { e.stopPropagation(); setMobileOpen((v) => !v); }}
+                    aria-label="Toggle mobile menu"
+                  >
+                    <HamburgerIcon isOpen={mobileOpen} />
+                  </button>
+                )}
+
                 <motion.button
                   onClick={() => handleNavClick("#contact")}
                   className="hidden md:flex items-center gap-2 px-5 py-2 rounded-full text-sm font-semibold text-white whitespace-nowrap"
@@ -189,32 +199,20 @@ export default function Navbar() {
                 >
                   {t("get_started")}
                 </motion.button>
-                {!isRtlLocale && <LanguageSwitcher />}
 
-                {/* Hamburger — also shown when desktop links overflow */}
-                <motion.button
-                  className={cn(hamburgerHideClass, "w-9 h-9 flex items-center justify-center rounded-full")}
-                  style={{
-                    display: linksOverflow ? "flex" : undefined,
-                    background: "rgba(255,255,255,0.06)",
-                    border: "1px solid rgba(255,255,255,0.09)",
-                  }}
-                  onClick={() => setMobileOpen((v) => !v)}
-                  whileTap={{ scale: 0.96 }}
-                  aria-label="Toggle mobile menu"
-                >
-                  <AnimatePresence mode="wait">
-                    {mobileOpen ? (
-                      <motion.div key="x" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.18 }}>
-                        <X size={16} />
-                      </motion.div>
-                    ) : (
-                      <motion.div key="menu" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.18 }}>
-                        <Menu size={16} />
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </motion.button>
+                <LanguageSwitcher />
+
+                {/* In LTR: hamburger comes after language button */}
+                {!isRtlLocale && (
+                  <button
+                    className={cn(hamburgerHideClass, "navbar-icon-btn w-9 h-9 flex items-center justify-center rounded-full", mobileOpen && "navbar-icon-btn--open")}
+                    style={{ display: undefined }}
+                    onClick={(e) => { e.stopPropagation(); setMobileOpen((v) => !v); }}
+                    aria-label="Toggle mobile menu"
+                  >
+                    <HamburgerIcon isOpen={mobileOpen} />
+                  </button>
+                )}
               </div>
           </motion.nav>
         </motion.div>
@@ -222,7 +220,7 @@ export default function Navbar() {
 
       {/* Mobile dropdown */}
       <div
-        className="fixed z-7999 pointer-events-none"
+        className="fixed z-8002 pointer-events-none"
         style={{
           top: scrolled ? "calc(1.25rem + 56px + 8px)" : "calc(56px + 8px)",
           left: scrolled ? "50%" : "clamp(0.75rem, 4vw, 2rem)",
@@ -236,14 +234,14 @@ export default function Navbar() {
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+              exit={{ opacity: 0, y: -14, transition: { duration: 0.25, ease: [0.4, 0, 1, 1] } }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
               className="pointer-events-auto"
               style={{
                 background: "color-mix(in srgb, var(--bg-primary) 94%, transparent)",
                 backdropFilter: "blur(24px)",
                 WebkitBackdropFilter: "blur(24px)",
-                border: "1px solid rgba(255,255,255,0.09)",
+                border: "1px solid var(--glass-border)",
                 borderRadius: "1.25rem",
                 boxShadow: "0 12px 40px rgba(0,0,0,0.3)",
               }}
@@ -260,12 +258,12 @@ export default function Navbar() {
                       "w-full px-4 py-3 rounded-xl text-sm font-semibold transition-colors duration-150 text-center",
                       activeSection === link.href.replace("#", "")
                         ? "text-brand bg-brand/08"
-                        : "hover:bg-white/05 hover:text-brand"
+                        : "hover:text-brand"
                     )}
                     style={{
                       color: activeSection === link.href.replace("#", "")
                         ? "#FC002A"
-                        : "rgba(200,196,240,0.7)",
+                        : "var(--text-secondary)",
                     }}
                   >
                     {t(link.key as Parameters<typeof t>[0])}

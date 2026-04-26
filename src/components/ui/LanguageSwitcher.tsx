@@ -16,6 +16,7 @@ const languages = [
 
 export default function LanguageSwitcher() {
   const locale = useLocale();
+  const isRtlLocale = locale === "ar" || locale === "ckb";
   const tLang = useTranslations("lang");
   const router = useRouter();
   const pathname = usePathname();
@@ -100,27 +101,16 @@ export default function LanguageSwitcher() {
         )}
     <div ref={ref} className="relative z-9001">
       {/* Trigger: globe icon only */}
-      <motion.button
+      <button
         onClick={() => setOpen((v) => !v)}
-        className="lang-globe-btn flex items-center justify-center w-9 h-9 rounded-full transition-all duration-200"
+        className={`navbar-icon-btn flex items-center justify-center w-9 h-9 rounded-full${open ? " navbar-icon-btn--open" : ""}`}
         disabled={isPending}
-        style={{
-          background: open ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.06)",
-          border: open ? "1px solid rgba(255,255,255,0.18)" : "1px solid rgba(255,255,255,0.09)",
-          color: open ? "rgba(230,226,255,0.92)" : "rgba(200,196,240,0.55)",
-          opacity: isPending ? 0.6 : 1,
-        }}
-        whileHover={{
-          scale: 1.05,
-          background: "rgba(255,255,255,0.1)",
-          borderColor: "rgba(255,255,255,0.18)",
-        }}
-        whileTap={{ scale: 0.94 }}
+        style={{ opacity: isPending ? 0.6 : 1 }}
         aria-label="Switch language"
         aria-expanded={open}
       >
         <Globe size={15} />
-      </motion.button>
+      </button>
 
       {/* Dropdown */}
       <AnimatePresence>
@@ -130,7 +120,7 @@ export default function LanguageSwitcher() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -6, scale: 0.96 }}
             transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute top-full mt-2 inset-e-0 min-w-32.5 rounded-xl overflow-hidden shadow-2xl"
+            className={`absolute top-full mt-2 min-w-32.5 rounded-xl overflow-hidden shadow-2xl ${isRtlLocale ? "left-0" : "right-0"}`}
             style={{
               background: "var(--bg-secondary)",
               border: "1px solid var(--border-color)",
@@ -150,7 +140,7 @@ export default function LanguageSwitcher() {
                   }}
                   onMouseEnter={(e) => {
                     if (lang.code !== locale) {
-                      (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.05)";
+                      (e.currentTarget as HTMLButtonElement).style.background = "var(--glass-bg)";
                     }
                   }}
                   onMouseLeave={(e) => {
