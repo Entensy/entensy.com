@@ -222,8 +222,6 @@
 
 /* Navbar pill — background/shadow/blur via CSS (Framer handles geometry) */
 .navbar-pill-bg ul::-webkit-scrollbar { display: none; }
-.navbar-pill-bg::-webkit-scrollbar { display: none; }
-.navbar-pill-bg { scrollbar-width: none; }
 @media (max-width: 300px) { .navbar-brand-name { display: none; } }
 .navbar-pill-bg {
   background: transparent;

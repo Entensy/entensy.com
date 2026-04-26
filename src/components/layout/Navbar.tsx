@@ -104,7 +104,7 @@ export default function Navbar() {
           {/* Inner nav — spring-animates shape, size, shadow */}
           <motion.nav
             className={cn(
-              "navbar-pill-bg w-full mx-auto flex items-center justify-between gap-4 overflow-x-auto",
+              "navbar-pill-bg w-full mx-auto flex items-center justify-between gap-4",
               scrolled ? "navbar-scrolled" : ""
             )}
             onClick={() => mobileOpen && setTimeout(() => setMobileOpen(false), 120)}
