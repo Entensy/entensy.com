@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
+import { useLocale } from "next-intl";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import HomeSection from "@/components/sections/HomeSection";
@@ -17,22 +18,25 @@ const AboutSection     = dynamic(() => import("@/components/sections/AboutSectio
 const ContactSection   = dynamic(() => import("@/components/sections/ContactSection"));
 const SocialsSection   = dynamic(() => import("@/components/sections/SocialsSection"));
 
-const SESSION_LOADED_KEY = "entensy:first-load-complete";
+const SESSION_LOCALE_KEY = "entensy:loaded-locale";
 
 export default function HomePage() {
+  const locale = useLocale();
   const [ready, setReady] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [showContent, setShowContent] = useState(false);
 
   useEffect(() => {
-    // Defer setState out of the synchronous effect body (React 19 rule)
     Promise.resolve().then(() => {
-      const hasLoadedBefore = window.sessionStorage.getItem(SESSION_LOADED_KEY) === "1";
-      setIsLoaded(hasLoadedBefore);
-      setShowContent(hasLoadedBefore);
+      const navEntry = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
+      const isReload = navEntry?.type === "reload";
+      const lastLocale = window.sessionStorage.getItem(SESSION_LOCALE_KEY);
+      const alreadyLoaded = !isReload && lastLocale === locale;
+      setIsLoaded(alreadyLoaded);
+      setShowContent(alreadyLoaded);
       setReady(true);
     });
-  }, []);
+  }, [locale]);
 
   // Lock scroll and pointer events while loading screen is active
   useEffect(() => {
@@ -52,7 +56,7 @@ export default function HomePage() {
   }, [isLoaded, ready]);
 
   const handleLoadingComplete = () => {
-    window.sessionStorage.setItem(SESSION_LOADED_KEY, "1");
+    window.sessionStorage.setItem(SESSION_LOCALE_KEY, locale);
     setIsLoaded(true);
     setTimeout(() => setShowContent(true), 80);
   };
