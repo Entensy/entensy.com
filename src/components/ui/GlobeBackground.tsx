@@ -98,13 +98,15 @@ export default function GlobeBackground({
 }: GlobeBackgroundProps) {
   // Suppress THREE.Clock deprecation warning emitted by @react-three/fiber internals
   useEffect(() => {
-    const originalWarn = console.warn.bind(console);
-    console.warn = (...args: unknown[]) => {
-      if (typeof args[0] === "string" && args[0].includes("THREE.Clock")) return;
-      originalWarn(...args);
-    };
+    const suppress = (args: unknown[]) =>
+      typeof args[0] === "string" && (args[0].includes("THREE.Clock") || args[0].includes("Context Lost"));
+    const originalWarn  = console.warn.bind(console);
+    const originalError = console.error.bind(console);
+    console.warn  = (...args: unknown[]) => { if (!suppress(args)) originalWarn(...args); };
+    console.error = (...args: unknown[]) => { if (!suppress(args)) originalError(...args); };
     return () => {
-      console.warn = originalWarn;
+      console.warn  = originalWarn;
+      console.error = originalError;
     };
   }, []);
 
@@ -115,8 +117,9 @@ export default function GlobeBackground({
     >
       <Canvas
         camera={{ position: [0, 0, 4], fov: 45 }}
-        gl={{ antialias: typeof window !== "undefined" && window.innerWidth >= 768, alpha: true }}
+        gl={{ antialias: typeof window !== "undefined" && window.innerWidth >= 768, alpha: true, powerPreference: "low-power" }}
         style={{ background: "transparent" }}
+        onCreated={({ gl }) => { gl.forceContextLoss = () => { gl.getContext()?.getExtension("WEBGL_lose_context")?.loseContext(); }; }}
       >
         <ambientLight intensity={0.5} />
         <GlobeWireframe />
