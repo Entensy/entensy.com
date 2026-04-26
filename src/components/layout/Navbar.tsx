@@ -5,7 +5,6 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
 import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
-import { useHoverCapable } from "@/hooks/useHoverCapable";
 import { cn } from "@/lib/utils";
 
 // Square 14×14 viewBox — left endpoints swing, right endpoints stay put.
@@ -44,7 +43,6 @@ export default function Navbar() {
   const t = useTranslations("nav");
   const locale = useLocale();
   const isRtlLocale = locale === "ar" || locale === "ckb";
-  const canHover = useHoverCapable();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
@@ -89,7 +87,7 @@ export default function Navbar() {
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const hamburgerHideClass = "sm:hidden";
+  const hamburgerHideClass = isRtlLocale ? "xl:hidden" : "lg:hidden";
   return (
     <div ref={navRef} dir={isRtlLocale ? "rtl" : "ltr"}>
       <header className="fixed inset-x-0 top-0 z-8001 pointer-events-none">
@@ -106,7 +104,7 @@ export default function Navbar() {
           {/* Inner nav — spring-animates shape, size, shadow */}
           <motion.nav
             className={cn(
-              "navbar-pill-bg w-full mx-auto flex items-center gap-4",
+              "navbar-pill-bg w-full mx-auto flex items-center justify-between gap-4 overflow-x-auto",
               scrolled ? "navbar-scrolled" : ""
             )}
             onClick={() => mobileOpen && setTimeout(() => setMobileOpen(false), 120)}
@@ -138,7 +136,7 @@ export default function Navbar() {
                   priority
                 />
                 <span
-                  className="navbar-brand-name hidden xs:inline text-sm font-black select-none"
+                  className="navbar-brand-name text-sm font-black select-none"
                   style={{ color: "rgba(218, 213, 255, 0.82)", letterSpacing: "0.18em" }}
                 >
                   {t("brand")}
@@ -148,8 +146,7 @@ export default function Navbar() {
               {/* Desktop Links */}
               <ul
                 ref={linksListRef}
-                className="hidden sm:flex items-center gap-2 flex-nowrap"
-                style={{ overflowX: "auto", scrollbarWidth: "none", msOverflowStyle: "none", flex: "1 1 0", minWidth: 0 }}
+                className={cn(isRtlLocale ? "hidden xl:flex" : "hidden lg:flex", "flex-1 justify-center items-center gap-2 flex-nowrap")}
               >
                 {navLinks.map((link) => (
                   <li key={link.key}>
@@ -176,12 +173,11 @@ export default function Navbar() {
               </ul>
 
               {/* Right side — always LTR so buttons never flip outside the nav in RTL pages */}
-              <div className="flex items-center gap-2.5 shrink-0 ms-auto" dir="ltr">
+              <div className="flex items-center gap-2.5 shrink-0" dir="ltr">
                 {/* In RTL: hamburger comes first so language button stays at the far right */}
                 {isRtlLocale && (
                   <button
                     className={cn(hamburgerHideClass, "navbar-icon-btn w-9 h-9 flex items-center justify-center rounded-full", mobileOpen && "navbar-icon-btn--open")}
-                    style={{ display: undefined }}
                     onClick={(e) => { e.stopPropagation(); setMobileOpen((v) => !v); }}
                     aria-label="Toggle mobile menu"
                   >
@@ -206,7 +202,6 @@ export default function Navbar() {
                 {!isRtlLocale && (
                   <button
                     className={cn(hamburgerHideClass, "navbar-icon-btn w-9 h-9 flex items-center justify-center rounded-full", mobileOpen && "navbar-icon-btn--open")}
-                    style={{ display: undefined }}
                     onClick={(e) => { e.stopPropagation(); setMobileOpen((v) => !v); }}
                     aria-label="Toggle mobile menu"
                   >
