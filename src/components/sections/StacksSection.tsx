@@ -119,39 +119,25 @@ export default function StacksSection() {
               <motion.button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
-                className="relative px-5 py-2.5 rounded-full text-sm font-semibold transition-colors duration-200"
-                initial={{ opacity: 0, y: -12 }}
+                className="relative px-5 py-2.5 rounded-full text-sm font-semibold"
+                style={{ border: `1px solid ${isActive ? cat.color + "50" : "var(--border-color)"}` }}
+                initial={{ opacity: 0, y: -12, color: "var(--text-muted)", background: "rgba(255,255,255,0)", boxShadow: "0 0 0px rgba(0,0,0,0)" }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false, margin: "-10px" }}
-                transition={{ delay: stackCategories.indexOf(cat) * 0.06, duration: 0.35, ease: "easeOut" }}
-                style={{
+                animate={{
                   color: isActive ? cat.color : "var(--text-muted)",
                   background: isActive ? `${cat.color}20` : "rgba(255,255,255,0)",
-                  border: `1px solid ${isActive ? cat.color + "50" : "var(--border-color)"}`,
                   boxShadow: isActive ? `0 0 12px ${cat.color}30` : "0 0 0px rgba(0,0,0,0)",
                 }}
-                whileHover={
-                  isActive || !canHover
-                    ? {}
-                    : {
-                        scale: 1.04,
-                        background: `${cat.color}12`,
-                        color: cat.color,
-                        borderColor: `${cat.color}30`,
-                        transition: { type: "spring", stiffness: 400, damping: 26 },
-                      }
-                }
-                whileTap={
-                  isActive
-                    ? { scale: 0.97 }
-                    : {
-                        scale: 0.96,
-                        background: `${cat.color}18`,
-                        color: cat.color,
-                        borderColor: `${cat.color}40`,
-                        transition: { type: "spring", stiffness: 400, damping: 26 },
-                      }
-                }
+                viewport={{ once: false, margin: "-10px" }}
+                transition={{ delay: stackCategories.indexOf(cat) * 0.06, duration: 0.35, ease: "easeOut" }}
+                whileHover={!isActive && canHover ? { scale: 1.04 } : {}}
+                whileTap={{
+                  scale: 1.05,
+                  background: `${cat.color}18`,
+                  color: cat.color,
+                  boxShadow: `0 0 14px ${cat.color}50`,
+                  transition: { duration: 0.15, ease: "easeOut" },
+                }}
               >
                 {t(`categories.${cat.id}` as Parameters<typeof t>[0])}
                 {isActive && (
@@ -198,7 +184,15 @@ export default function StacksSection() {
                   whileInView={{ opacity: 1, scale: 1, y: 0, color: badgeBaseColor, background: badgeBaseBg, borderColor: badgeBaseBorder }}
                   viewport={{ once: false, margin: "-10px" }}
                   className="stack-badge"
-                  transition={{ delay: index * 0.05, duration: 0.4, ease: "easeOut" }}
+                  transition={{
+                    opacity: { delay: index * 0.05, duration: 0.4, ease: "easeOut" },
+                    y: { delay: index * 0.05, duration: 0.4, ease: "easeOut" },
+                    scale: { duration: 0.3, ease: "easeOut" },
+                    color: { duration: 0.18, ease: "easeOut" },
+                    background: { duration: 0.18, ease: "easeOut" },
+                    borderColor: { duration: 0.18, ease: "easeOut" },
+                    boxShadow: { duration: 0.18, ease: "easeOut" },
+                  }}
                   whileHover={canHover ? {
                     scale: 1.09,
                     y: -3,
