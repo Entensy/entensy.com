@@ -79,7 +79,7 @@ function PortfolioCard({
   const [hoveredGithub, setHoveredGithub] = useState(false);
   const shellRef = useRef<HTMLDivElement>(null);
   const canHover = useHoverCapable();
-  const { handleBorderMouseMove, handleBorderMouseLeave } = useCardBorder(
+  const { handleBorderMouseMove, handleBorderMouseLeave, handleTouchStart, handleTouchEnd } = useCardBorder(
     shellRef as React.RefObject<HTMLElement | null>
   );
 
@@ -97,7 +97,8 @@ function PortfolioCard({
           style={{ background: "transparent" }}
           onMouseMove={handleBorderMouseMove}
           onMouseLeave={handleBorderMouseLeave}
-          onTouchEnd={handleBorderMouseLeave}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
         >
           {/* Border ring */}
           <div
@@ -258,7 +259,7 @@ export default function PortfolioSection() {
 
   const autoScrollPlugin = useRef(
     AutoScroll({
-      speed: 0.25,
+      speed: 0.10,
       startDelay: 0,
       stopOnInteraction: false,
       stopOnMouseEnter: false,

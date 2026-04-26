@@ -15,7 +15,7 @@ export const portfolioProjects: PortfolioProject[] = [
     titleKey: "projects.ecommerce.title",
     descKey: "projects.ecommerce.desc",
     gradient: "from-[#FC002A]/20 to-[#7C3AED]/20",
-    stacks: ["React", "Node.js", "PostgreSQL", "Tailwind CSS"],
+    stacks: ["React", "Node.js", "PostgreSQL", "Tailwind CSS", "Astro"],
     visitUrl: undefined,
     githubUrl: undefined,
   },
