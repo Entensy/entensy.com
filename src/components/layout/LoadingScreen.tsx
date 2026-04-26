@@ -21,11 +21,12 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
   const [exiting, setExiting] = useState(false);
 
   useEffect(() => {
+    let exitTimer: ReturnType<typeof setTimeout> | null = null;
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
         onComplete: () => {
           setExiting(true);
-          setTimeout(onComplete, 700);
+          exitTimer = setTimeout(onComplete, 700);
         },
       });
 
@@ -71,7 +72,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
       tl.to({}, { duration: 0.4 }); // hold
     });
 
-    return () => ctx.revert();
+    return () => { ctx.revert(); if (exitTimer) clearTimeout(exitTimer); };
   }, [isRtlLocale, onComplete]);
 
   return (
