@@ -13,6 +13,7 @@ import {
 } from "react-icons/fa6";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { useCardBorder } from "@/hooks/useCardBorder";
+import { useHoverCapable } from "@/hooks/useHoverCapable";
 import {
   staggerContainerVariant,
   cardEntranceVariant,
@@ -157,9 +158,8 @@ const CSS = `
     opacity: 0.45;
     transition: opacity 0.25s ease, filter 0.25s ease;
   }
-  .soc-shell:hover .card-border-ring {
-    opacity: 1;
-    filter: saturate(1.5) brightness(1.4);
+  @media (hover: hover) {
+    .soc-shell:hover .card-border-ring { opacity: 1; filter: saturate(1.5) brightness(1.4); }
   }
 `;
 
@@ -186,14 +186,29 @@ function SocialCard({
 }) {
   const [isHovered, setIsHovered] = useState(false);
   const shellRef = useRef<HTMLDivElement>(null);
-  const { handleBorderMouseMove, handleBorderMouseLeave } = useCardBorder(
+  const canHover = useHoverCapable();
+  const { handleBorderMouseMove, handleBorderMouseLeave, handleTouchStart, handleTouchEnd } = useCardBorder(
     shellRef as React.RefObject<HTMLElement | null>
   );
+
+  const handleMouseEnter = useCallback(() => {
+    if (canHover) setIsHovered(true);
+  }, [canHover]);
 
   const handleMouseLeave = useCallback(() => {
     setIsHovered(false);
     handleBorderMouseLeave();
   }, [handleBorderMouseLeave]);
+
+  const handleTouchStartCard = useCallback((e: React.TouchEvent<HTMLElement>) => {
+    setIsHovered(true);
+    handleTouchStart(e);
+  }, [handleTouchStart]);
+
+  const handleTouchEndCard = useCallback(() => {
+    setIsHovered(false);
+    handleTouchEnd();
+  }, [handleTouchEnd]);
 
   const Icon = social.icon;
   const isTikTok = social.id === "tiktok";
@@ -205,7 +220,11 @@ function SocialCard({
       style={{ background: "transparent" }}
       onMouseMove={handleBorderMouseMove}
       onMouseLeave={handleMouseLeave}
-      whileHover={{ y: -6 }}
+      onTouchStart={handleTouchStartCard}
+      onTouchEnd={handleTouchEndCard}
+      onTouchCancel={handleTouchEndCard}
+      whileHover={canHover ? { y: -6 } : {}}
+      whileTap={{ y: -4, scale: 0.98 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
     >
       <div
@@ -228,7 +247,7 @@ function SocialCard({
             : `0 6px 20px ${social.shadowColor.replace(/[\d.]+\)$/, "0.1)")}`,
           transition: "background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease",
         } as React.CSSProperties}
-        onMouseEnter={() => setIsHovered(true)}
+        onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
         <div
@@ -250,6 +269,7 @@ function SocialCard({
         {/* Radial glow */}
         <motion.div
           className="absolute inset-0 rounded-2xl pointer-events-none"
+          initial={{ opacity: 0.4 }}
           animate={{ opacity: isHovered ? 1 : 0.4 }}
           transition={{ duration: 0.25 }}
           style={{
@@ -259,7 +279,8 @@ function SocialCard({
 
         {/* Icon */}
         <motion.div
-          animate={isHovered ? { scale: 1.15, rotate: [-3, 3, 0] } : { scale: 1, rotate: 0 }}
+          initial={{ scale: 1, rotate: 0 }}
+          animate={isHovered ? { scale: 1.15, rotate: canHover ? [-3, 3, 0] : 8 } : { scale: 1, rotate: 0 }}
           transition={{ duration: 0.35 }}
           className="relative z-10"
         >
