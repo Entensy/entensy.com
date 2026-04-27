@@ -37,17 +37,19 @@ export default function HomePage() {
     }
   }, [locale]);
 
-  // Lock scroll and pointer events while loading screen is active
+  // Lock scroll while loading screen is active.
+  // Use overflow-y: scroll (not hidden) so the scrollbar gutter stays reserved — prevents layout shift in RTL
+  // where the scrollbar is on the left side. Pointer events are already disabled, so user can't actually scroll.
   useEffect(() => {
     if (!isLoaded) {
-      document.body.style.overflow = "hidden";
+      document.body.style.overflowY = "scroll";
       document.body.style.pointerEvents = "none";
     } else {
-      document.body.style.overflow = "";
+      document.body.style.overflowY = "";
       document.body.style.pointerEvents = "";
     }
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflowY = "";
       document.body.style.pointerEvents = "";
     };
   }, [isLoaded]);
