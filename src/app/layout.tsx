@@ -14,7 +14,7 @@ const montserrat = Montserrat({
 const notoSansArabic = Noto_Sans_Arabic({
   subsets: ["arabic"],
   weight: ["400", "500", "600", "700", "800", "900"],
-  variable: "--font-arabic",
+  variable: "--font-notoSans",
   display: "swap",
 });
 

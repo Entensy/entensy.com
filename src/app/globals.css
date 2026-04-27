@@ -466,7 +466,7 @@ body {
 
 [dir="rtl"],
 [dir="rtl"] * {
-  font-family: var(--font-arabic), system-ui, sans-serif !important;
+  font-family: var(--font-notoSans), system-ui, sans-serif !important;
 }
 
 /* Keep Arabic-script text naturally connected in RTL locales while preserving force-LTR elements. */
