@@ -80,6 +80,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
       {!exiting && (
         <motion.div
           className="loading-screen"
+          dir={isRtlLocale ? "rtl" : "ltr"}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{

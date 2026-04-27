@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect } from "react";
 import dynamic from "next/dynamic";
 import { useLocale } from "next-intl";
 import Navbar from "@/components/layout/Navbar";
@@ -22,26 +22,23 @@ const SESSION_LOCALE_KEY = "entensy:loaded-locale";
 
 export default function HomePage() {
   const locale = useLocale();
-  const [ready, setReady] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [showContent, setShowContent] = useState(false);
 
-  useEffect(() => {
-    Promise.resolve().then(() => {
-      const navEntry = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
-      const isReload = navEntry?.type === "reload";
-      const lastLocale = window.sessionStorage.getItem(SESSION_LOCALE_KEY);
-      const alreadyLoaded = !isReload && lastLocale === locale;
-      setIsLoaded(alreadyLoaded);
-      setShowContent(alreadyLoaded);
-      setReady(true);
-    });
+  // Runs before first paint — skips loading screen on return visits without a visible flash
+  useLayoutEffect(() => {
+    const navEntry = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
+    const isReload = navEntry?.type === "reload";
+    const lastLocale = window.sessionStorage.getItem(SESSION_LOCALE_KEY);
+    const alreadyLoaded = !isReload && lastLocale === locale;
+    if (alreadyLoaded) {
+      setIsLoaded(true);
+      setShowContent(true);
+    }
   }, [locale]);
 
   // Lock scroll and pointer events while loading screen is active
   useEffect(() => {
-    if (!ready) return;
-
     if (!isLoaded) {
       document.body.style.overflow = "hidden";
       document.body.style.pointerEvents = "none";
@@ -53,15 +50,13 @@ export default function HomePage() {
       document.body.style.overflow = "";
       document.body.style.pointerEvents = "";
     };
-  }, [isLoaded, ready]);
+  }, [isLoaded]);
 
   const handleLoadingComplete = () => {
     window.sessionStorage.setItem(SESSION_LOCALE_KEY, locale);
     setIsLoaded(true);
     setTimeout(() => setShowContent(true), 80);
   };
-
-  if (!ready) return null;
 
   return (
     <>
