@@ -23,6 +23,10 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
   useEffect(() => {
     let exitTimer: ReturnType<typeof setTimeout> | null = null;
     const ctx = gsap.context(() => {
+      // Hide targets immediately so there's no frame where they're visible before the animation starts
+      if (logoImgRef.current) gsap.set(logoImgRef.current, { opacity: 0, y: 40, scale: 0.82 });
+      if (taglineRef.current) gsap.set(taglineRef.current, { opacity: 0, y: 16 });
+
       const tl = gsap.timeline({
         onComplete: () => {
           setExiting(true);
@@ -32,10 +36,10 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
 
       // Animate logo image
       if (logoImgRef.current) {
-        tl.from(logoImgRef.current, {
-          opacity: 0,
-          y: 40,
-          scale: 0.82,
+        tl.to(logoImgRef.current, {
+          opacity: 1,
+          y: 0,
+          scale: 1,
           duration: 0.8,
           ease: "power3.out",
         });
@@ -43,11 +47,11 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
 
       // Animate tagline
       if (taglineRef.current) {
-        tl.from(
+        tl.to(
           taglineRef.current,
           {
-            opacity: 0,
-            y: 16,
+            opacity: 0.6,
+            y: 0,
             duration: 0.45,
             ease: "power2.out",
           },
@@ -81,8 +85,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
         <motion.div
           className="loading-screen"
           dir={isRtlLocale ? "rtl" : "ltr"}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          initial={{ opacity: 1 }}
           exit={{
             clipPath: "polygon(0 0, 100% 0, 100% 0, 0 0)",
             transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },

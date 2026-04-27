@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useTheme } from "@/components/layout/ThemeContext";
 import { useHoverCapable } from "@/hooks/useHoverCapable";
 import { motion, AnimatePresence } from "framer-motion";
@@ -11,6 +11,8 @@ export default function ThemeToggle() {
   const isDark = resolvedTheme === "dark";
   const canHover = useHoverCapable();
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
 
   const handleToggle = () => {
     const btn = buttonRef.current;
@@ -76,7 +78,6 @@ export default function ThemeToggle() {
       ref={buttonRef}
       onClick={handleToggle}
       className="fixed bottom-6 right-6 z-9000 w-12 h-12 rounded-full glass-card theme-toggle-btn flex items-center justify-center shadow-lg"
-      style={{ border: "1px solid rgba(252,0,42,0.3)" }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
@@ -84,10 +85,11 @@ export default function ThemeToggle() {
         y: { delay: 1, type: "spring", stiffness: 270, damping: 20 },
         scale: { type: "spring", stiffness: 420, damping: 18 },
       }}
-      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+      aria-label="Toggle theme"
+      suppressHydrationWarning
     >
       <AnimatePresence mode="wait">
-        {isDark ? (
+        {mounted && isDark ? (
           <motion.div
             key="moon"
             initial={{ rotate: -90, opacity: 0, scale: 0.5 }}
@@ -97,7 +99,7 @@ export default function ThemeToggle() {
           >
             <Moon size={18} className="text-gold" />
           </motion.div>
-        ) : (
+        ) : mounted ? (
           <motion.div
             key="sun"
             initial={{ rotate: 90, opacity: 0, scale: 0.5 }}
@@ -107,7 +109,7 @@ export default function ThemeToggle() {
           >
             <Sun size={18} className="text-gold" />
           </motion.div>
-        )}
+        ) : null}
       </AnimatePresence>
     </motion.button>
   );

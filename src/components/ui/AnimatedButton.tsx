@@ -129,7 +129,7 @@ const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>(
         ? { scale: 1.03, y: -1, filter: "brightness(0.88)" }
         : { scale: 1.04, y: -1.5 };
     const tapAnim = { scale: 0.97, y: 0 };
-    const springTransition = { type: "spring", stiffness: 400, damping: 20 };
+    const springTransition = { type: "spring" as const, stiffness: 400, damping: 20 };
 
     if (href && !isDisabled) {
       return (

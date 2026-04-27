@@ -100,7 +100,7 @@ function ServiceCard({
           onMouseMove={handleBorderMouseMove}
           onMouseLeave={handleBorderMouseLeave}
           onTouchStart={(e) => { shellRef.current?.classList.add("is-pressed"); handleTouchStart(e); }}
-          onTouchEnd={(e) => { shellRef.current?.classList.remove("is-pressed"); handleTouchEnd(e as unknown as React.TouchEvent<HTMLElement>); }}
+          onTouchEnd={() => { shellRef.current?.classList.remove("is-pressed"); handleTouchEnd(); }}
           onTouchCancel={() => shellRef.current?.classList.remove("is-pressed")}
         >
           {/* JS-driven border ring */}

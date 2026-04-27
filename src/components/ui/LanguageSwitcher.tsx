@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useTransition, useCallback } from "react";
-import { createPortal } from "react-dom";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -22,7 +21,6 @@ export default function LanguageSwitcher() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [open, setOpen] = useState(false);
-  const [isPending, startTransition] = useTransition();
   const ref = useRef<HTMLDivElement>(null);
 
   const buildLocalePath = useCallback((code: string) => {
@@ -38,11 +36,17 @@ export default function LanguageSwitcher() {
       return;
     }
 
-    const nextPath = buildLocalePath(code);
-    router.prefetch(nextPath);
-    startTransition(() => {
-      router.replace(nextPath, { scroll: false });
-    });
+    // Cover the current page instantly — loading screen (z-9999) takes over once the new component mounts
+    const cover = document.createElement("div");
+    cover.id = "lang-switch-cover";
+    cover.style.cssText = "position:fixed;inset:0;z-index:9998;background:var(--bg-primary);";
+    document.body.appendChild(cover);
+
+    window.sessionStorage.setItem("entensy:lang-switching", "1");
+    document.documentElement.style.overflow = "hidden";
+    document.documentElement.style.pointerEvents = "none";
+
+    router.replace(buildLocalePath(code), { scroll: false });
     setOpen(false);
   };
 
@@ -66,46 +70,11 @@ export default function LanguageSwitcher() {
   }, []);
 
   return (
-    <>
-      {isPending && typeof document !== "undefined" &&
-        createPortal(
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.18 }}
-            style={{
-              position: "fixed",
-              inset: 0,
-              zIndex: 99999,
-              background: "rgba(8,6,20,0.55)",
-              backdropFilter: "blur(4px)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 0.9, repeat: Infinity, ease: "linear" }}
-              style={{
-                width: 36,
-                height: 36,
-                borderRadius: "50%",
-                border: "3px solid rgba(252,0,42,0.18)",
-                borderTopColor: "#FC002A",
-              }}
-            />
-          </motion.div>,
-          document.body,
-        )}
     <div ref={ref} className="relative z-9001">
       {/* Trigger: globe icon only */}
       <button
         onClick={() => setOpen((v) => !v)}
         className={`navbar-icon-btn flex items-center justify-center w-9 h-9 rounded-full${open ? " navbar-icon-btn--open" : ""}`}
-        disabled={isPending}
-        style={{ opacity: isPending ? 0.6 : 1 }}
         aria-label="Switch language"
         aria-expanded={open}
       >
@@ -131,7 +100,6 @@ export default function LanguageSwitcher() {
               <li key={lang.code}>
                 <button
                   onClick={() => switchLocale(lang.code)}
-                  disabled={isPending}
                   className="w-full flex items-center justify-between px-4 py-2.5 text-sm font-medium transition-colors duration-150"
                   style={{
                     color: lang.code === locale ? "#FC002A" : "var(--text-secondary)",
@@ -165,6 +133,5 @@ export default function LanguageSwitcher() {
         )}
       </AnimatePresence>
     </div>
-    </>
   );
 }

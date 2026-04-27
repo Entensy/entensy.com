@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useLayoutEffect } from "react";
+import { useState, useLayoutEffect } from "react";
 import dynamic from "next/dynamic";
 import { useLocale } from "next-intl";
 import Navbar from "@/components/layout/Navbar";
@@ -20,41 +20,51 @@ const SocialsSection   = dynamic(() => import("@/components/sections/SocialsSect
 
 const SESSION_LOCALE_KEY = "entensy:loaded-locale";
 
+const LANG_SWITCHING_KEY = "entensy:lang-switching";
+
+// Runs synchronously during the first render (before any commit or paint).
+// Returns true when the loading screen should be skipped.
+// Always shows on: hard reload, first ever visit, language switch.
+function shouldSkipLoading(): boolean {
+  if (typeof window === "undefined") return false; // SSR — always show
+  // Language switcher sets this flag before navigating — always show the loading screen
+  if (window.sessionStorage.getItem(LANG_SWITCHING_KEY)) {
+    window.sessionStorage.removeItem(LANG_SWITCHING_KEY);
+    return false;
+  }
+  const navEntry = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
+  const isReload = navEntry?.type === "reload";
+  return !isReload && !!window.sessionStorage.getItem(SESSION_LOCALE_KEY);
+}
+
 export default function HomePage() {
   const locale = useLocale();
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [showContent, setShowContent] = useState(false);
+  // Lazy initializer runs synchronously on first render. If it returns true, isLoaded/showContent
+  // start as true and the LoadingScreen is never added to the tree at all — no AnimatePresence
+  // exit flash, no layout shift, no scroll-lock flicker.
+  const [isLoaded, setIsLoaded] = useState(shouldSkipLoading);
+  const [showContent, setShowContent] = useState(shouldSkipLoading);
 
-  // Runs before first paint — skips loading screen on return visits without a visible flash
+  // Lock scroll before first paint on every case that shows the loading screen.
+  // The inline script in layout.tsx covers hard loads; this useLayoutEffect covers SPA navigations
+  // (language switches) where the inline script doesn't re-run.
   useLayoutEffect(() => {
-    const navEntry = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
-    const isReload = navEntry?.type === "reload";
-    const lastLocale = window.sessionStorage.getItem(SESSION_LOCALE_KEY);
-    const alreadyLoaded = !isReload && lastLocale === locale;
-    if (alreadyLoaded) {
-      setIsLoaded(true);
-      setShowContent(true);
-    }
-  }, [locale]);
-
-  // Lock scroll while loading screen is active.
-  // Use overflow-y: scroll (not hidden) so the scrollbar gutter stays reserved — prevents layout shift in RTL
-  // where the scrollbar is on the left side. Pointer events are already disabled, so user can't actually scroll.
-  useEffect(() => {
     if (!isLoaded) {
-      document.body.style.overflowY = "scroll";
-      document.body.style.pointerEvents = "none";
+      document.documentElement.style.overflow = "hidden";
+      document.documentElement.style.pointerEvents = "none";
     } else {
-      document.body.style.overflowY = "";
-      document.body.style.pointerEvents = "";
+      document.documentElement.style.overflow = "";
+      document.documentElement.style.pointerEvents = "";
     }
     return () => {
-      document.body.style.overflowY = "";
-      document.body.style.pointerEvents = "";
+      document.documentElement.style.overflow = "";
+      document.documentElement.style.pointerEvents = "";
+      document.getElementById("lang-switch-cover")?.remove();
     };
   }, [isLoaded]);
 
   const handleLoadingComplete = () => {
+    document.getElementById("lang-switch-cover")?.remove();
     window.sessionStorage.setItem(SESSION_LOCALE_KEY, locale);
     setIsLoaded(true);
     setTimeout(() => setShowContent(true), 80);

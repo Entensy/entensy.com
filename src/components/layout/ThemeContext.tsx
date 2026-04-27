@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
 type Theme = "dark" | "light";
 
@@ -14,13 +14,16 @@ const ThemeContext = createContext<{
   setTheme: () => {},
 });
 
-function readStoredTheme(): Theme {
-  if (typeof window === "undefined") return "dark";
-  return localStorage.getItem("entensy-theme") === "light" ? "light" : "dark";
-}
-
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>(readStoredTheme);
+  // Always start with "dark" so SSR and client initial render match.
+  // The inline script in layout.tsx already applied the correct class to <html>
+  // before React hydrates, so CSS-variable-based styling is correct immediately.
+  const [theme, setThemeState] = useState<Theme>("dark");
+
+  useEffect(() => {
+    const actual = document.documentElement.classList.contains("dark") ? "dark" : "light";
+    if (actual !== theme) setThemeState(actual);
+  }, []);
 
   const setTheme = (t: Theme) => {
     setThemeState(t);

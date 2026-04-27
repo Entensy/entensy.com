@@ -1,5 +1,4 @@
 import { Montserrat, Noto_Sans_Arabic } from "next/font/google";
-import Script from "next/script";
 import { routing } from "@/i18n/routing";
 import "./globals.css";
 
@@ -40,14 +39,19 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
       className={`${montserrat.variable} ${notoSansArabic.variable} scroll-smooth dark`}
       suppressHydrationWarning
     >
-      <body className="antialiased overflow-x-hidden" suppressHydrationWarning>
-        <Script
-          id="theme-init"
-          strategy="beforeInteractive"
+      <head>
+        <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('entensy-theme');if(t==='light'){document.documentElement.classList.remove('dark')}else{document.documentElement.classList.add('dark')}}catch(e){}})()`,
           }}
         />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var nav=performance.getEntriesByType('navigation')[0];var isReload=nav&&nav.type==='reload';var hasLoaded=!!sessionStorage.getItem('entensy:loaded-locale');if(isReload||!hasLoaded){document.documentElement.style.overflow='hidden';document.documentElement.style.pointerEvents='none';}}catch(e){}})()`,
+          }}
+        />
+      </head>
+      <body className="antialiased overflow-x-hidden" suppressHydrationWarning>
         {children}
       </body>
     </html>

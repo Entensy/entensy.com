@@ -194,20 +194,12 @@ export default function StacksSection() {
                     boxShadow: { duration: 0.18, ease: "easeOut" },
                   }}
                   whileHover={canHover ? {
-                    scale: 1.09,
-                    y: -3,
+                    scale: 1.05,
                     color: techColor,
                     background: techBgColor,
                     borderColor: `${techColor}55`,
                     boxShadow: `0 0 18px ${techColor}70, 0 4px 22px ${techColor}35`,
-                    transition: {
-                      color: { duration: 0.18, ease: "easeOut" },
-                      background: { duration: 0.18, ease: "easeOut" },
-                      borderColor: { duration: 0.18, ease: "easeOut" },
-                      boxShadow: { duration: 0.18, ease: "easeOut" },
-                      scale: { type: "spring", stiffness: 500, damping: 22 },
-                      y: { type: "spring", stiffness: 500, damping: 22 },
-                    },
+                    transition: { duration: 0.15, ease: "easeOut" },
                   } : {}}
                   whileTap={{
                     scale: 1.05,
