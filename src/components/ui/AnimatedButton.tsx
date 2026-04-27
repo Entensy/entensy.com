@@ -111,7 +111,7 @@ const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>(
     );
 
     const commonClassName = cn(
-      "relative group inline-flex items-center justify-center gap-2 rounded-full font-medium overflow-hidden transition-all duration-300 will-change-transform",
+      "relative group inline-flex items-center justify-center gap-2 rounded-full font-medium overflow-hidden transition-colors duration-300 will-change-transform",
       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FC002A] focus-visible:ring-offset-2",
       "select-none",
       variantStyles[variant],
@@ -122,12 +122,14 @@ const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>(
       className
     );
 
-    // Primary/secondary: shift color on hover; others: keep scale lift
-    const isPrimaryOrSecondary = variant === "primary" || variant === "secondary";
-    const hoverAnim = isPrimaryOrSecondary
-      ? { y: -1, filter: "brightness(0.88)" }
-      : { scale: 1.04, y: -1.5 };
-    const tapAnim = { scale: 0.97, y: 0, filter: "brightness(0.82)" };
+    const isPrimary = variant === "primary";
+    const isSecondary = variant === "secondary";
+    const hoverAnim =
+      isPrimary || isSecondary
+        ? { scale: 1.03, y: -1, filter: "brightness(0.88)" }
+        : { scale: 1.04, y: -1.5 };
+    const tapAnim = { scale: 0.97, y: 0 };
+    const springTransition = { type: "spring", stiffness: 400, damping: 20 };
 
     if (href && !isDisabled) {
       return (
@@ -136,7 +138,7 @@ const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>(
           className={commonClassName}
           whileHover={hoverAnim}
           whileTap={tapAnim}
-          transition={{ type: "spring", stiffness: 300, damping: 22, mass: 0.9 }}
+          transition={springTransition}
         >
           {content}
         </motion.a>
@@ -150,7 +152,7 @@ const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>(
         disabled={isDisabled}
         whileHover={isDisabled ? {} : hoverAnim}
         whileTap={isDisabled ? {} : tapAnim}
-        transition={{ type: "spring", stiffness: 300, damping: 22, mass: 0.9 }}
+        transition={springTransition}
         {...props}
       >
         {content}
