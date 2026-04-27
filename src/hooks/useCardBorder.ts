@@ -32,8 +32,7 @@ function releaseOrbit() {
   }
 }
 
-const SPOTLIGHT_SPEED_IN  = 600; // px/s — snappy approach to tap point
-const SPOTLIGHT_SPEED_OUT = 280; // px/s — slower, relaxed return to orbit
+const SPOTLIGHT_SPEED_IN = 1200; // px/s — snappy approach to cursor/tap point
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────
 
@@ -78,55 +77,6 @@ export function useCardBorder(shellRef: React.RefObject<HTMLElement | null>) {
     };
   }, [shellRef]);
 
-  const handleBorderMouseMove = useCallback(
-    (e: React.MouseEvent<HTMLElement>) => {
-      // iOS fires fake mousemove after touchend — ignore events within 600 ms of a touch
-      if (Date.now() - lastTouchRef.current < 600) return;
-      const shell = shellRef.current;
-      if (!shell) return;
-      isHoveringRef.current = true;
-
-      const rect = e.currentTarget.getBoundingClientRect();
-      const mx = e.clientX - rect.left;
-      const my = e.clientY - rect.top;
-
-      const ring = shell.querySelector<HTMLElement>(".card-border-ring");
-      if (ring) {
-        ring.style.setProperty("--mx", mx + "px");
-        ring.style.setProperty("--my", my + "px");
-      }
-
-      const cursorGlow = shell.querySelector<HTMLElement>(".card-cursor-glow");
-      if (cursorGlow) {
-        gsap.to(cursorGlow, {
-          x: mx - rect.width / 2,
-          y: my - rect.height / 2,
-          opacity: 1,
-          duration: 0.1,
-          ease: "power2.out",
-          overwrite: "auto",
-        });
-      }
-    },
-    [shellRef]
-  );
-
-  const handleBorderMouseLeave = useCallback(() => {
-    const shell = shellRef.current;
-    if (!shell) return;
-    isHoveringRef.current = false;
-
-    const cursorGlow = shell.querySelector<HTMLElement>(".card-cursor-glow");
-    if (cursorGlow) {
-      gsap.to(cursorGlow, {
-        opacity: 0,
-        duration: 0.35,
-        ease: "power1.in",
-        overwrite: "auto",
-      });
-    }
-  }, [shellRef]);
-
   // Reads the current orbit position from sharedProxy so we can animate to/from it.
   const getOrbitPos = useCallback((shell: HTMLElement) => {
     const W = shell.offsetWidth;
@@ -138,6 +88,101 @@ export function useCardBorder(shellRef: React.RefObject<HTMLElement | null>) {
     if (pos < 2 * W + H)   return { mx: W - (pos - W - H), my: H        };
     return                        { mx: 0,             my: H - (pos - 2 * W - H) };
   }, []);
+
+  const handleBorderMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLElement>) => {
+      // iOS fires fake mousemove after touchend — ignore events within 600 ms of a touch
+      if (Date.now() - lastTouchRef.current < 600) return;
+      const shell = shellRef.current;
+      if (!shell) return;
+
+      const rect = e.currentTarget.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+
+      const ring = shell.querySelector<HTMLElement>(".card-border-ring");
+      const cursorGlow = shell.querySelector<HTMLElement>(".card-cursor-glow");
+
+      if (!isHoveringRef.current) {
+        // First entry: kill any in-progress return tween, then animate from orbit to cursor
+        if (returnTweenRef.current) {
+          returnTweenRef.current.kill();
+          returnTweenRef.current = null;
+        }
+        isHoveringRef.current = true;
+
+        if (ring) {
+          const { mx: fromMx, my: fromMy } = getOrbitPos(shell);
+          const dist = Math.hypot(mx - fromMx, my - fromMy);
+          const duration = Math.max(0.1, Math.min(0.35, dist / SPOTLIGHT_SPEED_IN));
+          const proxy = { mx: fromMx, my: fromMy };
+          gsap.to(proxy, {
+            mx, my, duration,
+            ease: "power2.out",
+            overwrite: "auto",
+            onUpdate: () => {
+              ring.style.setProperty("--mx", proxy.mx + "px");
+              ring.style.setProperty("--my", proxy.my + "px");
+            },
+          });
+        }
+      } else {
+        // Already hovering: follow cursor directly
+        if (ring) {
+          ring.style.setProperty("--mx", mx + "px");
+          ring.style.setProperty("--my", my + "px");
+        }
+      }
+
+      if (cursorGlow) {
+        gsap.to(cursorGlow, {
+          x: mx - rect.width / 2,
+          y: my - rect.height / 2,
+          opacity: 1,
+          duration: 0.1,
+          ease: "power2.out",
+          overwrite: "auto",
+        });
+      }
+    },
+    [shellRef, getOrbitPos]
+  );
+
+  const handleBorderMouseLeave = useCallback(() => {
+    const shell = shellRef.current;
+    if (!shell) return;
+
+    const ring = shell.querySelector<HTMLElement>(".card-border-ring");
+    const cursorGlow = shell.querySelector<HTMLElement>(".card-cursor-glow");
+
+    if (cursorGlow) {
+      gsap.to(cursorGlow, { opacity: 0, duration: 0.35, ease: "power1.in", overwrite: "auto" });
+    }
+
+    if (ring) {
+      const fromMx = parseFloat(ring.style.getPropertyValue("--mx") || "0");
+      const fromMy = parseFloat(ring.style.getPropertyValue("--my") || "0");
+      const proxy = { p: 0 };
+      returnTweenRef.current = gsap.to(proxy, {
+        p: 1,
+        duration: 0.5,
+        ease: "power2.inOut",
+        overwrite: "auto",
+        onUpdate: () => {
+          // Re-read the live orbit position every frame so we always land on it
+          const { mx: toMx, my: toMy } = getOrbitPos(shell);
+          ring.style.setProperty("--mx", (fromMx + (toMx - fromMx) * proxy.p) + "px");
+          ring.style.setProperty("--my", (fromMy + (toMy - fromMy) * proxy.p) + "px");
+        },
+        onComplete: () => {
+          returnTweenRef.current = null;
+          isHoveringRef.current = false;
+        },
+      });
+    } else {
+      isHoveringRef.current = false;
+    }
+  }, [shellRef, getOrbitPos]);
 
   // Smoothly animates the spotlight from its current orbit position to the touch point.
   const handleTouchStart = useCallback((e: React.TouchEvent<HTMLElement>) => {
@@ -164,7 +209,7 @@ export function useCardBorder(shellRef: React.RefObject<HTMLElement | null>) {
       // Start from wherever the orbit is right now
       const { mx: fromMx, my: fromMy } = getOrbitPos(shell);
       const dist = Math.hypot(targetMx - fromMx, targetMy - fromMy);
-      const duration = Math.max(0.18, Math.min(0.55, dist / SPOTLIGHT_SPEED_IN));
+      const duration = Math.max(0.1, Math.min(0.35, dist / SPOTLIGHT_SPEED_IN));
       const proxy = { mx: fromMx, my: fromMy };
       gsap.to(proxy, {
         mx: targetMx,
@@ -181,7 +226,7 @@ export function useCardBorder(shellRef: React.RefObject<HTMLElement | null>) {
 
     if (cursorGlow) {
       const dist = Math.hypot(targetMx - rect.width / 2, targetMy - rect.height / 2);
-      const duration = Math.max(0.18, Math.min(0.55, dist / SPOTLIGHT_SPEED_IN));
+      const duration = Math.max(0.1, Math.min(0.35, dist / SPOTLIGHT_SPEED_IN));
       gsap.to(cursorGlow, {
         x: targetMx - rect.width / 2,
         y: targetMy - rect.height / 2,
@@ -208,22 +253,18 @@ export function useCardBorder(shellRef: React.RefObject<HTMLElement | null>) {
     }
 
     if (ring) {
-      // Animate back to wherever the orbit is right now, then resume the tick
-      const { mx: toMx, my: toMy } = getOrbitPos(shell);
-      const fromMx = parseFloat(ring.style.getPropertyValue("--mx") || String(toMx));
-      const fromMy = parseFloat(ring.style.getPropertyValue("--my") || String(toMy));
-      const dist = Math.hypot(toMx - fromMx, toMy - fromMy);
-      const duration = Math.max(0.5, Math.min(1.0, dist / SPOTLIGHT_SPEED_OUT));
-      const proxy = { mx: fromMx, my: fromMy };
+      const fromMx = parseFloat(ring.style.getPropertyValue("--mx") || "0");
+      const fromMy = parseFloat(ring.style.getPropertyValue("--my") || "0");
+      const proxy = { p: 0 };
       returnTweenRef.current = gsap.to(proxy, {
-        mx: toMx,
-        my: toMy,
-        duration,
+        p: 1,
+        duration: 0.5,
         ease: "power2.inOut",
         overwrite: "auto",
         onUpdate: () => {
-          ring.style.setProperty("--mx", proxy.mx + "px");
-          ring.style.setProperty("--my", proxy.my + "px");
+          const { mx: toMx, my: toMy } = getOrbitPos(shell);
+          ring.style.setProperty("--mx", (fromMx + (toMx - fromMx) * proxy.p) + "px");
+          ring.style.setProperty("--my", (fromMy + (toMy - fromMy) * proxy.p) + "px");
         },
         onComplete: () => {
           returnTweenRef.current = null;
