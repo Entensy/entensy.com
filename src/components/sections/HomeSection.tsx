@@ -18,10 +18,10 @@ const GlobeBackground = dynamic(
 gsap.registerPlugin(SplitText, ScrollTrigger);
 
 const floatingBadges = [
-  { key: "floating_1", delay: 0,   x: "-10%", y: "30%", rtlX: null   },
-  { key: "floating_2", delay: 0.3, x: "80%",  y: "20%", rtlX: "20%"  },
-  { key: "floating_3", delay: 0.6, x: "-8%",  y: "70%", rtlX: null   },
-  { key: "floating_4", delay: 0.9, x: "78%",  y: "65%", rtlX: "22%"  },
+  { key: "floating_1", delay: 0,   side: "left"  as const, offset: "30%", y: "25%" },
+  { key: "floating_2", delay: 0.3, side: "right" as const, offset: "30%", y: "25%" },
+  { key: "floating_3", delay: 0.6, side: "left"  as const, offset: "25%", y: "68%" },
+  { key: "floating_4", delay: 0.9, side: "right" as const, offset: "25%", y: "68%" },
 ];
 
 // Mouse icon SVG scroll indicator
@@ -113,35 +113,58 @@ export default function HomeSection() {
         }}
       />
 
-      {/* Floating badges — RTL: only floating_2 and floating_4 mirrored to left edge */}
-      {floatingBadges
-        .filter((badge) => !isRtlLocale || badge.rtlX !== null)
-        .map((badge) => (
-        <motion.div
-          key={badge.key}
-          className="absolute hidden lg:flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold glass-card z-20 bg-drift-y"
-          style={{
-            left: isRtlLocale ? badge.rtlX! : badge.x,
-            top: badge.y,
-            background: "color-mix(in srgb, var(--bg-primary) 80%, transparent)",
-            backdropFilter: "blur(14px)",
-            WebkitBackdropFilter: "blur(14px)",
-            border: "1px solid rgba(252,0,42,0.2)",
-            color: "var(--text-secondary)",
-            "--dur": `${4 + badge.delay}s`,
-            "--delay": `${badge.delay + 1.5}s`,
-          } as React.CSSProperties}
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{
-            opacity: { delay: badge.delay + 1.5, duration: 0.6 },
-            scale: { delay: badge.delay + 1.5, duration: 0.6 },
-          }}
-        >
-          <span className="w-1.5 h-1.5 rounded-full bg-brand animate-pulse shrink-0" />
-          {t(badge.key as Parameters<typeof t>[0])}
-        </motion.div>
-      ))}
+      {/* Floating badges — all 4 show in both LTR and RTL, sides mirrored in RTL */}
+      {floatingBadges.map((badge) => {
+        // In LTR: left-side badge anchors its right edge left of center; right-side anchors its left edge right of center.
+        // In RTL: sides are flipped — left-side badge moves to right, right-side moves to left.
+        const posStyle = isRtlLocale
+          ? (badge.side === "left"
+            ? { left: `calc(50% + ${badge.offset})` }
+            : { right: `calc(50% + ${badge.offset})` })
+          : (badge.side === "right"
+            ? { left: `calc(50% + ${badge.offset})` }
+            : { right: `calc(50% + ${badge.offset})` });
+
+        return (
+          <div
+            key={badge.key}
+            className="absolute hidden lg:block z-20"
+            style={{ ...posStyle, top: badge.y }}
+          >
+            <motion.div
+              className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold glass-card bg-drift-y"
+              dir="ltr"
+              style={{
+                background: "color-mix(in srgb, var(--bg-primary) 80%, transparent)",
+                backdropFilter: "blur(14px)",
+                WebkitBackdropFilter: "blur(14px)",
+                border: "1px solid rgba(252,0,42,0.2)",
+                color: "var(--text-secondary)",
+                "--dur": `${4 + badge.delay}s`,
+                "--delay": `${badge.delay + 1.5}s`,
+              } as React.CSSProperties}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{
+                opacity: { delay: badge.delay + 1.5, duration: 0.6 },
+                scale: { delay: badge.delay + 1.5, duration: 0.6 },
+              }}
+            >
+              {isRtlLocale ? (
+                <>
+                  {t(badge.key as Parameters<typeof t>[0])}
+                  <span className="w-1.5 h-1.5 rounded-full bg-brand animate-pulse shrink-0" />
+                </>
+              ) : (
+                <>
+                  <span className="w-1.5 h-1.5 rounded-full bg-brand animate-pulse shrink-0" />
+                  {t(badge.key as Parameters<typeof t>[0])}
+                </>
+              )}
+            </motion.div>
+          </div>
+        );
+      })}
 
       {/* Main content — pt-24 ensures content doesn't crowd the navbar */}
       <div className="relative z-10 flex flex-col items-center text-center gap-6 px-[clamp(1.25rem,5vw,5rem)] max-w-5xl mx-auto w-full pt-28 md:pt-32 pb-28 md:pb-24">
@@ -231,13 +254,13 @@ export default function HomeSection() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.2, duration: 0.6 }}
-          className={`flex flex-col sm:flex-row gap-4 ${isRtlLocale ? "sm:flex-row-reverse" : ""}`}
+          className="flex flex-col sm:flex-row gap-4"
         >
           <AnimatedButton
             variant="primary"
             size="lg"
             icon={isRtlLocale ? <ArrowLeft size={18} /> : <ArrowRight size={18} />}
-            iconPosition={isRtlLocale ? "left" : "right"}
+            iconPosition="right"
             onClick={() => document.getElementById("portfolio")?.scrollIntoView({ behavior: "smooth" })}
           >
             {t("cta_primary")}
