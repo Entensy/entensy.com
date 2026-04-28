@@ -1,15 +1,11 @@
 "use client";
 
 import { useRef } from "react";
-import { useGSAP } from "@gsap/react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { SplitText } from "gsap/SplitText";
 import { motion } from "framer-motion";
 import { useLocale } from "next-intl";
 import { cn } from "@/lib/utils";
-
-gsap.registerPlugin(ScrollTrigger, SplitText);
+import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { revealVariant } from "@/lib/animations";
 
 interface SectionHeadingProps {
   badge?: string;
@@ -28,50 +24,16 @@ export default function SectionHeading({
   align = "center",
   titleClassName,
 }: SectionHeadingProps) {
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
   const locale = useLocale();
   const isRtlLocale = locale === "ar" || locale === "ckb";
 
-  useGSAP(() => {
-    if (!titleRef.current) return;
+  const badgeRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const subtitleRef = useRef<HTMLParagraphElement>(null);
 
-    if (isRtlLocale) {
-      gsap.fromTo(
-        titleRef.current,
-        { opacity: 0, y: 26 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.55,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: titleRef.current,
-            start: "top 88%",
-            toggleActions: "play none play reset",
-          },
-        }
-      );
-      return;
-    }
-
-    const split = new SplitText(titleRef.current, { type: "words" });
-
-    gsap.from(split.words, {
-      opacity: 0,
-      y: 32,
-      stagger: 0.06,
-      duration: 0.62,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: titleRef.current,
-        start: "top 85%",
-        toggleActions: "play none restart reset",
-      },
-    });
-
-    return () => split.revert();
-  }, { scope: containerRef, dependencies: [isRtlLocale, title] });
+  const badgeState = useScrollReveal(badgeRef as React.RefObject<Element | null>);
+  const titleState = useScrollReveal(titleRef as React.RefObject<Element | null>);
+  const subtitleState = useScrollReveal(subtitleRef as React.RefObject<Element | null>);
 
   const alignClass =
     align === "center"
@@ -81,16 +43,13 @@ export default function SectionHeading({
       : "text-start items-start";
 
   return (
-    <div
-      ref={containerRef}
-      className={cn("flex flex-col gap-4 mb-16", alignClass, className)}
-    >
+    <div className={cn("flex flex-col gap-4 mb-16", alignClass, className)}>
       {badge && (
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, margin: "-40px" }}
-          transition={{ duration: 0.5 }}
+          ref={badgeRef}
+          variants={revealVariant}
+          initial="below"
+          animate={badgeState}
           className={cn(
             "inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold",
             isRtlLocale ? "" : "tracking-widest uppercase"
@@ -109,25 +68,26 @@ export default function SectionHeading({
         </motion.div>
       )}
 
-      <h2
+      <motion.h2
         ref={titleRef}
+        variants={revealVariant}
+        initial="below"
+        animate={titleState}
         className={cn(
           "text-3xl md:text-4xl lg:text-5xl font-bold leading-tight tracking-tight",
-          isRtlLocale ? "overflow-visible" : "overflow-hidden",
           "heading-glass",
           titleClassName
         )}
-        style={{ perspective: "500px" }}
       >
         {title}
-      </h2>
+      </motion.h2>
 
       {subtitle && (
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, margin: "-40px" }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          ref={subtitleRef}
+          variants={revealVariant}
+          initial="below"
+          animate={subtitleState}
           className={cn(
             "max-w-2xl text-base md:text-lg leading-relaxed",
             "text-(--text-secondary)"
