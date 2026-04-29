@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useTranslations, useLocale } from "next-intl";
+import { useTheme } from "@/components/layout/ThemeContext";
 import {
   Mail,
   Phone,
@@ -19,11 +20,10 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import AnimatedButton from "@/components/ui/AnimatedButton";
 import Turnstile from "@/components/ui/Turnstile";
 import {
-  fadeUpVariant,
-  slideInLeftVariant,
-  slideInRightVariant,
-  viewportOnce,
+  revealVariant,
+  slideRevealLeftVariant,
 } from "@/lib/animations";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -63,18 +63,99 @@ const contactInfo = [
   },
 ] as const;
 
+// ─── Info Card ───────────────────────────────────────────────────────────────
+
+function InfoCard({
+  info,
+  t,
+}: {
+  info: (typeof contactInfo)[number];
+  t: ReturnType<typeof useTranslations>;
+}) {
+  const [hovered, setHovered] = useState(false);
+  const locale = useLocale();
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+  const isRtl = locale === "ar" || locale === "ckb";
+  const cardRef = useRef<HTMLDivElement>(null);
+  const cardState = useScrollReveal(cardRef as { current: Element | null });
+  const { icon: Icon, labelKey, valueKey, href, clickable } = info;
+
+  return (
+    <motion.div
+      ref={cardRef}
+      variants={revealVariant}
+      initial="below"
+      animate={cardState}
+      className="p-5 rounded-2xl flex items-start gap-4 overflow-hidden relative"
+      style={{
+        background: "var(--glass-bg)",
+        backdropFilter: "blur(12px)",
+        borderWidth: "1px",
+        borderStyle: "solid",
+        borderColor: "var(--glass-border)",
+        cursor: clickable ? "pointer" : "default",
+      }}
+      whileHover={{ scale: 1.01, y: -1, boxShadow: "0 16px 44px rgba(252,0,42,0.12)" }}
+      whileTap={{ scale: 1.01, boxShadow: "0 16px 44px rgba(252,0,42,0.28)", transition: { duration: 0.15, ease: "easeOut" } }}
+      transition={{ type: "spring", stiffness: 300, damping: 22 }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onTouchStart={() => setHovered(true)}
+      onTouchEnd={() => setHovered(false)}
+    >
+      <motion.div
+        className="contact-card-orb absolute -bottom-10 -right-10 w-32 h-32 rounded-full pointer-events-none"
+        style={{ background: isDark ? "radial-gradient(ellipse at 100% 100%, rgba(252,0,42,1) 0%, rgba(252,0,42,0.3) 50%, transparent 75%)" : "radial-gradient(ellipse at 100% 100%, rgba(252,0,42,0.18) 0%, rgba(252,0,42,0.06) 50%, transparent 75%)" }}
+        animate={{ scale: hovered ? 1.5 : 1, opacity: hovered ? 0.6 : 0.3 }}
+        whileTap={{ scale: 2.2, opacity: 0.70 }}
+        transition={{ type: "spring", stiffness: 200, damping: 20 }}
+      />
+      <div
+        className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-300"
+        style={{ background: "rgba(252,0,42,0.08)" }}
+      >
+        <Icon size={18} style={{ color: "#FC002A" }} />
+      </div>
+      <div className="min-w-0">
+        <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: "var(--text-muted)" }}>
+          {t(labelKey as Parameters<typeof t>[0])}
+        </p>
+        {href ? (
+          <a
+            href={href}
+            className="text-sm font-medium hover:text-brand transition-colors truncate block heading-glass"
+            {...(isRtl && href.startsWith("tel:") ? { dir: "ltr", style: { unicodeBidi: "bidi-override" } } : {})}
+          >
+            {t(valueKey as Parameters<typeof t>[0])}
+          </a>
+        ) : (
+          <p className="text-sm font-medium heading-glass">
+            {t(valueKey as Parameters<typeof t>[0])}
+          </p>
+        )}
+      </div>
+    </motion.div>
+  );
+}
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function ContactSection() {
   const t = useTranslations("contact");
   const locale = useLocale();
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
   const isRtlLocale = locale === "ar" || locale === "ckb";
   const [status, setStatus] = useState<FormStatus>("idle");
   const [ctaCardHovered, setCtaCardHovered] = useState(false);
-  const [hoveredInfoCard, setHoveredInfoCard] = useState<number | null>(null);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [turnstileResetKey, setTurnstileResetKey] = useState(0);
   const statusTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const formRef = useRef<HTMLDivElement>(null);
+  const formReveal = useScrollReveal(formRef as { current: Element | null });
+  const ctaCardRef = useRef<HTMLDivElement>(null);
+  const ctaCardReveal = useScrollReveal(ctaCardRef as { current: Element | null });
 
   // Clear any pending status reset on unmount
   useEffect(() => () => { if (statusTimerRef.current) clearTimeout(statusTimerRef.current); }, []);
@@ -173,14 +254,14 @@ export default function ContactSection() {
           className="absolute inset-y-0 left-0 w-1/2"
           style={{
             background:
-              "radial-gradient(ellipse at 0% 50%, rgba(252,0,42,0.12) 0%, transparent 65%)",
+              `radial-gradient(ellipse at 0% 50%, rgba(252,0,42,${isDark ? "0.12" : "0.04"}) 0%, transparent 65%)`,
           }}
         />
         <div
           className="absolute inset-y-0 right-0 w-1/2"
           style={{
             background:
-              "radial-gradient(ellipse at 100% 50%, rgba(201,168,76,0.08) 0%, transparent 65%)",
+              `radial-gradient(ellipse at 100% 50%, rgba(201,168,76,${isDark ? "0.08" : "0.03"}) 0%, transparent 65%)`,
           }}
         />
 
@@ -297,10 +378,10 @@ export default function ContactSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* ── Contact Form ── */}
           <motion.div
-            variants={slideInLeftVariant}
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewportOnce}
+            ref={formRef}
+            variants={slideRevealLeftVariant}
+            initial="below"
+            animate={formReveal}
             className="rounded-2xl p-8"
             style={{
               background: "var(--glass-bg)",
@@ -479,86 +560,20 @@ export default function ContactSection() {
           </motion.div>
 
           {/* ── Contact Info ── */}
-          <motion.div
-            variants={slideInRightVariant}
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewportOnce}
-            className="flex flex-col gap-6"
-          >
+          <div className="flex flex-col gap-6">
             {/* Info cards grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {contactInfo.map(({ icon: Icon, labelKey, valueKey, href, clickable }, i) => (
-                <motion.div
-                  key={labelKey}
-                  variants={fadeUpVariant}
-                  className="p-5 rounded-2xl flex items-start gap-4 overflow-hidden relative"
-                  style={{
-                    background: "var(--glass-bg)",
-                    backdropFilter: "blur(12px)",
-                    borderWidth: "1px",
-                    borderStyle: "solid",
-                    borderColor: "var(--glass-border)",
-                    cursor: clickable ? "pointer" : "default",
-                  }}
-                  whileHover={{
-                    scale: 1.01,
-                    y: -1,
-                    boxShadow: "0 16px 44px rgba(252,0,42,0.12)",
-                  }}
-                  whileTap={{ scale: 1.01, boxShadow: "0 16px 44px rgba(252,0,42,0.28)", transition: { duration: 0.15, ease: "easeOut" } }}
-                  transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                  onMouseEnter={() => setHoveredInfoCard(i)}
-                  onMouseLeave={() => setHoveredInfoCard(null)}
-                  onTouchStart={() => setHoveredInfoCard(i)}
-                  onTouchEnd={() => setHoveredInfoCard(null)}
-                >
-                  {/* Corner orb */}
-                  <motion.div
-                    className="contact-card-orb absolute -bottom-10 -right-10 w-32 h-32 rounded-full pointer-events-none"
-                    style={{ background: "radial-gradient(ellipse at 100% 100%, rgba(252,0,42,1) 0%, rgba(252,0,42,0.3) 50%, transparent 75%)" }}
-                    animate={{
-                      scale: hoveredInfoCard === i ? 1.5 : 1,
-                      opacity: hoveredInfoCard === i ? 0.6 : 0.3,
-                    }}
-                    whileTap={{ scale: 2.2, opacity: 0.70 }}
-                    transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                  />
-                  <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-300"
-                    style={{ background: "rgba(252,0,42,0.08)" }}
-                  >
-                    <Icon size={18} style={{ color: "#FC002A" }} />
-                  </div>
-                  <div className="min-w-0">
-                    <p
-                      className="text-xs font-semibold uppercase tracking-wider mb-1"
-                      style={{ color: "var(--text-muted)" }}
-                    >
-                      {t(labelKey as Parameters<typeof t>[0])}
-                    </p>
-                    {href ? (
-                      <a
-                        href={href}
-                        className={`text-sm font-medium hover:text-brand transition-colors truncate block heading-glass${isRtlLocale && href.startsWith("tel:") ? " force-ltr" : ""}`}
-                      >
-                        {t(valueKey as Parameters<typeof t>[0])}
-                      </a>
-                    ) : (
-                      <p
-                        className="text-sm font-medium heading-glass"
-                      >
-                        {t(valueKey as Parameters<typeof t>[0])}
-                      </p>
-                    )}
-                  </div>
-                </motion.div>
+              {contactInfo.map((info) => (
+                <InfoCard key={info.labelKey} info={info} t={t} />
               ))}
             </div>
 
             {/* "Let's build" decorative card */}
             <motion.div
-              variants={fadeUpVariant}
+              ref={ctaCardRef}
+              variants={revealVariant}
+              initial="below"
+              animate={ctaCardReveal}
               className="flex-1 p-8 rounded-2xl flex flex-col gap-4 justify-center relative overflow-hidden cursor-default"
               style={{
                 background:
@@ -578,14 +593,10 @@ export default function ContactSection() {
               onMouseEnter={() => setCtaCardHovered(true)}
               onMouseLeave={() => setCtaCardHovered(false)}
             >
-<div className="absolute inset-0 bg-grid-pattern opacity-20" />
-              {/* Split ambient echo */}
+              <div className="absolute inset-0 bg-grid-pattern opacity-20" />
               <div
                 className="absolute inset-0 pointer-events-none"
-                style={{
-                  background:
-                    "radial-gradient(ellipse at 80% 80%, rgba(201,168,76,0.12) 0%, transparent 60%)",
-                }}
+                style={{ background: `radial-gradient(ellipse at 80% 80%, rgba(201,168,76,${isDark ? "0.12" : "0.04"}) 0%, transparent 60%)` }}
               />
               <div className="relative z-10">
                 <h3 className="text-2xl font-black mb-2 heading-glass">
@@ -595,19 +606,14 @@ export default function ContactSection() {
                   {t("cta_card_desc")}
                 </p>
               </div>
-
-              {/* Bottom-right orb — grows on hover */}
               <motion.div
                 className="contact-card-orb absolute -bottom-8 -right-8 w-32 h-32 rounded-full pointer-events-none"
-                animate={{
-                  scale: ctaCardHovered ? 1.5 : 1,
-                  opacity: ctaCardHovered ? 0.6 : 0.3,
-                }}
+                animate={{ scale: ctaCardHovered ? 1.5 : 1, opacity: ctaCardHovered ? 0.6 : 0.3 }}
                 transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                style={{ background: "radial-gradient(ellipse at 100% 100%, rgba(252,0,42,1) 0%, rgba(252,0,42,0.3) 50%, transparent 75%)" }}
+                style={{ background: isDark ? "radial-gradient(ellipse at 100% 100%, rgba(252,0,42,1) 0%, rgba(252,0,42,0.3) 50%, transparent 75%)" : "radial-gradient(ellipse at 100% 100%, rgba(252,0,42,0.18) 0%, rgba(252,0,42,0.06) 50%, transparent 75%)" }}
               />
             </motion.div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

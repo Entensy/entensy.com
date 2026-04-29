@@ -14,11 +14,8 @@ import {
 import SectionHeading from "@/components/ui/SectionHeading";
 import { useCardBorder } from "@/hooks/useCardBorder";
 import { useHoverCapable } from "@/hooks/useHoverCapable";
-import {
-  staggerContainerVariant,
-  cardEntranceVariant,
-  viewportOnce,
-} from "@/lib/animations";
+import { cardRevealVariant } from "@/lib/animations";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 // Official brand colors & correct gradients
 const socialLinks = [
@@ -26,8 +23,8 @@ const socialLinks = [
     id: "facebook",
     icon: FaFacebook,
     label: "Facebook",
-    handle: "@entensy",
-    href: "https://facebook.com/entensy",
+    handle: "@entensyco",
+    href: "https://facebook.com/entensyco",
     color: "#1877F2",
     iconColor: "#1877F2",
     bgFrom: "rgba(24,119,242,0.14)",
@@ -42,8 +39,8 @@ const socialLinks = [
     id: "instagram",
     icon: FaInstagram,
     label: "Instagram",
-    handle: "@entensy",
-    href: "https://instagram.com/entensy",
+    handle: "@entensyagency",
+    href: "https://instagram.com/entensyagency",
     color: "#E1306C",
     iconColor: "url(#ig-gradient)",
     bgFrom: "rgba(252,175,69,0.08)",
@@ -74,8 +71,8 @@ const socialLinks = [
     id: "tiktok",
     icon: FaTiktok,
     label: "TikTok",
-    handle: "@entensy",
-    href: "https://tiktok.com/@entensy",
+    handle: "@entensyco",
+    href: "https://tiktok.com/@entensyco",
     // Official TikTok: black icon, red/cyan accents
     color: "#EE1D52",
     iconColor: "#010101",
@@ -316,7 +313,7 @@ function SocialCard({
           <span className="text-xs font-bold heading-glass">
             {social.label}
           </span>
-          <span className="text-[10px] font-medium" style={{ color: "var(--text-muted)" }}>
+          <span className="text-[10px] font-medium force-ltr" style={{ color: "var(--text-muted)" }}>
             {social.handle}
           </span>
         </div>
@@ -344,6 +341,22 @@ function SocialCard({
           {followText}
         </motion.span>
       </a>
+    </motion.div>
+  );
+}
+
+function SocialCardReveal({ social, followText }: { social: (typeof socialLinks)[number]; followText: string }) {
+  const revealRef = useRef<HTMLDivElement>(null);
+  const revealState = useScrollReveal(revealRef as React.RefObject<Element | null>);
+  return (
+    <motion.div
+      ref={revealRef}
+      variants={cardRevealVariant}
+      initial="below"
+      animate={revealState}
+      className="h-full"
+    >
+      <SocialCard social={social} followText={followText} />
     </motion.div>
   );
 }
@@ -458,24 +471,11 @@ export default function SocialsSection() {
             subtitle={t("subtitle")}
           />
 
-          <motion.div
-            variants={staggerContainerVariant}
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewportOnce}
-            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5"
-          >
-            {socialLinks.map((social, index) => (
-              <motion.div
-                key={social.id}
-                variants={cardEntranceVariant}
-                custom={index}
-                className="h-full"
-              >
-                <SocialCard social={social} followText={t("follow")} />
-              </motion.div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5">
+            {socialLinks.map((social) => (
+              <SocialCardReveal key={social.id} social={social} followText={t("follow")} />
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
     </>

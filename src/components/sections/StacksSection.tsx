@@ -7,8 +7,9 @@ import { useTheme } from "@/components/layout/ThemeContext";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { stackCategories } from "@/lib/stacks-data";
 import { iconRegistry } from "@/lib/icon-registry";
-import { staggerContainerVariant, viewportOnce } from "@/lib/animations";
+import { viewportOnce } from "@/lib/animations";
 import { useHoverCapable } from "@/hooks/useHoverCapable";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 // 21 evenly distributed watermark positions covering 0–95% range in both axes
 const WATERMARK_POSITIONS: { left: string; top: string }[] = [
@@ -35,6 +36,81 @@ const WATERMARK_POSITIONS: { left: string; top: string }[] = [
   { left: "68%", top: "85%" },
 ];
 
+type TechItem = (typeof stackCategories)[number]["items"][number];
+
+function TechBadge({
+  tech,
+  index,
+  isDark,
+  canHover,
+  badgeBaseColor,
+  badgeBaseBg,
+  badgeBaseBorder,
+}: {
+  tech: TechItem;
+  index: number;
+  isDark: boolean;
+  canHover: boolean;
+  badgeBaseColor: string;
+  badgeBaseBg: string;
+  badgeBaseBorder: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const state = useScrollReveal(ref as React.RefObject<Element | null>);
+
+  const techColor = tech.name === "Next.js" ? (isDark ? "#FFFFFF" : "#111111") : tech.color;
+  const techBgColor = tech.name === "Next.js"
+    ? (isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)")
+    : tech.bgColor;
+  const Icon = tech.icon ? iconRegistry[tech.icon] : undefined;
+
+  const variant = {
+    below:   { opacity: 0, scale: 0.8, y: 20 },
+    above:   { opacity: 0, y: -14, scale: 0.97, transition: { duration: 0.22, ease: "easeIn" as const } },
+    visible: { opacity: 1, scale: 1,  y: 0,     transition: { delay: index * 0.04, duration: 0.4, ease: "easeOut" as const } },
+  };
+
+  return (
+    <motion.div
+      ref={ref}
+      variants={variant}
+      initial="below"
+      animate={state}
+      className="stack-badge"
+      style={{
+        color: badgeBaseColor,
+        background: badgeBaseBg,
+        borderColor: badgeBaseBorder,
+      }}
+      transition={{
+        color:       { duration: 0.18, ease: "easeOut" },
+        background:  { duration: 0.18, ease: "easeOut" },
+        borderColor: { duration: 0.18, ease: "easeOut" },
+        boxShadow:   { duration: 0.18, ease: "easeOut" },
+      }}
+      whileHover={canHover ? {
+        scale: 1.05,
+        color: techColor,
+        background: techBgColor,
+        borderColor: `${techColor}55`,
+        boxShadow: `0 0 18px ${techColor}70, 0 4px 22px ${techColor}35`,
+        transition: { duration: 0.15, ease: "easeOut" },
+      } : {}}
+      whileTap={{
+        scale: 1.05,
+        color: techColor,
+        background: techBgColor,
+        borderColor: `${techColor}55`,
+        boxShadow: `0 0 18px ${techColor}70, 0 4px 22px ${techColor}35`,
+        transition: { duration: 0.15, ease: "easeOut" },
+      }}
+    >
+      {Icon && <Icon style={{ color: techColor, fontSize: "1.1rem", flexShrink: 0 }} />}
+      <span>{tech.name}</span>
+    </motion.div>
+  );
+}
+
 export default function StacksSection() {
   const t = useTranslations("stacks");
   const locale = useLocale();
@@ -45,14 +121,12 @@ export default function StacksSection() {
   const [activeCategory, setActiveCategory] = useState(stackCategories[0].id);
   const sectionRef = useRef<HTMLElement>(null);
 
-  // Base badge color is theme-aware — Framer reads this as the from-value for whileHover
   const badgeBaseColor = isDark ? "rgba(248,248,255,0.65)" : "rgba(13,10,30,0.65)";
-  const badgeBaseBg = isDark ? "rgba(255,255,255,0.04)" : "rgba(13,10,30,0.05)";
+  const badgeBaseBg    = isDark ? "rgba(255,255,255,0.04)" : "rgba(13,10,30,0.05)";
   const badgeBaseBorder = isDark ? "rgba(255,255,255,0.08)" : "rgba(13,10,30,0.10)";
 
   const currentCategory = stackCategories.find((c) => c.id === activeCategory)!;
 
-  // Collect all tech items for watermarks (one per position slot, cycling through categories)
   const allItems = stackCategories.flatMap((cat) =>
     cat.items.map((item) => ({ ...item, catColor: cat.color }))
   );
@@ -128,7 +202,7 @@ export default function StacksSection() {
                   background: isActive ? `${cat.color}20` : "rgba(255,255,255,0)",
                   boxShadow: isActive ? `0 0 12px ${cat.color}30` : "0 0 0px rgba(0,0,0,0)",
                 }}
-                viewport={{ once: false, margin: "-10px" }}
+                viewport={{ once: false, margin: "-15% 0px -5% 0px", amount: 0.05 }}
                 transition={{ delay: stackCategories.indexOf(cat) * 0.06, duration: 0.35, ease: "easeOut" }}
                 whileHover={!isActive && canHover ? { scale: 1.04 } : {}}
                 whileTap={{
@@ -159,70 +233,23 @@ export default function StacksSection() {
         <AnimatePresence mode="wait">
           <motion.div
             key={activeCategory}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            variants={staggerContainerVariant}
             className="flex flex-wrap justify-center gap-4 force-ltr"
             dir="ltr"
           >
-            {currentCategory.items.map((tech, index) => {
-              const Icon = tech.icon ? iconRegistry[tech.icon] : undefined;
-              // Next.js icon is white by design; swap to near-black in light mode
-              const techColor = tech.name === "Next.js"
-                ? (isDark ? "#FFFFFF" : "#111111")
-                : tech.color;
-              const techBgColor = tech.name === "Next.js"
-                ? (isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)")
-                : tech.bgColor;
-
-              return (
-                <motion.div
-                  key={tech.name}
-                  initial={{ opacity: 0, scale: 0.8, y: 20, color: badgeBaseColor, background: badgeBaseBg, borderColor: badgeBaseBorder }}
-                  whileInView={{ opacity: 1, scale: 1, y: 0, color: badgeBaseColor, background: badgeBaseBg, borderColor: badgeBaseBorder }}
-                  viewport={{ once: false, margin: "-10px" }}
-                  className="stack-badge"
-                  transition={{
-                    opacity: { delay: index * 0.05, duration: 0.4, ease: "easeOut" },
-                    y: { delay: index * 0.05, duration: 0.4, ease: "easeOut" },
-                    scale: { duration: 0.3, ease: "easeOut" },
-                    color: { duration: 0.18, ease: "easeOut" },
-                    background: { duration: 0.18, ease: "easeOut" },
-                    borderColor: { duration: 0.18, ease: "easeOut" },
-                    boxShadow: { duration: 0.18, ease: "easeOut" },
-                  }}
-                  whileHover={canHover ? {
-                    scale: 1.05,
-                    color: techColor,
-                    background: techBgColor,
-                    borderColor: `${techColor}55`,
-                    boxShadow: `0 0 18px ${techColor}70, 0 4px 22px ${techColor}35`,
-                    transition: { duration: 0.15, ease: "easeOut" },
-                  } : {}}
-                  whileTap={{
-                    scale: 1.05,
-                    color: techColor,
-                    background: techBgColor,
-                    borderColor: `${techColor}55`,
-                    boxShadow: `0 0 18px ${techColor}70, 0 4px 22px ${techColor}35`,
-                    transition: { duration: 0.15, ease: "easeOut" },
-                  }}
-                >
-                  {Icon && (
-                    <Icon
-                      style={{
-                        color: techColor,
-                        fontSize: "1.1rem",
-                        flexShrink: 0,
-                      }}
-                    />
-                  )}
-                  <span>{tech.name}</span>
-                </motion.div>
-              );
-            })}
+            {currentCategory.items.map((tech, index) => (
+              <TechBadge
+                key={tech.name}
+                tech={tech}
+                index={index}
+                isDark={isDark}
+                canHover={canHover}
+                badgeBaseColor={badgeBaseColor}
+                badgeBaseBg={badgeBaseBg}
+                badgeBaseBorder={badgeBaseBorder}
+              />
+            ))}
           </motion.div>
         </AnimatePresence>
 

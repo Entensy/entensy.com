@@ -12,7 +12,8 @@ import TiltCard from "@/components/ui/TiltCard";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { solutions } from "@/lib/solutions-data";
 import { useCardBorder } from "@/hooks/useCardBorder";
-import { staggerContainerVariant, cardEntranceVariant, viewportOnce } from "@/lib/animations";
+import { cardRevealVariant } from "@/lib/animations";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 type IconComponent = React.FC<{ style?: React.CSSProperties; className?: string }>;
 
@@ -22,20 +23,20 @@ const iconMap: Record<string, IconComponent> = {
   FiBriefcase, FiZap, FiSettings,
 };
 
-const solutionTagMap: Record<string, string> = {
-  "business-websites": "Web",
-  "company-portals": "Portal",
-  "ecommerce": "Commerce",
-  "booking": "Booking",
-  "dashboards": "Dashboard",
-  "crm-erp": "CRM",
-  "saas": "SaaS",
-  "mobile-apps": "Mobile",
-  "internal-tools": "Internal",
-  "government": "Civic",
-  "branding": "Brand",
-  "mvp-startup": "MVP",
-  "maintenance": "Support",
+const solutionTagKeyMap: Record<string, string> = {
+  "business-websites": "business_websites",
+  "company-portals": "company_portals",
+  "ecommerce": "ecommerce",
+  "booking": "booking",
+  "dashboards": "dashboards",
+  "crm-erp": "crm_erp",
+  "saas": "saas",
+  "mobile-apps": "mobile_apps",
+  "internal-tools": "internal_tools",
+  "government": "government",
+  "branding": "branding",
+  "mvp-startup": "mvp_startup",
+  "maintenance": "maintenance",
 };
 
 const CSS = `
@@ -85,6 +86,8 @@ function SolutionCard({
 }) {
   const Icon = iconMap[solution.icon];
   const shellRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const cardState = useScrollReveal(cardRef as React.RefObject<Element | null>);
   const { handleBorderMouseMove, handleBorderMouseLeave, handleTouchStart, handleTouchEnd } = useCardBorder(
     shellRef as React.RefObject<HTMLElement | null>
   );
@@ -93,9 +96,12 @@ function SolutionCard({
 
   return (
     <motion.div
-      variants={cardEntranceVariant}
-      custom={index}
+      ref={cardRef}
+      variants={cardRevealVariant}
+      initial="below"
+      animate={cardState}
       className={`${colSpan} ${centerClass} h-full`}
+      style={{ backdropFilter: "blur(4px) saturate(120%)", WebkitBackdropFilter: "blur(4px) saturate(120%)" }}
       whileTap={{ scale: 0.97 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
     >
@@ -120,8 +126,9 @@ function SolutionCard({
           <div
             className="sol-card relative h-62 p-5 pb-12 rounded-2xl overflow-hidden flex flex-col gap-3 transition-[box-shadow,border-color] duration-300"
             style={{
-              background: "rgba(13, 10, 30, 0.88)",
-              border: `1px solid ${solution.color}10`,
+              background: "rgba(255, 255, 255, 0.04)",
+              border: "1px solid rgba(255, 255, 255, 0.09)",
+              boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.07)",
             } as React.CSSProperties}
           >
             <div
@@ -207,7 +214,7 @@ function SolutionCard({
 
             {/* Decorative index number */}
             <span
-              className="absolute bottom-3 right-4 text-5xl font-black leading-none pointer-events-none select-none z-10"
+              className={`absolute bottom-3 text-5xl font-black leading-none pointer-events-none select-none z-10 ${isRtl ? "left-4" : "right-4"}`}
               style={{ color: solution.color, opacity: 0.07 }}
             >
               {padded}
@@ -216,7 +223,7 @@ function SolutionCard({
             {/* Tag pill */}
             {tag && (
               <span
-                className="absolute bottom-4 left-5 text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full z-10 force-ltr"
+                className={`absolute bottom-4 text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full z-10 force-ltr ${isRtl ? "right-5" : "left-5"}`}
                 dir="ltr"
                 style={{
                   background: `${solution.color}18`,
@@ -292,18 +299,13 @@ export default function SolutionsSection() {
             subtitle={t("solutions.subtitle")}
           />
 
-          <motion.div
-            variants={staggerContainerVariant}
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewportOnce}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 auto-rows-auto"
-          >
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 auto-rows-auto">
             {solutions.map((solution, index) => {
-              const tag = solutionTagMap[solution.id] ?? "";
+              const tagKey = solutionTagKeyMap[solution.id];
+              const tag = tagKey ? t(`solutions.tags.${tagKey}` as Parameters<typeof t>[0]) : "";
               const padded = String(index + 1).padStart(2, "0");
               const centerClass = lgAlone[index]
-                ? "sm:col-span-2 sm:max-w-xs sm:mx-auto lg:col-span-1 lg:max-w-none lg:mx-0 lg:col-start-2 xl:col-start-auto"
+                ? "sm:col-span-2 lg:col-span-3 xl:col-span-1"
                 : "";
               return (
                 <SolutionCard
@@ -318,7 +320,7 @@ export default function SolutionsSection() {
                 />
               );
             })}
-          </motion.div>
+          </div>
         </div>
       </section>
     </>

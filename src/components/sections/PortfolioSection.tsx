@@ -15,6 +15,8 @@ import { useHoverCapable } from "@/hooks/useHoverCapable";
 import { portfolioProjects } from "@/lib/portfolio-data";
 import { stackCategories } from "@/lib/stacks-data";
 import { iconRegistry } from "@/lib/icon-registry";
+import { revealVariant } from "@/lib/animations";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 type IconComp = React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
 
@@ -266,6 +268,9 @@ export default function PortfolioSection() {
       direction: isRtlLocale ? "backward" : "forward",
     })
   );
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const carouselReveal = useScrollReveal(carouselRef as React.RefObject<Element | null>);
+
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { loop: true, align: "start", dragFree: true },
     [autoScrollPlugin.current]
@@ -342,11 +347,11 @@ export default function PortfolioSection() {
 
         {/* ── Full-width carousel with CSS mask fade ── */}
         <motion.div
+          ref={carouselRef}
+          variants={revealVariant}
+          initial="below"
+          animate={carouselReveal}
           className="relative z-10 w-full mt-2 embla"
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, margin: "-10px", amount: 0 }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         >
           <div ref={emblaRef} className="embla__viewport">
             <div className="embla__container">

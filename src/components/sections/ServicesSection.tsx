@@ -12,24 +12,25 @@ import TiltCard from "@/components/ui/TiltCard";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { services } from "@/lib/services-data";
 import { useCardBorder } from "@/hooks/useCardBorder";
-import { staggerContainerVariant, cardEntranceVariant, viewportOnce } from "@/lib/animations";
+import { cardRevealVariant } from "@/lib/animations";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 const iconMap: Record<string, LucideIcon> = {
   Code2, Globe, Smartphone, Palette, Brain,
   Kanban, Wrench, BarChart3, RefreshCw, Rocket,
 };
 
-const serviceTagMap: Record<string, string> = {
-  "custom-software": "Custom",
-  "web-app": "Web",
-  "mobile-app": "Mobile",
-  "ui-ux": "Design",
-  "tech-consulting": "Strategy",
-  "agile-pm": "Agile",
-  "maintenance": "Support",
-  "business-analysis": "Analytics",
-  "modernization": "Transform",
-  "mvp": "Launch",
+const serviceTagKeyMap: Record<string, string> = {
+  "custom-software": "custom_software",
+  "web-app": "web_app",
+  "mobile-app": "mobile_app",
+  "ui-ux": "ui_ux",
+  "tech-consulting": "tech_consulting",
+  "agile-pm": "agile_pm",
+  "maintenance": "maintenance",
+  "business-analysis": "business_analysis",
+  "modernization": "modernization",
+  "mvp": "mvp",
 };
 
 const CSS = `
@@ -68,6 +69,7 @@ function ServiceCard({
   padded,
   centeringClass,
   isRtl,
+  isWide,
   t,
 }: {
   service: (typeof services)[number];
@@ -76,23 +78,29 @@ function ServiceCard({
   padded: string;
   centeringClass: string;
   isRtl: boolean;
+  isWide: boolean;
   t: ReturnType<typeof useTranslations>;
 }) {
   const Icon = iconMap[service.icon];
   const shellRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const cardState = useScrollReveal(cardRef as React.RefObject<Element | null>);
   const { handleBorderMouseMove, handleBorderMouseLeave, handleTouchStart, handleTouchEnd } = useCardBorder(
     shellRef as React.RefObject<HTMLElement | null>
   );
 
   return (
     <motion.div
-      variants={cardEntranceVariant}
-      custom={index}
+      ref={cardRef}
+      variants={cardRevealVariant}
+      initial="below"
+      animate={cardState}
       className={`col-span-1 h-full ${centeringClass}`}
+      style={{ backdropFilter: "blur(4px) saturate(120%)", WebkitBackdropFilter: "blur(4px) saturate(120%)" }}
       whileTap={{ scale: 0.97 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
     >
-      <TiltCard tiltMaxAngle={10}>
+      <TiltCard tiltMaxAngle={isWide ? 2 : 10}>
         <div
           ref={shellRef}
           className="svc-shell relative rounded-2xl p-px overflow-hidden h-full"
@@ -111,10 +119,11 @@ function ServiceCard({
 
           {/* Card body */}
           <div
-            className="svc-card relative h-68 p-5 pb-12 rounded-2xl overflow-hidden flex flex-col gap-3 transition-[box-shadow,border-color] duration-300"
+            className={`svc-card relative h-68 rounded-2xl overflow-hidden transition-[box-shadow,border-color] duration-300 ${isWide ? "p-5 pb-12 flex flex-row items-start gap-5" : "p-5 pb-12 flex flex-col gap-3"}`}
             style={{
-              background: "rgba(14, 10, 32, 0.88)",
-              border: `1px solid ${service.color}12`,
+              background: "rgba(255, 255, 255, 0.04)",
+              border: "1px solid rgba(255, 255, 255, 0.09)",
+              boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.07)",
             } as React.CSSProperties}
           >
             <div
@@ -149,9 +158,10 @@ function ServiceCard({
               />
             </div>
 
-            {/* Icon */}
+            {/* Icon + Content */}
+            <div className={`flex relative z-10 ${isWide ? "flex-col gap-3 flex-1" : "flex-col gap-3 flex-1"}`}>
             <div
-              className="svc-icon w-12 h-12 rounded-xl flex items-center justify-center shrink-0 relative z-10"
+              className="svc-icon w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
               style={{
                 background: `${service.color}18`,
                 border: `1px solid ${service.color}35`,
@@ -163,7 +173,7 @@ function ServiceCard({
             </div>
 
             {/* Content */}
-            <div className="flex flex-col gap-2 flex-1 relative z-10">
+            <div className="flex flex-col gap-2 flex-1">
               <h3
                 className="text-sm font-bold leading-snug heading-glass"
               >
@@ -183,9 +193,11 @@ function ServiceCard({
               </p>
             </div>
 
+            </div>{/* end icon+content wrapper */}
+
             {/* Decorative index number */}
             <span
-              className="absolute bottom-3 right-4 text-5xl font-black leading-none pointer-events-none select-none z-10"
+              className={`absolute bottom-3 text-5xl font-black leading-none pointer-events-none select-none z-10 ${isRtl ? "left-4" : "right-4"}`}
               style={{ color: service.color, opacity: 0.07 }}
             >
               {padded}
@@ -194,7 +206,7 @@ function ServiceCard({
             {/* Tag pill */}
             {tag && (
               <span
-                className="absolute bottom-4 left-5 text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full z-10 force-ltr"
+                className={`absolute bottom-4 text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full z-10 force-ltr ${isRtl ? "right-5" : "left-5"}`}
                 dir="ltr"
                 style={{
                   background: `${service.color}18`,
@@ -205,8 +217,6 @@ function ServiceCard({
                 {tag}
               </span>
             )}
-
-            {/* Bottom accent line */}
           </div>
         </div>
       </TiltCard>
@@ -263,28 +273,23 @@ export default function ServicesSection() {
             subtitle={t("services.subtitle")}
           />
 
-          <motion.div
-            variants={staggerContainerVariant}
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewportOnce}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
-          >
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {services.map((service, index) => {
-              const tag = serviceTagMap[service.id] ?? "";
+              const tagKey = serviceTagKeyMap[service.id];
+              const tag = tagKey ? t(`services.tags.${tagKey}` as Parameters<typeof t>[0]) : "";
               const padded = String(index + 1).padStart(2, "0");
               const isLast = index === services.length - 1;
               const isSecondLast = index === services.length - 2;
               const smCenter = lastRowRemainderSm === 1 && isLast
-                ? "sm:col-span-2 sm:justify-self-center sm:w-[calc(50%-0.625rem)]"
+                ? "sm:col-span-2"
                 : "";
               const lgCenter =
                 lastRowRemainder === 1 && isLast
-                  ? "lg:col-start-2"
+                  ? "lg:col-span-3"
                   : lastRowRemainder === 2 && isSecondLast
                   ? "lg:col-start-1"
                   : lastRowRemainder === 2 && isLast
-                  ? "lg:col-start-3"
+                  ? "lg:col-span-2"
                   : "";
               const centeringClass = `${smCenter} ${lgCenter}`.trim();
 
@@ -297,11 +302,12 @@ export default function ServicesSection() {
                   padded={padded}
                   centeringClass={centeringClass}
                   isRtl={isRtlLocale}
+                  isWide={lastRowRemainder === 1 && isLast}
                   t={t}
                 />
               );
             })}
-          </motion.div>
+          </div>
         </div>
       </section>
     </>

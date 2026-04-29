@@ -18,10 +18,11 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import { useTheme } from "@/components/layout/ThemeContext";
 import { useHoverCapable } from "@/hooks/useHoverCapable";
 import {
-  staggerContainerVariant,
-  fadeUpVariant,
-  viewportOnce,
+  staggerRevealContainer,
+  cardRevealVariant,
+  revealVariant,
 } from "@/lib/animations";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 const GlobeBackground = dynamic(
   () => import("@/components/ui/GlobeBackground"),
@@ -122,14 +123,18 @@ const WATERMARK_POSITIONS = [
 function PillarCard({
   pillar,
   t,
+  isRtl,
 }: {
   pillar: (typeof pillars)[number];
   t: ReturnType<typeof useTranslations>;
+  isRtl: boolean;
 }) {
   const [hovered, setHovered] = useState(false);
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
   const canHover = useHoverCapable();
+  const cardRef = useRef<HTMLDivElement>(null);
+  const cardState = useScrollReveal(cardRef as React.RefObject<Element | null>);
 
   const cardBg      = isDark ? "rgba(13,10,30,0.88)"       : "rgba(255,255,255,0.82)";
   const shadowBase  = isDark
@@ -140,6 +145,13 @@ function PillarCard({
     : `0 0 0 1px ${pillar.color}55, 0 14px 52px ${pillar.color}14`;
 
   return (
+    <motion.div
+      ref={cardRef}
+      variants={cardRevealVariant}
+      initial="below"
+      animate={cardState}
+      className="h-full"
+    >
       <motion.div
         className="pillar-card relative rounded-2xl overflow-hidden flex flex-col h-full cursor-default"
         style={{ background: cardBg, boxShadow: shadowBase }}
@@ -156,20 +168,20 @@ function PillarCard({
         onTouchEnd={() => setHovered(false)}
         onTouchCancel={() => setHovered(false)}
       >
-        {/* Diagonal top-left slash */}
-        <div className="absolute top-0 left-0 pointer-events-none rounded-tl-2xl overflow-hidden" style={{ width: "68%", height: "55%" }}>
+        {/* Diagonal corner accent — top-left in LTR, top-right in RTL */}
+        <div className={`absolute top-0 pointer-events-none overflow-hidden ${isRtl ? "right-0 rounded-tr-2xl" : "left-0 rounded-tl-2xl"}`} style={{ width: "68%", height: "55%" }}>
           <div
             className="absolute inset-0"
             style={{
-              background: `linear-gradient(135deg, ${pillar.color}30 0%, ${pillar.color}10 40%, transparent 60%)`,
-              clipPath: "polygon(0 0, 100% 0, 0 100%)",
+              background: `linear-gradient(${isRtl ? "225deg" : "135deg"}, ${pillar.color}30 0%, ${pillar.color}10 40%, transparent 60%)`,
+              clipPath: isRtl ? "polygon(0 0, 100% 0, 100% 100%)" : "polygon(0 0, 100% 0, 0 100%)",
             }}
           />
           <div
             className="absolute inset-0"
             style={{
-              background: `linear-gradient(135deg, ${pillar.color}60 0%, ${pillar.color}15 10%, transparent 22%)`,
-              clipPath: "polygon(0 0, 100% 0, 0 100%)",
+              background: `linear-gradient(${isRtl ? "225deg" : "135deg"}, ${pillar.color}60 0%, ${pillar.color}15 10%, transparent 22%)`,
+              clipPath: isRtl ? "polygon(0 0, 100% 0, 100% 100%)" : "polygon(0 0, 100% 0, 0 100%)",
             }}
           />
         </div>
@@ -184,7 +196,7 @@ function PillarCard({
 
         {/* Watermark number */}
         <span
-          className="absolute bottom-4 right-5 font-black leading-none pointer-events-none select-none"
+          className={`absolute bottom-4 font-black leading-none pointer-events-none select-none ${isRtl ? "left-5" : "right-5"}`}
           style={{ fontSize: "6.5rem", color: pillar.color, opacity: 0.055, lineHeight: 1 }}
         >
           {pillar.number}
@@ -224,10 +236,15 @@ function PillarCard({
 
         </div>
       </motion.div>
+    </motion.div>
   );
 }
 
 // ─── Animated Counter ─────────────────────────────────────────────────────────
+
+const ARABIC_DIGITS = "٠١٢٣٤٥٦٧٨٩";
+const toWestern = (s: string) => s.replace(/[٠-٩]/g, d => String(ARABIC_DIGITS.indexOf(d)));
+const toArabic  = (s: string) => s.replace(/[0-9]/g, d => ARABIC_DIGITS[parseInt(d)]);
 
 function CounterValue({ value, color }: { value: string; color: string }) {
   const ref = useRef<HTMLSpanElement>(null);
@@ -235,8 +252,10 @@ function CounterValue({ value, color }: { value: string; color: string }) {
 
   useGSAP(
     () => {
-      const numeric = parseFloat(value.replace(/[^0-9.]/g, ""));
-      const suffix = value.replace(/[0-9.]/g, "");
+      const western = toWestern(value);
+      const numeric = parseFloat(western.replace(/[^0-9.]/g, ""));
+      const suffix   = value.replace(/[٠-٩0-9.]/g, "");
+      const useArabic = /[٠-٩]/.test(value);
 
       if (isNaN(numeric)) {
         setDisplayed(value);
@@ -249,11 +268,10 @@ function CounterValue({ value, color }: { value: string; color: string }) {
         duration: 2.2,
         ease: "power2.out",
         onUpdate: () => {
-          setDisplayed(
-            (numeric % 1 === 0
-              ? Math.floor(obj.val).toString()
-              : obj.val.toFixed(0)) + suffix
-          );
+          const digits = numeric % 1 === 0
+            ? Math.floor(obj.val).toString()
+            : obj.val.toFixed(0);
+          setDisplayed((useArabic ? toArabic(digits) : digits) + suffix);
         },
         scrollTrigger: {
           trigger: ref.current,
@@ -268,12 +286,59 @@ function CounterValue({ value, color }: { value: string; color: string }) {
   return (
     <span
       ref={ref}
-      className="text-4xl md:text-5xl font-black tabular-nums relative z-10 force-ltr"
+      className="text-4xl md:text-5xl font-black tabular-nums relative z-10"
       dir="ltr"
-      style={{ color }}
+      style={{ color, unicodeBidi: "bidi-override" }}
     >
       {displayed}
     </span>
+  );
+}
+
+// ─── Capability Tile ─────────────────────────────────────────────────────────
+
+function CapabilityTile({
+  cap,
+  capColor,
+  capCenter,
+  t,
+}: {
+  cap: { key: string; Icon: React.ComponentType<{ size?: number; style?: React.CSSProperties; strokeWidth?: number }> };
+  capColor: string;
+  capCenter: string;
+  t: ReturnType<typeof useTranslations>;
+}) {
+  const canHover = useHoverCapable();
+  const tileRef = useRef<HTMLDivElement>(null);
+  const tileState = useScrollReveal(tileRef as React.RefObject<Element | null>);
+  const CapIcon = cap.Icon;
+
+  return (
+    <motion.div
+      ref={tileRef}
+      variants={cardRevealVariant}
+      initial="below"
+      animate={tileState}
+      className={`cap-tile rounded-xl px-3 py-4 flex flex-col items-center gap-2 text-center cursor-default relative overflow-hidden ${capCenter}`}
+      whileHover={canHover ? { scale: 1.05, y: -2 } : {}}
+      whileTap={{ scale: 1.03, y: -1 }}
+      transition={{ type: "spring", stiffness: 320, damping: 18 }}
+      style={{ background: `${capColor}0a`, border: `1px solid ${capColor}25` }}
+    >
+      <div
+        className="cap-tile-glow absolute inset-0 rounded-xl pointer-events-none"
+        style={{ background: `radial-gradient(circle at 50% 50%, ${capColor}18 0%, transparent 70%)` }}
+      />
+      <div
+        className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 relative z-10"
+        style={{ background: `${capColor}14`, border: `1px solid ${capColor}30`, boxShadow: `0 0 16px ${capColor}18` }}
+      >
+        <CapIcon size={18} style={{ color: capColor }} strokeWidth={1.8} />
+      </div>
+      <span className="text-xs font-semibold leading-snug relative z-10" style={{ color: "var(--text-muted)" }}>
+        {t(cap.key as Parameters<typeof t>[0])}
+      </span>
+    </motion.div>
   );
 }
 
@@ -297,6 +362,13 @@ export default function AboutSection() {
   const ctaBtnRef = useRef<HTMLButtonElement>(null);
   const [bannerActive, setBannerActive] = useState(false);
   const [ctaHovered, setCtaHovered] = useState(false);
+
+  const statsGridRef = useRef<HTMLDivElement>(null);
+  const statsReveal = useScrollReveal(statsGridRef as React.RefObject<Element | null>);
+  const bannerRef = useRef<HTMLDivElement>(null);
+  const bannerReveal = useScrollReveal(bannerRef as React.RefObject<Element | null>);
+  const ctaStripRef = useRef<HTMLDivElement>(null);
+  const ctaStripReveal = useScrollReveal(ctaStripRef as React.RefObject<Element | null>);
   const [ctaTapped, setCtaTapped] = useState(false);
 
   return (
@@ -342,10 +414,10 @@ export default function AboutSection() {
 
           {/* ── Identity Banner ── */}
           <motion.div
-            variants={fadeUpVariant}
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewportOnce}
+            ref={bannerRef}
+            variants={revealVariant}
+            initial="below"
+            animate={bannerReveal}
             className="about-banner w-full mb-14 rounded-3xl overflow-hidden relative"
             style={{
               background:
@@ -462,11 +534,7 @@ export default function AboutSection() {
           </motion.div>
 
           {/* ── Stats Row — unified spectrum panel ── */}
-          <motion.div
-            variants={fadeUpVariant}
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewportOnce}
+          <div
             className="mb-14 rounded-2xl overflow-hidden"
             style={{ background: panelBg, boxShadow: panelShadow }}
           >
@@ -479,17 +547,17 @@ export default function AboutSection() {
             />
 
             <motion.div
-              variants={staggerContainerVariant}
-              initial="hidden"
-              whileInView="visible"
-              viewport={viewportOnce}
+              ref={statsGridRef}
+              variants={staggerRevealContainer}
+              initial="below"
+              animate={statsReveal}
               className="grid grid-cols-2 md:grid-cols-4 gap-px"
               style={{ background: dividerBg }}
             >
               {stats.map((stat, i) => (
                 <motion.div
                   key={stat.valueKey}
-                  variants={fadeUpVariant}
+                  variants={revealVariant}
                   className="relative flex flex-col items-center gap-3 text-center py-9 px-5 cursor-default"
                   style={{ background: cellBg }}
                   whileHover={canHover ? { boxShadow: `inset 0 0 40px ${stat.color}22` } : {}}
@@ -542,34 +610,20 @@ export default function AboutSection() {
                 </motion.div>
               ))}
             </motion.div>
-          </motion.div>
+          </div>
 
           {/* ── Three Pillars ── */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-14">
-            {pillars.map((pillar, i) => (
-              <motion.div
-                key={pillar.key}
-                variants={fadeUpVariant}
-                initial="hidden"
-                whileInView="visible"
-                viewport={viewportOnce}
-                custom={i}
-                className="h-full"
-              >
-                <PillarCard pillar={pillar} t={t} />
-              </motion.div>
+            {pillars.map((pillar) => (
+              <PillarCard key={pillar.key} pillar={pillar} t={t} isRtl={isRtlLocale} />
             ))}
           </div>
 
           {/* ── Capabilities ── */}
-          <motion.div
-            variants={fadeUpVariant}
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewportOnce}
+          <div
             className="about-capabilities-panel rounded-2xl p-8"
             style={{
-              background: "rgba(13,10,30,0.88)",
+              background: panelBg,
               border: "1px solid var(--glass-border)",
             }}
           >
@@ -587,68 +641,31 @@ export default function AboutSection() {
             </div>
 
             {/* 5-column icon tile grid */}
-            <motion.div
-              variants={staggerContainerVariant}
-              initial="hidden"
-              whileInView="visible"
-              viewport={viewportOnce}
-              className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3"
-            >
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
               {capabilities.map((cap, capIdx) => {
-                const CapIcon = cap.Icon;
                 const capColor = capabilityColors[capIdx % capabilityColors.length];
-                // Center last tile when alone in its row (sm: 3-col, 10%3=1)
                 const capLastRow3Rem = capabilities.length % 3;
                 const isLastCap = capIdx === capabilities.length - 1;
                 const capCenter = capLastRow3Rem === 1 && isLastCap
                   ? "sm:col-span-3 lg:col-span-1 sm:mx-auto sm:w-1/3 lg:w-auto lg:mx-0"
                   : "";
                 return (
-                  <motion.div
+                  <CapabilityTile
                     key={cap.key}
-                    variants={fadeUpVariant}
-                    className={`cap-tile rounded-xl px-3 py-4 flex flex-col items-center gap-2 text-center cursor-default relative overflow-hidden ${capCenter}`}
-                    whileHover={canHover ? { scale: 1.05, y: -2 } : {}}
-                    whileTap={{ scale: 1.03, y: -1 }}
-                    transition={{ type: "spring", stiffness: 320, damping: 18 }}
-                    style={{
-                      background: `${capColor}0a`,
-                      border: `1px solid ${capColor}25`,
-                    }}
-                  >
-                    {/* Hover glow */}
-                    <div
-                      className="cap-tile-glow absolute inset-0 rounded-xl pointer-events-none"
-                      style={{
-                        background: `radial-gradient(circle at 50% 50%, ${capColor}18 0%, transparent 70%)`,
-                      }}
-                    />
-                    <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 relative z-10"
-                      style={{
-                        background: `${capColor}14`,
-                        border: `1px solid ${capColor}30`,
-                        boxShadow: `0 0 16px ${capColor}18`,
-                      }}
-                    >
-                      <CapIcon size={18} style={{ color: capColor }} strokeWidth={1.8} />
-                    </div>
-                    <span className="text-xs font-semibold leading-snug relative z-10" style={{ color: "var(--text-muted)" }}>
-                      {t(cap.key as Parameters<typeof t>[0])}
-                    </span>
-                  </motion.div>
+                    cap={cap}
+                    capColor={capColor}
+                    capCenter={capCenter}
+                    t={t}
+                  />
                 );
               })}
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
 
           {/* ── CTA Strip ── */}
+          <motion.div ref={ctaStripRef} variants={revealVariant} initial="below" animate={ctaStripReveal}>
           <motion.div
             ref={ctaCardRef}
-            variants={fadeUpVariant}
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewportOnce}
             className="about-cta-strip mt-12 flex flex-col sm:flex-row items-center justify-between gap-6 rounded-3xl p-8 md:p-10 relative overflow-hidden cursor-default"
             style={{
               background: "rgba(13,10,30,0.88)",
@@ -676,9 +693,9 @@ export default function AboutSection() {
           >
             {/* Multi-layered gradient mesh */}
             <div className="absolute inset-0 pointer-events-none rounded-3xl overflow-hidden">
-              <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 70% 80% at 10% 50%, rgba(244,63,94,0.12) 0%, transparent 60%)" }} />
-              <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 60% 80% at 90% 50%, rgba(124,58,237,0.10) 0%, transparent 60%)" }} />
-              <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 50% 40% at 50% 100%, rgba(201,168,76,0.07) 0%, transparent 60%)" }} />
+              <div style={{ position: "absolute", inset: 0, background: `radial-gradient(ellipse 70% 80% at 10% 50%, rgba(244,63,94,${isDark ? "0.12" : "0.05"}) 0%, transparent 60%)` }} />
+              <div style={{ position: "absolute", inset: 0, background: `radial-gradient(ellipse 60% 80% at 90% 50%, rgba(124,58,237,${isDark ? "0.10" : "0.04"}) 0%, transparent 60%)` }} />
+              <div style={{ position: "absolute", inset: 0, background: `radial-gradient(ellipse 50% 40% at 50% 100%, rgba(201,168,76,${isDark ? "0.07" : "0.03"}) 0%, transparent 60%)` }} />
               <div className="absolute inset-0 bg-grid-pattern opacity-8" />
             </div>
 
@@ -731,6 +748,7 @@ export default function AboutSection() {
               {t("cta_action")}
               <ArrowRight size={16} className="rtl-arrow" />
             </motion.button>
+          </motion.div>
           </motion.div>
         </div>
     </section>
