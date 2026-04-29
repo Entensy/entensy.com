@@ -88,7 +88,7 @@ export default function TiltCard({
       <div
         ref={innerRef}
         className="tilt-card-inner h-full"
-        style={{ transformStyle: "preserve-3d", willChange: "transform" }}
+        style={{ transformStyle: "preserve-3d" }}
       >
         {children}
       </div>
