@@ -76,6 +76,18 @@
         "title": "گەشەپێدانی MVP و پشتگیری ستارتئەپ",
         "desc": "گەشەپێدانی خێرای MVP بۆ ستارتئەپەکان و پڕۆژە نوێیەکان — بیرۆکەکەت بە خێرایی بسەلمێنە، بە کەمی دەست پێبکە و بە متمانەوە گەشە بکە."
       }
+    },
+    "tags": {
+      "custom_software": "تایبەت",
+      "web_app": "وێب",
+      "mobile_app": "مۆبایل",
+      "ui_ux": "دیزاین",
+      "tech_consulting": "ستراتیژی",
+      "agile_pm": "ئاجایل",
+      "maintenance": "پشتگیری",
+      "business_analysis": "شیکردنەوە",
+      "modernization": "گۆڕانکاری",
+      "mvp": "دەستپێکردن"
     }
   },
   "solutions": {
@@ -136,6 +148,21 @@
         "title": "چاککردنەوە و زیادکردنی تایبەتمەندی",
         "desc": "گەشەپێدانی بەردەوام، چارەسەرکردنی کێشەکان، و زیادکردنی تایبەتمەندی بۆ بەرهەمە نەرمەکاڵاییەکانی ئێستا بۆ ئەوەی بە کێبڕکێی بمێننەوە."
       }
+    },
+    "tags": {
+      "business_websites": "وێب",
+      "company_portals": "پۆرتاڵ",
+      "ecommerce": "بازرگانی",
+      "booking": "حیجز",
+      "dashboards": "داشبۆرد",
+      "crm_erp": "CRM",
+      "saas": "SaaS",
+      "mobile_apps": "مۆبایل",
+      "internal_tools": "ناوخۆیی",
+      "government": "حکومی",
+      "branding": "براند",
+      "mvp_startup": "MVP",
+      "maintenance": "پشتگیری"
     }
   },
   "stacks": {
@@ -220,13 +247,13 @@
       "data_driven": "بڕیاردان لەسەر بنەمای داتا"
     },
     "stats": {
-      "years": "+٥",
+      "years": "٥+",
       "years_label": "ساڵ لە نایابی",
-      "projects": "+٥٠",
+      "projects": "٥٠+",
       "projects_label": "پڕۆژەی تەواوکراو",
-      "services": "+١٠",
+      "services": "١٠+",
       "services_label": "خزمەتگوزاری سەرەکی",
-      "satisfaction": "٪١٠٠",
+      "satisfaction": "١٠٠٪",
       "satisfaction_label": "ڕەزامەندی کڕیار"
     },
     "pillars": {
@@ -256,7 +283,7 @@
       "name_placeholder": "ناوی تەواوی تۆ",
       "email": "ئیمەیڵ",
       "email_placeholder": "your@email.com",
-      "message": "وەسف",
+      "message": "باسکردن",
       "message_placeholder": "پێمان بڵێ دەربارەی پڕۆژەکەت...",
       "send": "ناردنی نامە",
       "sending": "ناردن...",
@@ -273,7 +300,7 @@
       "email_label": "ئیمەیڵ",
       "email_value": "contact@entensy.com",
       "phone_label": "تەلەفۆن",
-      "phone_value": "+964 770 862 5008",
+      "phone_value": "+٩٦٤ ٧٧٠ ٨٦٢ ٥٠٠٨",
       "hours_label": "کاتی کارکردن",
       "hours_value": "شەممە - پێنجشەممە، ٩:٠٠ بەیانی - ٦:٠٠ ئێوارە",
       "response_label": "کاتی وەڵامدانەوە",

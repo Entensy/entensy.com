@@ -76,6 +76,18 @@
         "title": "MVP Development & Startup Support",
         "desc": "Rapid MVP development for startups and new ventures — validate your idea fast, launch lean, and scale with confidence."
       }
+    },
+    "tags": {
+      "custom_software": "Custom",
+      "web_app": "Web",
+      "mobile_app": "Mobile",
+      "ui_ux": "Design",
+      "tech_consulting": "Strategy",
+      "agile_pm": "Agile",
+      "maintenance": "Support",
+      "business_analysis": "Analytics",
+      "modernization": "Transform",
+      "mvp": "Launch"
     }
   },
   "solutions": {
@@ -136,6 +148,21 @@
         "title": "Maintenance & Feature Expansion",
         "desc": "Ongoing development, bug fixing, and feature additions for existing software products to keep them competitive."
       }
+    },
+    "tags": {
+      "business_websites": "Web",
+      "company_portals": "Portal",
+      "ecommerce": "Commerce",
+      "booking": "Booking",
+      "dashboards": "Dashboard",
+      "crm_erp": "CRM",
+      "saas": "SaaS",
+      "mobile_apps": "Mobile",
+      "internal_tools": "Internal",
+      "government": "Civic",
+      "branding": "Brand",
+      "mvp_startup": "MVP",
+      "maintenance": "Support"
     }
   },
   "stacks": {

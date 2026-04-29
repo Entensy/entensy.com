@@ -76,6 +76,18 @@
         "title": "تطوير MVP ودعم الشركات الناشئة",
         "desc": "تطوير منتج أولي قابل للتطبيق (MVP) للشركات الناشئة والمشاريع الجديدة — للتحقق من فكرتك بسرعة، والإطلاق المرن، والتوسع بثقة."
       }
+    },
+    "tags": {
+      "custom_software": "مخصص",
+      "web_app": "ويب",
+      "mobile_app": "جوال",
+      "ui_ux": "تصميم",
+      "tech_consulting": "استراتيجية",
+      "agile_pm": "رشيق",
+      "maintenance": "دعم",
+      "business_analysis": "تحليل",
+      "modernization": "تحول",
+      "mvp": "إطلاق"
     }
   },
   "solutions": {
@@ -136,6 +148,21 @@
         "title": "الصيانة وتوسيع الميزات",
         "desc": "تطوير مستمر، وإصلاح أخطاء، وإضافة ميزات لمنتجاتك البرمجية الحالية لإبقائها تنافسية."
       }
+    },
+    "tags": {
+      "business_websites": "ويب",
+      "company_portals": "بوابة",
+      "ecommerce": "تجارة",
+      "booking": "حجز",
+      "dashboards": "لوحة تحكم",
+      "crm_erp": "CRM",
+      "saas": "SaaS",
+      "mobile_apps": "جوال",
+      "internal_tools": "داخلي",
+      "government": "حكومي",
+      "branding": "علامة تجارية",
+      "mvp_startup": "MVP",
+      "maintenance": "دعم"
     }
   },
   "stacks": {
@@ -273,7 +300,7 @@
       "email_label": "البريد الإلكتروني",
       "email_value": "contact@entensy.com",
       "phone_label": "الهاتف",
-      "phone_value": "+964 770 862 5008",
+      "phone_value": "+٩٦٤ ٧٧٠ ٨٦٢ ٥٠٠٨",
       "hours_label": "ساعات العمل",
       "hours_value": "السبت – الخميس، ٩:٠٠ صباحاً – ٦:٠٠ مساءً",
       "response_label": "وقت الاستجابة",
