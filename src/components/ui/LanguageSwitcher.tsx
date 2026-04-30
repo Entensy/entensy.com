@@ -89,7 +89,7 @@ export default function LanguageSwitcher() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -6, scale: 0.96 }}
             transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
-            className={`absolute top-full mt-2 min-w-32.5 rounded-xl overflow-hidden shadow-2xl ${isRtlLocale ? "left-0" : "right-0"}`}
+            className={`absolute top-full mt-4 min-w-36 rounded-xl overflow-hidden shadow-2xl ${isRtlLocale ? "left-0" : "right-0"}`}
             style={{
               background: "var(--bg-secondary)",
               border: "1px solid var(--border-color)",
