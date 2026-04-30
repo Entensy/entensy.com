@@ -116,7 +116,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
           {/* Content */}
           <div className="relative z-10 flex flex-col items-center gap-8 px-8">
             {/* Logo */}
-            <div className="flex flex-col items-center gap-4">
+            <div className="flex flex-col items-center gap-6">
               <div ref={logoImgRef} className="flex items-center justify-center">
                 <Image
                   src="/images/logo.png"
@@ -140,9 +140,9 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
             </div>
 
             {/* Progress bar */}
-            <div className="w-48 md:w-64 flex flex-col items-center gap-3">
+            <div className="w-48 md:w-64 flex flex-col items-center gap-6">
               <div
-                className="w-full h-px rounded-full overflow-hidden"
+                className="w-full h-0.5 rounded-full overflow-hidden"
                 style={{ background: "var(--border-color)" }}
               >
                 <div
@@ -159,9 +159,12 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
               </div>
               <span
                 className="text-xs font-medium tabular-nums"
-                style={{ color: "var(--text-muted)" }}
+                dir="ltr"
+                style={{ color: "var(--text-muted)", unicodeBidi: "bidi-override" }}
               >
-                {progress}%
+                {isRtlLocale
+                  ? "٪" + String(progress).replace(/[0-9]/g, d => "٠١٢٣٤٥٦٧٨٩"[parseInt(d)])
+                  : `${progress}%`}
               </span>
             </div>
           </div>
