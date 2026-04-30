@@ -46,15 +46,49 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
+  const [isTight, setIsTight] = useState(false);
+  const [linksOverflow, setLinksOverflow] = useState(false);
+  const tightRef = useRef(false);
+  const overflowRef = useRef(false);
   const navRef = useRef<HTMLDivElement>(null);
   const linksListRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 1);
+    onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    const el = linksListRef.current;
+    if (!el) return;
+    let frame: number;
+    const check = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const children = Array.from(el.children);
+        const T = children.reduce((sum, c) => sum + (c as HTMLElement).offsetWidth, 0)
+          + (children.length - 1) * 8; // include gap-2
+
+        // Normalize back to "what clientWidth would be at 24px padding, no hamburger"
+        // tight=true added 16px to ul (padding shrank) → subtract to normalize
+        // overflow=true removed 46px from ul (hamburger appeared) → add back to normalize
+        const normalized = el.clientWidth
+          - (tightRef.current ? 16 : 0)
+          + (overflowRef.current ? 46 : 0);
+
+        const newOverflow = T > normalized + 16; // even 16px padding boost isn't enough
+        const newTight = T > normalized;          // 24px padding not enough, 16px might save it
+
+        if (newTight !== tightRef.current) { tightRef.current = newTight; setIsTight(newTight); }
+        if (newOverflow !== overflowRef.current) { overflowRef.current = newOverflow; setLinksOverflow(newOverflow); }
+      });
+    };
+    const obs = new ResizeObserver(check);
+    obs.observe(el);
+    return () => { obs.disconnect(); cancelAnimationFrame(frame); };
+  }, []);
 
   useEffect(() => {
     const sections = navLinks.map((l) => l.href.replace("#", ""));
@@ -87,7 +121,6 @@ export default function Navbar() {
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const hamburgerHideClass = isRtlLocale ? "xl:hidden" : "lg:hidden";
   return (
     <div ref={navRef} dir={isRtlLocale ? "rtl" : "ltr"}>
       <header className="fixed inset-x-0 top-0 z-8001 pointer-events-none">
@@ -96,8 +129,8 @@ export default function Navbar() {
           className="pointer-events-auto flex justify-center"
           animate={{
             paddingTop: scrolled ? "1.25rem" : "0rem",
-            paddingLeft: scrolled ? "1rem" : "0rem",
-            paddingRight: scrolled ? "1rem" : "0rem",
+            paddingLeft: scrolled ? (isTight && !linksOverflow ? "1rem" : "1.5rem") : "0rem",
+            paddingRight: scrolled ? (isTight && !linksOverflow ? "1rem" : "1.5rem") : "0rem",
           }}
           transition={SPRING}
         >
@@ -107,18 +140,26 @@ export default function Navbar() {
               "navbar-pill-bg w-full mx-auto flex items-center justify-between gap-4",
               scrolled ? "navbar-scrolled" : ""
             )}
+            style={{
+              backdropFilter: "blur(12px) saturate(120%)",
+              WebkitBackdropFilter: "blur(12px) saturate(120%)",
+              background: `var(${scrolled ? "--navbar-bg-scrolled" : "--navbar-bg"})`,
+              overflowX: "auto",
+              minWidth: 0,
+            }}
             onClick={() => mobileOpen && setTimeout(() => setMobileOpen(false), 120)}
             initial={{ maxWidth: 1280, minWidth: 0, borderRadius: 14 }}
             animate={{
               maxWidth: scrolled ? (isRtlLocale ? 1260 : 1160) : 1280,
               paddingTop: scrolled ? "0.65rem" : "1rem",
               paddingBottom: scrolled ? "0.65rem" : "1rem",
-              paddingLeft: scrolled ? "1.5rem" : "1.25rem",
-              paddingRight: scrolled ? "1.5rem" : "1.25rem",
+              paddingLeft: isTight && !linksOverflow ? "1rem" : "1.5rem",
+              paddingRight: isTight && !linksOverflow ? "1rem" : "1.5rem",
               borderRadius: scrolled ? 9999 : 14,
             }}
             transition={SPRING}
           >
+
               {/* Logo */}
               <motion.a
                 href="#home"
@@ -136,17 +177,20 @@ export default function Navbar() {
                   priority
                 />
                 <span
-                  className="navbar-brand-name text-sm font-black select-none"
+                  className="navbar-brand-name text-sm font-black select-none max-[360px]:hidden"
                   style={{ color: "rgba(218, 213, 255, 0.82)", letterSpacing: "0.18em" }}
                 >
                   {t("brand")}
                 </span>
               </motion.a>
 
-              {/* Desktop Links */}
+              {/* Desktop Links — hidden when ResizeObserver detects overflow */}
               <ul
                 ref={linksListRef}
-                className={cn(isRtlLocale ? "hidden xl:flex" : "hidden lg:flex", "flex-1 justify-center items-center gap-2 flex-nowrap")}
+                className={cn(
+                  "flex flex-1 min-w-0 justify-center items-center gap-2 flex-nowrap",
+                  linksOverflow ? "invisible pointer-events-none w-0 overflow-hidden" : "visible"
+                )}
               >
                 {navLinks.map((link) => (
                   <li key={link.key}>
@@ -175,15 +219,17 @@ export default function Navbar() {
               {/* Right side — always LTR so buttons never flip outside the nav in RTL pages */}
               <div className="flex items-center gap-2.5 shrink-0" dir="ltr">
                 {/* In RTL: hamburger comes first so language button stays at the far right */}
-                {isRtlLocale && (
+                {isRtlLocale && linksOverflow && (
                   <button
-                    className={cn(hamburgerHideClass, "navbar-icon-btn w-9 h-9 flex items-center justify-center rounded-full", mobileOpen && "navbar-icon-btn--open")}
+                    className={cn("navbar-icon-btn w-9 h-9 flex items-center justify-center rounded-full", mobileOpen && "navbar-icon-btn--open")}
                     onClick={(e) => { e.stopPropagation(); setMobileOpen((v) => !v); }}
                     aria-label="Toggle mobile menu"
                   >
                     <HamburgerIcon isOpen={mobileOpen} />
                   </button>
                 )}
+
+                {isRtlLocale && <LanguageSwitcher />}
 
                 <motion.button
                   onClick={() => handleNavClick("#contact")}
@@ -196,12 +242,12 @@ export default function Navbar() {
                   {t("get_started")}
                 </motion.button>
 
-                <LanguageSwitcher />
+                {!isRtlLocale && <LanguageSwitcher />}
 
                 {/* In LTR: hamburger comes after language button */}
-                {!isRtlLocale && (
+                {!isRtlLocale && linksOverflow && (
                   <button
-                    className={cn(hamburgerHideClass, "navbar-icon-btn w-9 h-9 flex items-center justify-center rounded-full", mobileOpen && "navbar-icon-btn--open")}
+                    className={cn("navbar-icon-btn w-9 h-9 flex items-center justify-center rounded-full", mobileOpen && "navbar-icon-btn--open")}
                     onClick={(e) => { e.stopPropagation(); setMobileOpen((v) => !v); }}
                     aria-label="Toggle mobile menu"
                   >
