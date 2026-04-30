@@ -150,12 +150,21 @@ export default function HomeSection() {
                 scale: { delay: badge.delay + 1.5, duration: 0.6 },
               }}
             >
-              {isRtlLocale ? (
-                <>
-                  {t(badge.key as Parameters<typeof t>[0])}
-                  <span className="w-1.5 h-1.5 rounded-full bg-brand animate-pulse shrink-0" />
-                </>
-              ) : (
+              {isRtlLocale ? (() => {
+                const text = t(badge.key as Parameters<typeof t>[0]);
+                const m = text.match(/^([٠-٩\d+٪%]+)\s*(.*)/);
+                return (
+                  <>
+                    {m ? (
+                      <>
+                        {m[2] && <span>{m[2]}</span>}
+                        <span style={{ unicodeBidi: "bidi-override", direction: "ltr" }}>{m[1]}</span>
+                      </>
+                    ) : text}
+                    <span className="w-1.5 h-1.5 rounded-full bg-brand animate-pulse shrink-0" />
+                  </>
+                );
+              })() : (
                 <>
                   <span className="w-1.5 h-1.5 rounded-full bg-brand animate-pulse shrink-0" />
                   {t(badge.key as Parameters<typeof t>[0])}
@@ -282,13 +291,13 @@ export default function HomeSection() {
           className="flex flex-wrap items-center justify-center gap-x-6 gap-y-4 md:gap-x-12 pt-2"
         >
           {[
-            { value: "50+", label: t("stats.projects") },
-            { value: "5+", label: t("stats.years") },
-            { value: "10+", label: t("stats.services") },
-            { value: "3", label: t("stats.languages") },
+            { value: isRtlLocale ? "٥٠+" : "50+", label: t("stats.projects") },
+            { value: isRtlLocale ? "٥+"  : "5+",  label: t("stats.years") },
+            { value: isRtlLocale ? "١٠+" : "10+", label: t("stats.services") },
+            { value: isRtlLocale ? "٣"   : "3",   label: t("stats.languages") },
           ].map((stat, i) => (
             <div key={i} className="flex flex-col items-center gap-1">
-              <span className="text-2xl md:text-3xl font-black" style={{ color: "#FC002A" }}>
+              <span className="text-2xl md:text-3xl font-black" dir="ltr" style={{ color: "#FC002A", unicodeBidi: "bidi-override" }}>
                 {stat.value}
               </span>
               <span className="text-xs font-medium tracking-wide" style={{ color: "var(--text-muted)" }}>
