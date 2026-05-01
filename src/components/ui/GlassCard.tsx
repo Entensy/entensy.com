@@ -38,8 +38,7 @@ export default function GlassCard({
       className={cn("glass-card", className)}
       style={style}
       onClick={onClick}
-      {...motionProps}
-    >
+      {...motionProps}>
       {children}
     </Component>
   );

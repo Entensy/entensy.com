@@ -1,6 +1,6 @@
 import type { Variants } from "framer-motion";
 
-// ─── Legacy variants ──────────────────────────────────────────────────────────
+// ---- Legacy variants ----
 // Still used by elements that rely on whileInView (GSAP headings, CTA strips, etc.)
 
 export const fadeUpVariant: Variants = {

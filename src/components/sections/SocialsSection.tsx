@@ -120,33 +120,33 @@ const socialLinks = [
 
 // Watermark icon positions (18 distributed across the section)
 const WATERMARK_POSITIONS = [
-  { left: "4%",  top: "8%",  dur: "18s", delay: "0s"   },
+  { left: "4%", top: "8%", dur: "18s", delay: "0s" },
   { left: "18%", top: "72%", dur: "22s", delay: "1.5s" },
-  { left: "32%", top: "20%", dur: "16s", delay: "3s"   },
+  { left: "32%", top: "20%", dur: "16s", delay: "3s" },
   { left: "45%", top: "82%", dur: "20s", delay: "0.8s" },
   { left: "58%", top: "12%", dur: "24s", delay: "2.2s" },
-  { left: "72%", top: "65%", dur: "17s", delay: "4s"   },
-  { left: "84%", top: "28%", dur: "19s", delay: "1s"   },
+  { left: "72%", top: "65%", dur: "17s", delay: "4s" },
+  { left: "84%", top: "28%", dur: "19s", delay: "1s" },
   { left: "92%", top: "78%", dur: "21s", delay: "3.5s" },
-  { left: "10%", top: "45%", dur: "15s", delay: "5s"   },
-  { left: "24%", top: "90%", dur: "23s", delay: "2s"   },
+  { left: "10%", top: "45%", dur: "15s", delay: "5s" },
+  { left: "24%", top: "90%", dur: "23s", delay: "2s" },
   { left: "38%", top: "50%", dur: "18s", delay: "0.5s" },
   { left: "52%", top: "35%", dur: "20s", delay: "4.5s" },
   { left: "65%", top: "88%", dur: "16s", delay: "1.8s" },
-  { left: "78%", top: "42%", dur: "22s", delay: "3s"   },
+  { left: "78%", top: "42%", dur: "22s", delay: "3s" },
   { left: "88%", top: "10%", dur: "19s", delay: "0.2s" },
-  { left: "14%", top: "28%", dur: "17s", delay: "6s"   },
+  { left: "14%", top: "28%", dur: "17s", delay: "6s" },
   { left: "50%", top: "60%", dur: "21s", delay: "2.8s" },
   { left: "75%", top: "18%", dur: "23s", delay: "1.2s" },
 ];
 
 // Follow pill positions
 const FOLLOW_POSITIONS = [
-  { left: "8%",  top: "35%", dur: "20s", delay: "2s"   },
-  { left: "30%", top: "55%", dur: "17s", delay: "5s"   },
-  { left: "55%", top: "22%", dur: "22s", delay: "1s"   },
-  { left: "70%", top: "78%", dur: "19s", delay: "3s"   },
-  { left: "86%", top: "48%", dur: "21s", delay: "4s"   },
+  { left: "8%", top: "35%", dur: "20s", delay: "2s" },
+  { left: "30%", top: "55%", dur: "17s", delay: "5s" },
+  { left: "55%", top: "22%", dur: "22s", delay: "1s" },
+  { left: "70%", top: "78%", dur: "19s", delay: "3s" },
+  { left: "86%", top: "48%", dur: "21s", delay: "4s" },
   { left: "42%", top: "68%", dur: "18s", delay: "0.5s" },
 ];
 
@@ -162,13 +162,13 @@ const CSS = `
 
 // SVG gradient def for Instagram icon
 const InstagramGradientDef = () => (
-  <svg width="0" height="0" style={{ position: "absolute" }}>
+  <svg width='0' height='0' style={{ position: "absolute" }}>
     <defs>
-      <linearGradient id="ig-gradient" x1="0%" y1="100%" x2="100%" y2="0%">
-        <stop offset="0%"   stopColor="#FCAF45" />
-        <stop offset="35%"  stopColor="#E1306C" />
-        <stop offset="70%"  stopColor="#833AB4" />
-        <stop offset="100%" stopColor="#5851DB" />
+      <linearGradient id='ig-gradient' x1='0%' y1='100%' x2='100%' y2='0%'>
+        <stop offset='0%' stopColor='#FCAF45' />
+        <stop offset='35%' stopColor='#E1306C' />
+        <stop offset='70%' stopColor='#833AB4' />
+        <stop offset='100%' stopColor='#5851DB' />
       </linearGradient>
     </defs>
   </svg>
@@ -184,9 +184,12 @@ function SocialCard({
   const [isHovered, setIsHovered] = useState(false);
   const shellRef = useRef<HTMLDivElement>(null);
   const canHover = useHoverCapable();
-  const { handleBorderMouseMove, handleBorderMouseLeave, handleTouchStart, handleTouchEnd } = useCardBorder(
-    shellRef as React.RefObject<HTMLElement | null>
-  );
+  const {
+    handleBorderMouseMove,
+    handleBorderMouseLeave,
+    handleTouchStart,
+    handleTouchEnd,
+  } = useCardBorder(shellRef as React.RefObject<HTMLElement | null>);
 
   const handleMouseEnter = useCallback(() => {
     if (canHover) setIsHovered(true);
@@ -197,10 +200,13 @@ function SocialCard({
     handleBorderMouseLeave();
   }, [handleBorderMouseLeave]);
 
-  const handleTouchStartCard = useCallback((e: React.TouchEvent<HTMLElement>) => {
-    setIsHovered(true);
-    handleTouchStart(e);
-  }, [handleTouchStart]);
+  const handleTouchStartCard = useCallback(
+    (e: React.TouchEvent<HTMLElement>) => {
+      setIsHovered(true);
+      handleTouchStart(e);
+    },
+    [handleTouchStart],
+  );
 
   const handleTouchEndCard = useCallback(() => {
     setIsHovered(false);
@@ -213,7 +219,7 @@ function SocialCard({
   return (
     <motion.div
       ref={shellRef}
-      className="soc-shell relative rounded-2xl p-px overflow-hidden h-full"
+      className='soc-shell relative rounded-2xl p-px overflow-hidden h-full'
       style={{ background: "transparent" }}
       onMouseMove={handleBorderMouseMove}
       onMouseLeave={handleMouseLeave}
@@ -222,50 +228,62 @@ function SocialCard({
       onTouchCancel={handleTouchEndCard}
       whileHover={canHover ? { y: -6 } : {}}
       whileTap={{ y: -4, scale: 0.98 }}
-      transition={{ type: "spring", stiffness: 300, damping: 20 }}
-    >
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}>
       <div
-        className="card-border-ring rounded-2xl"
-        style={{ "--ring-color": social.color + "62", "--ring-color-light": social.color + "42" } as React.CSSProperties}
+        className='card-border-ring rounded-2xl'
+        style={
+          {
+            "--ring-color": social.color + "62",
+            "--ring-color-light": social.color + "42",
+          } as React.CSSProperties
+        }
       />
 
       <a
         href={social.href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="soc-card relative h-54 rounded-2xl flex flex-col items-center justify-center gap-3 text-center overflow-hidden"
-        style={{
-          background: isHovered
-            ? `linear-gradient(160deg, ${social.bgHoverFrom}, ${social.bgHoverTo})`
-            : `linear-gradient(160deg, ${social.bgFrom}, ${social.bgTo})`,
-          border: `1px solid ${isHovered ? social.borderHover : social.borderBase}`,
-          boxShadow: isHovered
-            ? `0 16px 40px ${social.shadowColor}, inset 0 0 0 1px ${social.color}15`
-            : `0 6px 20px ${social.shadowColor.replace(/[\d.]+\)$/, "0.1)")}`,
-          transition: "background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease",
-        } as React.CSSProperties}
+        target='_blank'
+        rel='noopener noreferrer'
+        className='soc-card relative h-54 rounded-2xl flex flex-col items-center justify-center gap-3 text-center overflow-hidden'
+        style={
+          {
+            background: isHovered
+              ? `linear-gradient(160deg, ${social.bgHoverFrom}, ${social.bgHoverTo})`
+              : `linear-gradient(160deg, ${social.bgFrom}, ${social.bgTo})`,
+            border: `1px solid ${isHovered ? social.borderHover : social.borderBase}`,
+            boxShadow: isHovered
+              ? `0 16px 40px ${social.shadowColor}, inset 0 0 0 1px ${social.color}15`
+              : `0 6px 20px ${social.shadowColor.replace(/[\d.]+\)$/, "0.1)")}`,
+            transition:
+              "background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease",
+          } as React.CSSProperties
+        }
         onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-      >
+        onMouseLeave={handleMouseLeave}>
         <div
-          className="card-orbit-glow"
-          style={{
-            display: "none",
-            "--orbit-color": social.color + "1e",
-          } as React.CSSProperties}
+          className='card-orbit-glow'
+          style={
+            {
+              display: "none",
+              "--orbit-color": social.color + "1e",
+            } as React.CSSProperties
+          }
         />
         <div
-          className="card-cursor-glow"
-          style={{
-            width: "190px", height: "190px",
-            top: "calc(50% - 95px)", left: "calc(50% - 95px)",
-            "--cursor-color": social.color + "28",
-          } as React.CSSProperties}
+          className='card-cursor-glow'
+          style={
+            {
+              width: "190px",
+              height: "190px",
+              top: "calc(50% - 95px)",
+              left: "calc(50% - 95px)",
+              "--cursor-color": social.color + "28",
+            } as React.CSSProperties
+          }
         />
 
         {/* Radial glow */}
         <motion.div
-          className="absolute inset-0 rounded-2xl pointer-events-none"
+          className='absolute inset-0 rounded-2xl pointer-events-none'
           initial={{ opacity: 0.4 }}
           animate={{ opacity: isHovered ? 1 : 0.4 }}
           transition={{ duration: 0.25 }}
@@ -277,10 +295,13 @@ function SocialCard({
         {/* Icon */}
         <motion.div
           initial={{ scale: 1, rotate: 0 }}
-          animate={isHovered ? { scale: 1.15, rotate: canHover ? [-3, 3, 0] : 8 } : { scale: 1, rotate: 0 }}
+          animate={
+            isHovered
+              ? { scale: 1.15, rotate: canHover ? [-3, 3, 0] : 8 }
+              : { scale: 1, rotate: 0 }
+          }
           transition={{ duration: 0.35 }}
-          className="relative z-10"
-        >
+          className='relative z-10'>
           {social.id === "instagram" ? (
             <>
               <InstagramGradientDef />
@@ -296,7 +317,13 @@ function SocialCard({
             </>
           ) : (
             <Icon
-              className={isTikTok ? "soc-tiktok-icon" : social.id === "x" ? "soc-x-icon" : ""}
+              className={
+                isTikTok
+                  ? "soc-tiktok-icon"
+                  : social.id === "x"
+                    ? "soc-x-icon"
+                    : ""
+              }
               style={{
                 color: social.iconColor,
                 fontSize: "2.1rem",
@@ -309,11 +336,13 @@ function SocialCard({
         </motion.div>
 
         {/* Label */}
-        <div className="flex flex-col gap-0.5 relative z-10">
-          <span className="text-xs font-bold heading-glass">
+        <div className='flex flex-col gap-0.5 relative z-10'>
+          <span className='text-xs font-bold heading-glass'>
             {social.label}
           </span>
-          <span className="text-[10px] font-medium force-ltr" style={{ color: "var(--text-muted)" }}>
+          <span
+            className='text-[10px] font-medium force-ltr'
+            style={{ color: "var(--text-muted)" }}>
             {social.handle}
           </span>
         </div>
@@ -336,8 +365,7 @@ function SocialCard({
             border: `1px solid ${social.color}45`,
             cursor: "pointer",
             display: "inline-block",
-          }}
-        >
+          }}>
           {followText}
         </motion.span>
       </a>
@@ -345,17 +373,24 @@ function SocialCard({
   );
 }
 
-function SocialCardReveal({ social, followText }: { social: (typeof socialLinks)[number]; followText: string }) {
+function SocialCardReveal({
+  social,
+  followText,
+}: {
+  social: (typeof socialLinks)[number];
+  followText: string;
+}) {
   const revealRef = useRef<HTMLDivElement>(null);
-  const revealState = useScrollReveal(revealRef as React.RefObject<Element | null>);
+  const revealState = useScrollReveal(
+    revealRef as React.RefObject<Element | null>,
+  );
   return (
     <motion.div
       ref={revealRef}
       variants={cardRevealVariant}
-      initial="below"
+      initial='below'
       animate={revealState}
-      className="h-full"
-    >
+      className='h-full'>
       <SocialCard social={social} followText={followText} />
     </motion.div>
   );
@@ -367,22 +402,35 @@ export default function SocialsSection() {
   const isRtlLocale = locale === "ar" || locale === "ckb";
 
   // Cycle through social icons for watermarks
-  const allIcons = [FaFacebook, FaInstagram, FaXTwitter, FaTiktok, FaYoutube, FaLinkedin];
-  const iconColors = ["#1877F2", "#E1306C", "#E7E9EA", "#EE1D52", "#FF0000", "#0A66C2"];
+  const allIcons = [
+    FaFacebook,
+    FaInstagram,
+    FaXTwitter,
+    FaTiktok,
+    FaYoutube,
+    FaLinkedin,
+  ];
+  const iconColors = [
+    "#1877F2",
+    "#E1306C",
+    "#E7E9EA",
+    "#EE1D52",
+    "#FF0000",
+    "#0A66C2",
+  ];
 
   return (
     <>
       <style>{CSS}</style>
       <section
-        id="socials"
-        className="section-wrapper relative overflow-hidden"
+        id='socials'
+        className='section-wrapper relative overflow-hidden'
         style={{ background: "var(--bg-primary)" }}
-        dir={isRtlLocale ? "rtl" : "ltr"}
-      >
-        {/* ── Background ── */}
-        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        dir={isRtlLocale ? "rtl" : "ltr"}>
+        {/* Background */}
+        <div className='absolute inset-0 z-0 overflow-hidden pointer-events-none'>
           {/* Dot grid */}
-          <div className="absolute inset-0 bg-grid-pattern opacity-20" />
+          <div className='absolute inset-0 bg-grid-pattern opacity-20' />
 
           {/* Floating social icon watermarks */}
           {WATERMARK_POSITIONS.map((pos, i) => {
@@ -391,18 +439,19 @@ export default function SocialsSection() {
             return (
               <div
                 key={i}
-                className="absolute bg-drift-y"
-                style={{
-                  left: pos.left,
-                  top: pos.top,
-                  opacity: 0.045,
-                  color: wmColor,
-                  fontSize: "3.2rem",
-                  lineHeight: 1,
-                  "--dur": pos.dur,
-                  "--delay": pos.delay,
-                } as React.CSSProperties}
-              >
+                className='absolute bg-drift-y'
+                style={
+                  {
+                    left: pos.left,
+                    top: pos.top,
+                    opacity: 0.045,
+                    color: wmColor,
+                    fontSize: "3.2rem",
+                    lineHeight: 1,
+                    "--dur": pos.dur,
+                    "--delay": pos.delay,
+                  } as React.CSSProperties
+                }>
                 <WmIcon />
               </div>
             );
@@ -412,68 +461,97 @@ export default function SocialsSection() {
           {FOLLOW_POSITIONS.map((pos, i) => (
             <div
               key={`follow-${i}`}
-              className="absolute bg-drift-y"
-              style={{
-                left: pos.left,
-                top: pos.top,
-                opacity: 0.06,
-                "--dur": pos.dur,
-                "--delay": pos.delay,
-              } as React.CSSProperties}
-            >
+              className='absolute bg-drift-y'
+              style={
+                {
+                  left: pos.left,
+                  top: pos.top,
+                  opacity: 0.06,
+                  "--dur": pos.dur,
+                  "--delay": pos.delay,
+                } as React.CSSProperties
+              }>
               <span
                 style={{
                   display: "inline-block",
                   padding: "4px 12px",
                   borderRadius: "9999px",
-                  border: "1px solid color-mix(in srgb, var(--text-primary) 18%, transparent)",
+                  border:
+                    "1px solid color-mix(in srgb, var(--text-primary) 18%, transparent)",
                   fontSize: "9px",
                   fontWeight: 700,
                   letterSpacing: "0.12em",
                   textTransform: "uppercase",
-                  color: "color-mix(in srgb, var(--text-primary) 55%, transparent)",
+                  color:
+                    "color-mix(in srgb, var(--text-primary) 55%, transparent)",
                   whiteSpace: "nowrap",
-                }}
-              >
-                {t("follow")} ✓
+                }}>
+                {t("follow")}
               </span>
             </div>
           ))}
 
-          {/* Ambient platform orbs — CSS-driven */}
+          {/* Ambient platform orbs - CSS-driven */}
           {[
-            { color: "rgba(24,119,242,0.10)",  left: "5%",  top: "20%", size: "24vw", dur: "18s", delay: "0s"   },
-            { color: "rgba(225,48,108,0.09)",   left: "28%", top: "75%", size: "22vw", dur: "22s", delay: "2s"   },
-            { color: "rgba(255,0,0,0.08)",      left: "88%", top: "28%", size: "20vw", dur: "20s", delay: "4s"   },
+            {
+              color: "rgba(24,119,242,0.10)",
+              left: "5%",
+              top: "20%",
+              size: "24vw",
+              dur: "18s",
+              delay: "0s",
+            },
+            {
+              color: "rgba(225,48,108,0.09)",
+              left: "28%",
+              top: "75%",
+              size: "22vw",
+              dur: "22s",
+              delay: "2s",
+            },
+            {
+              color: "rgba(255,0,0,0.08)",
+              left: "88%",
+              top: "28%",
+              size: "20vw",
+              dur: "20s",
+              delay: "4s",
+            },
           ].map((obj, i) => (
             <div
               key={`orb-${i}`}
-              className="absolute rounded-full bg-scale-pulse"
-              style={{
-                width: obj.size,
-                height: obj.size,
-                left: obj.left,
-                top: obj.top,
-                transform: "translate(-50%, -50%)",
-                background: `radial-gradient(circle, ${obj.color}, transparent 72%)`,
-                filter: "blur(48px)",
-                "--dur": obj.dur,
-                "--delay": obj.delay,
-              } as React.CSSProperties}
+              className='absolute rounded-full bg-scale-pulse'
+              style={
+                {
+                  width: obj.size,
+                  height: obj.size,
+                  left: obj.left,
+                  top: obj.top,
+                  transform: "translate(-50%, -50%)",
+                  background: `radial-gradient(circle, ${obj.color}, transparent 72%)`,
+                  filter: "blur(48px)",
+                  "--dur": obj.dur,
+                  "--delay": obj.delay,
+                } as React.CSSProperties
+              }
             />
           ))}
         </div>
 
-        <div className="section-inner relative z-10">
+        <div className='section-inner relative z-10'>
           <SectionHeading
             badge={t("badge")}
             title={t("title")}
             subtitle={t("subtitle")}
           />
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5">
+          <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5'>
             {socialLinks.map((social) => (
-              <SocialCardReveal key={social.id} social={social} followText={t("follow")} />
+              <SocialCardReveal
+                key={social.id}
+                social={social}
+                followText={t("follow")}
+              />
             ))}
           </div>
         </div>

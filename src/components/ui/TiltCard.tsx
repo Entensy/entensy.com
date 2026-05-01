@@ -32,7 +32,12 @@ export default function TiltCard({
   const isTouching = useRef(false);
   const touchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  useEffect(() => () => { if (touchTimer.current) clearTimeout(touchTimer.current); }, []);
+  useEffect(
+    () => () => {
+      if (touchTimer.current) clearTimeout(touchTimer.current);
+    },
+    [],
+  );
 
   const tiltTo = (rect: DOMRect, clientX: number, clientY: number) => {
     const cx = (clientX - rect.left) / rect.width - 0.5;
@@ -60,18 +65,28 @@ export default function TiltCard({
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     isTouching.current = true;
     const touch = e.touches[0];
-    tiltTo(e.currentTarget.getBoundingClientRect(), touch.clientX, touch.clientY);
+    tiltTo(
+      e.currentTarget.getBoundingClientRect(),
+      touch.clientX,
+      touch.clientY,
+    );
   };
 
   const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
     const touch = e.touches[0];
-    tiltTo(e.currentTarget.getBoundingClientRect(), touch.clientX, touch.clientY);
+    tiltTo(
+      e.currentTarget.getBoundingClientRect(),
+      touch.clientX,
+      touch.clientY,
+    );
   };
 
   const handleTouchEnd = () => {
     reset(innerRef.current);
     if (touchTimer.current) clearTimeout(touchTimer.current);
-    touchTimer.current = setTimeout(() => { isTouching.current = false; }, 300);
+    touchTimer.current = setTimeout(() => {
+      isTouching.current = false;
+    }, 300);
   };
 
   return (
@@ -83,13 +98,11 @@ export default function TiltCard({
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
-      onTouchCancel={handleTouchEnd}
-    >
+      onTouchCancel={handleTouchEnd}>
       <div
         ref={innerRef}
-        className="tilt-card-inner h-full"
-        style={{ transformStyle: "preserve-3d" }}
-      >
+        className='tilt-card-inner h-full'
+        style={{ transformStyle: "preserve-3d" }}>
         {children}
       </div>
     </div>

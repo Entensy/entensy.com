@@ -12,26 +12,68 @@ import AnimatedButton from "@/components/ui/AnimatedButton";
 
 const GlobeBackground = dynamic(
   () => import("@/components/ui/GlobeBackground"),
-  { ssr: false }
+  { ssr: false },
 );
 
 gsap.registerPlugin(SplitText, ScrollTrigger);
 
 const floatingBadges = [
-  { key: "floating_1", delay: 0,   side: "left"  as const, offset: "30%", y: "25%" },
-  { key: "floating_2", delay: 0.3, side: "right" as const, offset: "30%", y: "25%" },
-  { key: "floating_3", delay: 0.6, side: "left"  as const, offset: "25%", y: "68%" },
-  { key: "floating_4", delay: 0.9, side: "right" as const, offset: "25%", y: "68%" },
+  {
+    key: "floating_1",
+    delay: 0,
+    side: "left" as const,
+    offset: "30%",
+    y: "25%",
+  },
+  {
+    key: "floating_2",
+    delay: 0.3,
+    side: "right" as const,
+    offset: "30%",
+    y: "25%",
+  },
+  {
+    key: "floating_3",
+    delay: 0.6,
+    side: "left" as const,
+    offset: "25%",
+    y: "68%",
+  },
+  {
+    key: "floating_4",
+    delay: 0.9,
+    side: "right" as const,
+    offset: "25%",
+    y: "68%",
+  },
 ];
 
 // Mouse icon SVG scroll indicator
 function MouseScrollIcon() {
   return (
-    <svg width="22" height="34" viewBox="0 0 22 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="1" y="1" width="20" height="32" rx="10" stroke="currentColor" strokeWidth="1.5" strokeOpacity="0.5" />
+    <svg
+      width='22'
+      height='34'
+      viewBox='0 0 22 34'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'>
+      <rect
+        x='1'
+        y='1'
+        width='20'
+        height='32'
+        rx='10'
+        stroke='currentColor'
+        strokeWidth='1.5'
+        strokeOpacity='0.5'
+      />
       <motion.rect
-        x="10" y="7" width="2" height="6" rx="1"
-        fill="currentColor"
+        x='10'
+        y='7'
+        width='2'
+        height='6'
+        rx='1'
+        fill='currentColor'
         animate={{ y: [7, 13, 7] }}
         transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
       />
@@ -49,16 +91,22 @@ export default function HomeSection() {
   const [globeVisible, setGlobeVisible] = useState(true);
 
   useEffect(() => {
-    // RTL: use Framer Motion (see JSX below) — skip GSAP to avoid stale ref issues
+    // RTL: use Framer Motion (see JSX below) - skip GSAP to avoid stale ref issues
     if (isRtlLocale) return;
 
     // LTR only: char-by-char animation on plain-text lines (not gradient word)
     const targets = [line1Ref.current, line3Ref.current].filter(Boolean);
     if (!targets.length) return;
 
-    const splits = targets.map((el) => new SplitText(el!, { type: "chars,words" }));
+    const splits = targets.map(
+      (el) => new SplitText(el!, { type: "chars,words" }),
+    );
     // Prevent mid-word line breaks on the char-level inline-block spans
-    splits.forEach((s) => s.words.forEach((w) => { (w as HTMLElement).style.whiteSpace = "nowrap"; }));
+    splits.forEach((s) =>
+      s.words.forEach((w) => {
+        (w as HTMLElement).style.whiteSpace = "nowrap";
+      }),
+    );
     const allChars = splits.flatMap((s) => s.chars);
 
     const tl = gsap.timeline({ delay: 0.3 });
@@ -83,7 +131,7 @@ export default function HomeSection() {
     if (!section) return;
     const observer = new IntersectionObserver(
       ([entry]) => setGlobeVisible(entry.isIntersecting),
-      { threshold: 0.01 }
+      { threshold: 0.01 },
     );
     observer.observe(section);
     return () => observer.disconnect();
@@ -92,81 +140,91 @@ export default function HomeSection() {
   return (
     <section
       ref={sectionRef}
-      id="home"
-      className="relative min-h-svh flex flex-col items-center justify-center overflow-hidden"
+      id='home'
+      className='relative min-h-svh flex flex-col items-center justify-center overflow-hidden'
       style={{ background: "var(--bg-primary)" }}
-      dir={isRtlLocale ? "rtl" : "ltr"}
-    >
-      {/* Globe background — only mounted while section is visible */}
+      dir={isRtlLocale ? "rtl" : "ltr"}>
+      {/* Globe background - only mounted while section is visible */}
       {globeVisible && (
-        <div className="absolute inset-0 z-0">
+        <div className='absolute inset-0 z-0'>
           <GlobeBackground showIcosahedron opacity={0.85} />
         </div>
       )}
 
       {/* Deep radial gradient */}
       <div
-        className="absolute inset-0 z-1 pointer-events-none"
+        className='absolute inset-0 z-1 pointer-events-none'
         style={{
           background:
             "radial-gradient(ellipse 80% 60% at 50% 40%, rgba(252,0,42,0.07) 0%, transparent 65%), radial-gradient(ellipse 60% 40% at 50% 100%, rgba(255,255,255,0.03) 0%, transparent 60%)",
         }}
       />
 
-      {/* Floating badges — all 4 show in both LTR and RTL, sides mirrored in RTL */}
+      {/* Floating badges - all 4 show in both LTR and RTL, sides mirrored in RTL */}
       {floatingBadges.map((badge) => {
         // In LTR: left-side badge anchors its right edge left of center; right-side anchors its left edge right of center.
         // In RTL: sides are flipped — left-side badge moves to right, right-side moves to left.
         const posStyle = isRtlLocale
-          ? (badge.side === "left"
+          ? badge.side === "left"
             ? { left: `calc(50% + ${badge.offset})` }
-            : { right: `calc(50% + ${badge.offset})` })
-          : (badge.side === "right"
+            : { right: `calc(50% + ${badge.offset})` }
+          : badge.side === "right"
             ? { left: `calc(50% + ${badge.offset})` }
-            : { right: `calc(50% + ${badge.offset})` });
+            : { right: `calc(50% + ${badge.offset})` };
 
         return (
           <div
             key={badge.key}
-            className="absolute hidden lg:block z-20"
-            style={{ ...posStyle, top: badge.y }}
-          >
+            className='absolute hidden lg:block z-20'
+            style={{ ...posStyle, top: badge.y }}>
             <motion.div
-              className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold glass-card bg-drift-y"
-              dir="ltr"
-              style={{
-                background: "color-mix(in srgb, var(--bg-primary) 80%, transparent)",
-                backdropFilter: "blur(14px)",
-                WebkitBackdropFilter: "blur(14px)",
-                border: "1px solid rgba(252,0,42,0.2)",
-                color: "var(--text-secondary)",
-                "--dur": `${4 + badge.delay}s`,
-                "--delay": `${badge.delay + 1.5}s`,
-              } as React.CSSProperties}
+              className='flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold glass-card bg-drift-y'
+              dir='ltr'
+              style={
+                {
+                  background:
+                    "color-mix(in srgb, var(--bg-primary) 80%, transparent)",
+                  backdropFilter: "blur(14px)",
+                  WebkitBackdropFilter: "blur(14px)",
+                  border: "1px solid rgba(252,0,42,0.2)",
+                  color: "var(--text-secondary)",
+                  "--dur": "5s",
+                  "--delay": "0s",
+                } as React.CSSProperties
+              }
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{
                 opacity: { delay: badge.delay + 1.5, duration: 0.6 },
                 scale: { delay: badge.delay + 1.5, duration: 0.6 },
-              }}
-            >
-              {isRtlLocale ? (() => {
-                const text = t(badge.key as Parameters<typeof t>[0]);
-                const m = text.match(/^([٠-٩\d+٪%]+)\s*(.*)/);
-                return (
-                  <>
-                    {m ? (
-                      <>
-                        {m[2] && <span>{m[2]}</span>}
-                        <span style={{ unicodeBidi: "bidi-override", direction: "ltr" }}>{m[1]}</span>
-                      </>
-                    ) : text}
-                    <span className="w-1.5 h-1.5 rounded-full bg-brand animate-pulse shrink-0" />
-                  </>
-                );
-              })() : (
+              }}>
+              {isRtlLocale ? (
+                (() => {
+                  const text = t(badge.key as Parameters<typeof t>[0]);
+                  const m = text.match(/^([٠-٩\d+٪%]+)\s*(.*)/);
+                  return (
+                    <>
+                      {m ? (
+                        <>
+                          {m[2] && <span>{m[2]}</span>}
+                          <span
+                            style={{
+                              unicodeBidi: "bidi-override",
+                              direction: "ltr",
+                            }}>
+                            {m[1]}
+                          </span>
+                        </>
+                      ) : (
+                        text
+                      )}
+                      <span className='w-1.5 h-1.5 rounded-full bg-brand animate-pulse shrink-0' />
+                    </>
+                  );
+                })()
+              ) : (
                 <>
-                  <span className="w-1.5 h-1.5 rounded-full bg-brand animate-pulse shrink-0" />
+                  <span className='w-1.5 h-1.5 rounded-full bg-brand animate-pulse shrink-0' />
                   {t(badge.key as Parameters<typeof t>[0])}
                 </>
               )}
@@ -175,9 +233,8 @@ export default function HomeSection() {
         );
       })}
 
-      {/* Main content — pt-24 ensures content doesn't crowd the navbar */}
-      <div className="relative z-10 flex flex-col items-center text-center gap-6 px-[clamp(1.25rem,5vw,5rem)] max-w-5xl mx-auto w-full pt-28 md:pt-32 pb-28 md:pb-24">
-
+      {/* Main content - pt-24 ensures content doesn't crowd the navbar */}
+      <div className='relative z-10 flex flex-col items-center text-center gap-6 px-[clamp(1.25rem,5vw,5rem)] max-w-5xl mx-auto w-full pt-28 md:pt-32 pb-28 md:pb-24'>
         {/* Badge */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -190,57 +247,55 @@ export default function HomeSection() {
             background: "rgba(252,0,42,0.08)",
             border: "1px solid rgba(252,0,42,0.2)",
             color: "rgba(252,0,42,0.9)",
-          }}
-        >
+          }}>
           <Sparkles size={12} />
           {t("badge")}
         </motion.div>
 
-        {/* Headline — gradient word animated separately (not via SplitText) */}
-        <div className="overflow-visible">
-          <h1
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-[1.08] tracking-tight"
-          >
-            {/* headline_1 — LTR: GSAP chars; RTL: Framer Motion fade */}
+        {/* Headline - gradient word animated separately (not via SplitText) */}
+        <div className='overflow-visible'>
+          <h1 className='text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-[1.08] tracking-tight'>
+            {/* headline_1 - LTR: GSAP chars; RTL: Framer Motion fade */}
             {t("headline_1") && (
               <>
                 {isRtlLocale ? (
                   <motion.span
-                    className="heading-glass"
+                    className='heading-glass'
                     initial={{ opacity: 0, y: 26 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.25, duration: 0.58, ease: "easeOut" }}
-                  >
+                    transition={{
+                      delay: 0.25,
+                      duration: 0.58,
+                      ease: "easeOut",
+                    }}>
                     {t("headline_1")}{" "}
                   </motion.span>
                 ) : (
-                  <span ref={line1Ref} className="heading-glass">
+                  <span ref={line1Ref} className='heading-glass'>
                     {t("headline_1")}{" "}
                   </span>
                 )}
               </>
             )}
             <motion.span
-              className="gradient-text"
+              className='gradient-text'
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7, duration: 0.6, ease: "easeOut" }}
-            >
+              transition={{ delay: 0.7, duration: 0.6, ease: "easeOut" }}>
               {t("headline_2")}
             </motion.span>
             <br />
-            {/* headline_3 — LTR: GSAP chars; RTL: Framer Motion fade */}
+            {/* headline_3 - LTR: GSAP chars; RTL: Framer Motion fade */}
             {isRtlLocale ? (
               <motion.span
-                className="heading-glass"
+                className='heading-glass'
                 initial={{ opacity: 0, y: 26 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.36, duration: 0.58, ease: "easeOut" }}
-              >
+                transition={{ delay: 0.36, duration: 0.58, ease: "easeOut" }}>
                 {t("headline_3")}
               </motion.span>
             ) : (
-              <span ref={line3Ref} className="heading-glass">
+              <span ref={line3Ref} className='heading-glass'>
                 {t("headline_3")}
               </span>
             )}
@@ -252,33 +307,39 @@ export default function HomeSection() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.0, duration: 0.7 }}
-          className="max-w-3xl text-sm md:text-base lg:text-lg leading-relaxed"
-          style={{ color: "var(--text-secondary)" }}
-        >
+          className='max-w-3xl text-sm md:text-base lg:text-lg leading-relaxed'
+          style={{ color: "var(--text-secondary)" }}>
           {t("subheadline")}
         </motion.p>
 
-        {/* CTAs — RTL: ghost first, then primary (reversed visual order) */}
+        {/* CTAs - RTL: ghost first, then primary (reversed visual order) */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.2, duration: 0.6 }}
-          className="flex flex-col sm:flex-row gap-4"
-        >
+          className='flex flex-col sm:flex-row gap-4'>
           <AnimatedButton
-            variant="primary"
-            size="lg"
-            icon={isRtlLocale ? <ArrowLeft size={18} /> : <ArrowRight size={18} />}
-            iconPosition="right"
-            onClick={() => document.getElementById("portfolio")?.scrollIntoView({ behavior: "smooth" })}
-          >
+            variant='primary'
+            size='lg'
+            icon={
+              isRtlLocale ? <ArrowLeft size={18} /> : <ArrowRight size={18} />
+            }
+            iconPosition='right'
+            onClick={() =>
+              document
+                .getElementById("portfolio")
+                ?.scrollIntoView({ behavior: "smooth" })
+            }>
             {t("cta_primary")}
           </AnimatedButton>
           <AnimatedButton
-            variant="ghost"
-            size="lg"
-            onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
-          >
+            variant='ghost'
+            size='lg'
+            onClick={() =>
+              document
+                .getElementById("contact")
+                ?.scrollIntoView({ behavior: "smooth" })
+            }>
             {t("cta_secondary")}
           </AnimatedButton>
         </motion.div>
@@ -288,19 +349,23 @@ export default function HomeSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.4, duration: 0.6 }}
-          className="flex flex-wrap items-center justify-center gap-x-6 gap-y-4 md:gap-x-12 pt-2"
-        >
+          className='flex flex-wrap items-center justify-center gap-x-6 gap-y-4 md:gap-x-12 pt-2'>
           {[
             { value: isRtlLocale ? "٥٠+" : "50+", label: t("stats.projects") },
-            { value: isRtlLocale ? "٥+"  : "5+",  label: t("stats.years") },
+            { value: isRtlLocale ? "٥+" : "5+", label: t("stats.years") },
             { value: isRtlLocale ? "١٠+" : "10+", label: t("stats.services") },
-            { value: isRtlLocale ? "٣"   : "3",   label: t("stats.languages") },
+            { value: isRtlLocale ? "٣" : "3", label: t("stats.languages") },
           ].map((stat, i) => (
-            <div key={i} className="flex flex-col items-center gap-1">
-              <span className="text-2xl md:text-3xl font-black" dir="ltr" style={{ color: "#FC002A", unicodeBidi: "bidi-override" }}>
+            <div key={i} className='flex flex-col items-center gap-1'>
+              <span
+                className='text-2xl md:text-3xl font-black'
+                dir='ltr'
+                style={{ color: "#FC002A", unicodeBidi: "bidi-override" }}>
                 {stat.value}
               </span>
-              <span className="text-xs font-medium tracking-wide" style={{ color: "var(--text-muted)" }}>
+              <span
+                className='text-xs font-medium tracking-wide'
+                style={{ color: "var(--text-muted)" }}>
                 {stat.label}
               </span>
             </div>
@@ -310,29 +375,34 @@ export default function HomeSection() {
 
       {/* Scroll indicator */}
       <motion.button
-        className="absolute bottom-1 md:bottom-2 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2 px-3 py-2 rounded-full"
+        className='absolute bottom-1 md:bottom-2 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2 px-3 py-2 rounded-full'
         style={{ color: "var(--text-muted)" }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 0.52 }}
         transition={{ delay: 2, duration: 0.6 }}
         whileHover={{ opacity: 1 }}
-        onClick={() => document.getElementById("services")?.scrollIntoView({ behavior: "smooth" })}
-        aria-label={t("scroll_hint")}
-      >
+        onClick={() =>
+          document
+            .getElementById("services")
+            ?.scrollIntoView({ behavior: "smooth" })
+        }
+        aria-label={t("scroll_hint")}>
         <MouseScrollIcon />
         <span
           className={`text-[9px] font-medium whitespace-nowrap ${
             isRtlLocale ? "" : "tracking-[0.22em] uppercase"
-          }`}
-        >
+          }`}>
           {t("scroll_hint")}
         </span>
       </motion.button>
 
-      {/* Bottom fade — uses bg-primary so it blends with the next section */}
+      {/* Bottom fade - uses bg-primary so it blends with the next section */}
       <div
-        className="absolute bottom-0 left-0 right-0 h-48 z-2 pointer-events-none"
-        style={{ background: "linear-gradient(to top, var(--bg-primary) 0%, rgba(255,255,255,0) 100%)" }}
+        className='absolute bottom-0 left-0 right-0 h-48 z-2 pointer-events-none'
+        style={{
+          background:
+            "linear-gradient(to top, var(--bg-primary) 0%, rgba(255,255,255,0) 100%)",
+        }}
       />
     </section>
   );

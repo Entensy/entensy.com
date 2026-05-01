@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 
-// ─── Shared orbit clock ────────────────────────────────────────────────────────
+// ---- Shared orbit clock ----
 // One tween drives all cards. Each card reads from sharedProxy.t via a ticker
 // so they're always in the same phase regardless of mount order/timing.
 
@@ -32,9 +32,9 @@ function releaseOrbit() {
   }
 }
 
-const SPOTLIGHT_SPEED_IN = 1200; // px/s — snappy approach to cursor/tap point
+const SPOTLIGHT_SPEED_IN = 1200; // px/s - snappy approach to cursor/tap point
 
-// ─── Hook ─────────────────────────────────────────────────────────────────────
+// ---- Hook ----
 
 export function useCardBorder(shellRef: React.RefObject<HTMLElement | null>) {
   const isHoveringRef = useRef(false);
@@ -83,15 +83,15 @@ export function useCardBorder(shellRef: React.RefObject<HTMLElement | null>) {
     const H = shell.offsetHeight;
     const perim = 2 * (W + H);
     const pos = (sharedProxy.t % 1) * perim;
-    if (pos < W)           return { mx: pos,           my: 0             };
-    if (pos < W + H)       return { mx: W,             my: pos - W       };
-    if (pos < 2 * W + H)   return { mx: W - (pos - W - H), my: H        };
-    return                        { mx: 0,             my: H - (pos - 2 * W - H) };
+    if (pos < W) return { mx: pos, my: 0 };
+    if (pos < W + H) return { mx: W, my: pos - W };
+    if (pos < 2 * W + H) return { mx: W - (pos - W - H), my: H };
+    return { mx: 0, my: H - (pos - 2 * W - H) };
   }, []);
 
   const handleBorderMouseMove = useCallback(
     (e: React.MouseEvent<HTMLElement>) => {
-      // iOS fires fake mousemove after touchend — ignore events within 600 ms of a touch
+      // iOS fires fake mousemove after touchend - ignore events within 600 ms of a touch
       if (Date.now() - lastTouchRef.current < 600) return;
       const shell = shellRef.current;
       if (!shell) return;

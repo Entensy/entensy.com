@@ -24,8 +24,7 @@ interface AnimatedButtonProps extends SafeButtonProps {
 }
 
 const variantStyles: Record<ButtonVariant, string> = {
-  primary:
-    "bg-[#FC002A] text-white shadow-[0_0_22px_rgba(252,0,42,0.28)]",
+  primary: "bg-[#FC002A] text-white shadow-[0_0_22px_rgba(252,0,42,0.28)]",
   secondary:
     "bg-[#C9A84C] text-[#0D0A1E] shadow-[0_0_22px_rgba(201,168,76,0.28)]",
   ghost:
@@ -54,7 +53,7 @@ const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>(
       href,
       ...props
     },
-    ref
+    ref,
   ) => {
     const isDisabled = disabled || loading;
 
@@ -62,38 +61,36 @@ const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>(
       <>
         {/* Shimmer overlay */}
         <span
-          className="absolute inset-0 overflow-hidden rounded-[inherit]"
-          aria-hidden
-        >
-          <span className="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/15 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+          className='absolute inset-0 overflow-hidden rounded-[inherit]'
+          aria-hidden>
+          <span className='absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/15 to-transparent transition-transform duration-700 group-hover:translate-x-full' />
         </span>
 
         {/* Icon left */}
         {icon && iconPosition === "left" && (
-          <span className="relative z-10 shrink-0">{icon}</span>
+          <span className='relative z-10 shrink-0'>{icon}</span>
         )}
 
         {/* Label */}
-        <span className="relative z-10 font-semibold tracking-wide">
+        <span className='relative z-10 font-semibold tracking-wide'>
           {loading ? (
-            <span className="flex items-center gap-2">
+            <span className='flex items-center gap-2'>
               <svg
-                className="animate-spin w-4 h-4"
-                viewBox="0 0 24 24"
-                fill="none"
-              >
+                className='animate-spin w-4 h-4'
+                viewBox='0 0 24 24'
+                fill='none'>
                 <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
+                  className='opacity-25'
+                  cx='12'
+                  cy='12'
+                  r='10'
+                  stroke='currentColor'
+                  strokeWidth='4'
                 />
                 <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                  className='opacity-75'
+                  fill='currentColor'
+                  d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z'
                 />
               </svg>
               {children}
@@ -105,7 +102,7 @@ const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>(
 
         {/* Icon right */}
         {icon && iconPosition === "right" && !loading && (
-          <span className="relative z-10 shrink-0">{icon}</span>
+          <span className='relative z-10 shrink-0'>{icon}</span>
         )}
       </>
     );
@@ -119,7 +116,7 @@ const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>(
       isDisabled
         ? "opacity-40 pointer-events-none cursor-not-allowed"
         : "cursor-pointer",
-      className
+      className,
     );
 
     const isPrimary = variant === "primary";
@@ -129,7 +126,11 @@ const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>(
         ? { scale: 1.03, y: -1, filter: "brightness(0.88)" }
         : { scale: 1.04, y: -1.5 };
     const tapAnim = { scale: 0.97, y: 0 };
-    const springTransition = { type: "spring" as const, stiffness: 400, damping: 20 };
+    const springTransition = {
+      type: "spring" as const,
+      stiffness: 400,
+      damping: 20,
+    };
 
     if (href && !isDisabled) {
       return (
@@ -138,8 +139,7 @@ const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>(
           className={commonClassName}
           whileHover={hoverAnim}
           whileTap={tapAnim}
-          transition={springTransition}
-        >
+          transition={springTransition}>
           {content}
         </motion.a>
       );
@@ -153,12 +153,11 @@ const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>(
         whileHover={isDisabled ? {} : hoverAnim}
         whileTap={isDisabled ? {} : tapAnim}
         transition={springTransition}
-        {...props}
-      >
+        {...props}>
         {content}
       </motion.button>
     );
-  }
+  },
 );
 
 AnimatedButton.displayName = "AnimatedButton";
