@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
 export default function NotFound() {
@@ -14,21 +15,21 @@ export default function NotFound() {
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute inset-0 bg-grid-pattern opacity-[0.06]" />
         <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-175 h-175 rounded-full"
           style={{
             background: "radial-gradient(circle, rgba(252,0,42,0.10) 0%, transparent 65%)",
             filter: "blur(70px)",
           }}
         />
         <div
-          className="absolute -top-20 -left-20 w-[400px] h-[400px] rounded-full"
+          className="absolute -top-20 -left-20 w-100 h-100 rounded-full"
           style={{
             background: "radial-gradient(circle, rgba(97,78,198,0.09) 0%, transparent 70%)",
             filter: "blur(80px)",
           }}
         />
         <div
-          className="absolute -bottom-20 -right-20 w-[400px] h-[400px] rounded-full"
+          className="absolute -bottom-20 -right-20 w-100 h-100 rounded-full"
           style={{
             background: "radial-gradient(circle, rgba(97,78,198,0.09) 0%, transparent 70%)",
             filter: "blur(80px)",
@@ -39,13 +40,13 @@ export default function NotFound() {
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center text-center gap-5 px-6 max-w-xl mx-auto w-full">
         {/* Logo */}
-        <motion.a
-          href="/"
+        <motion.div
           initial={{ opacity: 0, y: -16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className="mb-2 flex items-center gap-2"
+          className="mb-2"
         >
+          <Link href="/" className="flex items-center gap-2">
           <Image
             src="/images/logo.png"
             alt="ENTENSY"
@@ -60,7 +61,8 @@ export default function NotFound() {
           >
             ENTENSY
           </span>
-        </motion.a>
+          </Link>
+        </motion.div>
 
         {/* 404 */}
         <motion.div
@@ -117,7 +119,7 @@ export default function NotFound() {
           transition={{ delay: 0.55, duration: 0.5 }}
           className="flex flex-col sm:flex-row gap-3 mt-2"
         >
-          <a
+          <Link
             href="/"
             className="flex items-center justify-center gap-2 px-6 py-3 rounded-full text-sm font-bold text-white transition-opacity hover:opacity-90"
             style={{
@@ -127,8 +129,8 @@ export default function NotFound() {
           >
             <ArrowLeft size={18} />
             Back to Home
-          </a>
-          <a
+          </Link>
+          <Link
             href="/#contact"
             className="flex items-center justify-center gap-2 px-6 py-3 rounded-full text-sm font-semibold border transition-colors hover:border-[rgba(252,0,42,0.4)]"
             style={{
@@ -137,7 +139,7 @@ export default function NotFound() {
             }}
           >
             Contact Us
-          </a>
+          </Link>
         </motion.div>
       </div>
 

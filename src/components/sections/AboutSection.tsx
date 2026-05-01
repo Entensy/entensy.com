@@ -7,12 +7,22 @@ import { useLocale } from "next-intl";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 import {
-  Clock, Code2, Layers, Star,
-  Users, Zap, Target, ArrowRight,
-  Kanban, Cloud, Shield, Truck, MessageCircle, BarChart3,
+  Clock,
+  Code2,
+  Layers,
+  Star,
+  Users,
+  Zap,
+  Target,
+  ArrowRight,
+  Kanban,
+  Cloud,
+  Shield,
+  Truck,
+  MessageCircle,
+  BarChart3,
 } from "lucide-react";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { useTheme } from "@/components/layout/ThemeContext";
@@ -24,11 +34,6 @@ import {
 } from "@/lib/animations";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 
-const GlobeBackground = dynamic(
-  () => import("@/components/ui/GlobeBackground"),
-  { ssr: false }
-);
-
 gsap.registerPlugin(ScrollTrigger);
 
 const CSS = `
@@ -38,13 +43,33 @@ const CSS = `
   }
 `;
 
-// ─── Data ────────────────────────────────────────────────────────────────────
+// ---- Data ----
 
 const stats = [
-  { valueKey: "stats.years",        labelKey: "stats.years_label",        color: "#F43F5E", Icon: Clock  },
-  { valueKey: "stats.projects",     labelKey: "stats.projects_label",     color: "#C9A84C", Icon: Code2  },
-  { valueKey: "stats.services",     labelKey: "stats.services_label",     color: "#7C3AED", Icon: Layers },
-  { valueKey: "stats.satisfaction", labelKey: "stats.satisfaction_label", color: "#10B981", Icon: Star   },
+  {
+    valueKey: "stats.years",
+    labelKey: "stats.years_label",
+    color: "#F43F5E",
+    Icon: Clock,
+  },
+  {
+    valueKey: "stats.projects",
+    labelKey: "stats.projects_label",
+    color: "#C9A84C",
+    Icon: Code2,
+  },
+  {
+    valueKey: "stats.services",
+    labelKey: "stats.services_label",
+    color: "#7C3AED",
+    Icon: Layers,
+  },
+  {
+    valueKey: "stats.satisfaction",
+    labelKey: "stats.satisfaction_label",
+    color: "#10B981",
+    Icon: Star,
+  },
 ] as const;
 
 // Unique color per capability for visual variety
@@ -90,35 +115,34 @@ const pillars = [
 ] as const;
 
 const capabilities = [
-  { key: "capabilities.agile",        Icon: Kanban        },
-  { key: "capabilities.architecture", Icon: Layers        },
-  { key: "capabilities.fullstack",    Icon: Code2         },
-  { key: "capabilities.cloud",        Icon: Cloud         },
-  { key: "capabilities.user_centered",Icon: Users         },
-  { key: "capabilities.performance",  Icon: Zap           },
-  { key: "capabilities.security",     Icon: Shield        },
-  { key: "capabilities.delivery",     Icon: Truck         },
-  { key: "capabilities.communication",Icon: MessageCircle },
-  { key: "capabilities.data_driven",  Icon: BarChart3     },
+  { key: "capabilities.agile", Icon: Kanban },
+  { key: "capabilities.architecture", Icon: Layers },
+  { key: "capabilities.fullstack", Icon: Code2 },
+  { key: "capabilities.cloud", Icon: Cloud },
+  { key: "capabilities.user_centered", Icon: Users },
+  { key: "capabilities.performance", Icon: Zap },
+  { key: "capabilities.security", Icon: Shield },
+  { key: "capabilities.delivery", Icon: Truck },
+  { key: "capabilities.communication", Icon: MessageCircle },
+  { key: "capabilities.data_driven", Icon: BarChart3 },
 ];
 
-
 const WATERMARK_POSITIONS = [
-  { left: "4%",  top: "8%",  dur: "18s", delay: "0s"   },
-  { left: "20%", top: "4%",  dur: "22s", delay: "1.2s" },
-  { left: "38%", top: "14%", dur: "16s", delay: "3s"   },
-  { left: "58%", top: "6%",  dur: "20s", delay: "0.8s" },
+  { left: "4%", top: "8%", dur: "18s", delay: "0s" },
+  { left: "20%", top: "4%", dur: "22s", delay: "1.2s" },
+  { left: "38%", top: "14%", dur: "16s", delay: "3s" },
+  { left: "58%", top: "6%", dur: "20s", delay: "0.8s" },
   { left: "76%", top: "12%", dur: "24s", delay: "2.2s" },
-  { left: "92%", top: "30%", dur: "17s", delay: "4s"   },
-  { left: "88%", top: "60%", dur: "19s", delay: "1s"   },
+  { left: "92%", top: "30%", dur: "17s", delay: "4s" },
+  { left: "88%", top: "60%", dur: "19s", delay: "1s" },
   { left: "68%", top: "80%", dur: "21s", delay: "3.5s" },
-  { left: "44%", top: "88%", dur: "15s", delay: "5s"   },
-  { left: "22%", top: "76%", dur: "23s", delay: "2s"   },
-  { left: "6%",  top: "55%", dur: "18s", delay: "0.5s" },
+  { left: "44%", top: "88%", dur: "15s", delay: "5s" },
+  { left: "22%", top: "76%", dur: "23s", delay: "2s" },
+  { left: "6%", top: "55%", dur: "18s", delay: "0.5s" },
   { left: "32%", top: "42%", dur: "20s", delay: "4.5s" },
 ];
 
-// ─── Pillar Card ──────────────────────────────────────────────────────────────
+// ---- Pillar Card ----
 
 function PillarCard({
   pillar,
@@ -136,8 +160,8 @@ function PillarCard({
   const cardRef = useRef<HTMLDivElement>(null);
   const cardState = useScrollReveal(cardRef as React.RefObject<Element | null>);
 
-  const cardBg      = isDark ? "rgba(13,10,30,0.88)"       : "rgba(255,255,255,0.82)";
-  const shadowBase  = isDark
+  const cardBg = isDark ? "rgba(13,10,30,0.88)" : "rgba(255,255,255,0.82)";
+  const shadowBase = isDark
     ? `0 0 0 1px rgba(255,255,255,0.05), 0 8px 40px ${pillar.color}08`
     : `0 0 0 1px rgba(13,10,30,0.07), 0 6px 32px rgba(13,10,30,0.05)`;
   const shadowHover = isDark
@@ -148,12 +172,11 @@ function PillarCard({
     <motion.div
       ref={cardRef}
       variants={cardRevealVariant}
-      initial="below"
+      initial='below'
       animate={cardState}
-      className="h-full"
-    >
+      className='h-full'>
       <motion.div
-        className="pillar-card relative rounded-2xl overflow-hidden flex flex-col h-full cursor-default"
+        className='pillar-card relative rounded-2xl overflow-hidden flex flex-col h-full cursor-default'
         style={{ background: cardBg, boxShadow: shadowBase }}
         animate={{
           boxShadow: hovered ? shadowHover : shadowBase,
@@ -161,34 +184,43 @@ function PillarCard({
           scale: hovered ? 1.005 : 1,
         }}
         transition={{ type: "spring", stiffness: 280, damping: 22 }}
-        whileTap={{ scale: 1.005, boxShadow: shadowHover, transition: { duration: 0.15, ease: "easeOut" } }}
+        whileTap={{
+          scale: 1.005,
+          boxShadow: shadowHover,
+          transition: { duration: 0.15, ease: "easeOut" },
+        }}
         onMouseEnter={canHover ? () => setHovered(true) : undefined}
         onMouseLeave={() => setHovered(false)}
         onTouchStart={() => setHovered(true)}
         onTouchEnd={() => setHovered(false)}
-        onTouchCancel={() => setHovered(false)}
-      >
-        {/* Diagonal corner accent — top-left in LTR, top-right in RTL */}
-        <div className={`absolute top-0 pointer-events-none overflow-hidden ${isRtl ? "right-0 rounded-tr-2xl" : "left-0 rounded-tl-2xl"}`} style={{ width: "68%", height: "55%" }}>
+        onTouchCancel={() => setHovered(false)}>
+        {/* Diagonal corner accent - top-left in LTR, top-right in RTL */}
+        <div
+          className={`absolute top-0 pointer-events-none overflow-hidden ${isRtl ? "right-0 rounded-tr-2xl" : "left-0 rounded-tl-2xl"}`}
+          style={{ width: "68%", height: "55%" }}>
           <div
-            className="absolute inset-0"
+            className='absolute inset-0'
             style={{
               background: `linear-gradient(${isRtl ? "225deg" : "135deg"}, ${pillar.color}30 0%, ${pillar.color}10 40%, transparent 60%)`,
-              clipPath: isRtl ? "polygon(0 0, 100% 0, 100% 100%)" : "polygon(0 0, 100% 0, 0 100%)",
+              clipPath: isRtl
+                ? "polygon(0 0, 100% 0, 100% 100%)"
+                : "polygon(0 0, 100% 0, 0 100%)",
             }}
           />
           <div
-            className="absolute inset-0"
+            className='absolute inset-0'
             style={{
               background: `linear-gradient(${isRtl ? "225deg" : "135deg"}, ${pillar.color}60 0%, ${pillar.color}15 10%, transparent 22%)`,
-              clipPath: isRtl ? "polygon(0 0, 100% 0, 100% 100%)" : "polygon(0 0, 100% 0, 0 100%)",
+              clipPath: isRtl
+                ? "polygon(0 0, 100% 0, 100% 100%)"
+                : "polygon(0 0, 100% 0, 0 100%)",
             }}
           />
         </div>
 
-        {/* Top gradient line — fades in from center, not single color */}
+        {/* Top gradient line - fades in from center, not single color */}
         <div
-          className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+          className='absolute top-0 left-0 right-0 h-px pointer-events-none'
           style={{
             background: `linear-gradient(90deg, transparent 0%, ${pillar.color}80 35%, ${pillar.color}80 65%, transparent 100%)`,
           }}
@@ -197,54 +229,63 @@ function PillarCard({
         {/* Watermark number */}
         <span
           className={`absolute bottom-4 font-black leading-none pointer-events-none select-none ${isRtl ? "left-5" : "right-5"}`}
-          style={{ fontSize: "6.5rem", color: pillar.color, opacity: 0.055, lineHeight: 1 }}
-        >
+          style={{
+            fontSize: "6.5rem",
+            color: pillar.color,
+            opacity: 0.055,
+            lineHeight: 1,
+          }}>
           {pillar.number}
         </span>
 
         {/* Content */}
-        <div className="relative flex-1 p-7 flex flex-col gap-4 z-10">
+        <div className='relative flex-1 p-7 flex flex-col gap-4 z-10'>
           {/* Icon + number row */}
-          <div className="flex items-start justify-between gap-3">
+          <div className='flex items-start justify-between gap-3'>
             <div
-              className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0"
+              className='w-12 h-12 rounded-2xl flex items-center justify-center shrink-0'
               style={{
                 background: `${pillar.color}15`,
                 border: `1px solid ${pillar.color}28`,
                 boxShadow: `0 0 22px ${pillar.color}1e`,
-              }}
-            >
-              <pillar.Icon size={24} style={{ color: pillar.color }} strokeWidth={1.6} />
+              }}>
+              <pillar.Icon
+                size={24}
+                style={{ color: pillar.color }}
+                strokeWidth={1.6}
+              />
             </div>
             <span
-              className="text-4xl font-black leading-none"
-              style={{ color: pillar.color, opacity: 0.28 }}
-            >
+              className='text-4xl font-black leading-none'
+              style={{ color: pillar.color, opacity: 0.28 }}>
               {pillar.number}
             </span>
           </div>
 
           {/* Title */}
-          <h3 className="text-xl font-black" style={{ color: pillar.color }}>
+          <h3 className='text-xl font-black' style={{ color: pillar.color }}>
             {t(`pillars.${pillar.key}.title` as Parameters<typeof t>[0])}
           </h3>
 
           {/* Description */}
-          <p className="text-sm leading-relaxed flex-1" style={{ color: "var(--text-secondary)" }}>
+          <p
+            className='text-sm leading-relaxed flex-1'
+            style={{ color: "var(--text-secondary)" }}>
             {t(`pillars.${pillar.key}.desc` as Parameters<typeof t>[0])}
           </p>
-
         </div>
       </motion.div>
     </motion.div>
   );
 }
 
-// ─── Animated Counter ─────────────────────────────────────────────────────────
+// ---- Animated Counter ----
 
 const ARABIC_DIGITS = "٠١٢٣٤٥٦٧٨٩";
-const toWestern = (s: string) => s.replace(/[٠-٩]/g, d => String(ARABIC_DIGITS.indexOf(d)));
-const toArabic  = (s: string) => s.replace(/[0-9]/g, d => ARABIC_DIGITS[parseInt(d)]);
+const toWestern = (s: string) =>
+  s.replace(/[٠-٩]/g, (d) => String(ARABIC_DIGITS.indexOf(d)));
+const toArabic = (s: string) =>
+  s.replace(/[0-9]/g, (d) => ARABIC_DIGITS[parseInt(d)]);
 
 function CounterValue({ value, color }: { value: string; color: string }) {
   const ref = useRef<HTMLSpanElement>(null);
@@ -254,7 +295,7 @@ function CounterValue({ value, color }: { value: string; color: string }) {
     () => {
       const western = toWestern(value);
       const numeric = parseFloat(western.replace(/[^0-9.]/g, ""));
-      const suffix   = value.replace(/[٠-٩0-9.]/g, "");
+      const suffix = value.replace(/[٠-٩0-9.]/g, "");
       const useArabic = /[٠-٩]/.test(value);
 
       if (isNaN(numeric)) {
@@ -268,9 +309,10 @@ function CounterValue({ value, color }: { value: string; color: string }) {
         duration: 2.2,
         ease: "power2.out",
         onUpdate: () => {
-          const digits = numeric % 1 === 0
-            ? Math.floor(obj.val).toString()
-            : obj.val.toFixed(0);
+          const digits =
+            numeric % 1 === 0
+              ? Math.floor(obj.val).toString()
+              : obj.val.toFixed(0);
           setDisplayed((useArabic ? toArabic(digits) : digits) + suffix);
         },
         scrollTrigger: {
@@ -280,22 +322,21 @@ function CounterValue({ value, color }: { value: string; color: string }) {
         },
       });
     },
-    { scope: ref, dependencies: [value] }
+    { scope: ref, dependencies: [value] },
   );
 
   return (
     <span
       ref={ref}
-      className="text-4xl md:text-5xl font-black tabular-nums relative z-10"
-      dir="ltr"
-      style={{ color, unicodeBidi: "bidi-override" }}
-    >
+      className='text-4xl md:text-5xl font-black tabular-nums relative z-10'
+      dir='ltr'
+      style={{ color, unicodeBidi: "bidi-override" }}>
       {displayed}
     </span>
   );
 }
 
-// ─── Capability Tile ─────────────────────────────────────────────────────────
+// ---- Capability Tile ----
 
 function CapabilityTile({
   cap,
@@ -303,7 +344,14 @@ function CapabilityTile({
   capCenter,
   t,
 }: {
-  cap: { key: string; Icon: React.ComponentType<{ size?: number; style?: React.CSSProperties; strokeWidth?: number }> };
+  cap: {
+    key: string;
+    Icon: React.ComponentType<{
+      size?: number;
+      style?: React.CSSProperties;
+      strokeWidth?: number;
+    }>;
+  };
   capColor: string;
   capCenter: string;
   t: ReturnType<typeof useTranslations>;
@@ -317,32 +365,41 @@ function CapabilityTile({
     <motion.div
       ref={tileRef}
       variants={cardRevealVariant}
-      initial="below"
+      initial='below'
       animate={tileState}
       className={`cap-tile rounded-xl px-3 py-4 flex flex-col items-center gap-2 text-center cursor-default relative overflow-hidden ${capCenter}`}
       whileHover={canHover ? { scale: 1.05, y: -2 } : {}}
       whileTap={{ scale: 1.03, y: -1 }}
       transition={{ type: "spring", stiffness: 320, damping: 18 }}
-      style={{ background: `${capColor}0a`, border: `1px solid ${capColor}25` }}
-    >
+      style={{
+        background: `${capColor}0a`,
+        border: `1px solid ${capColor}25`,
+      }}>
       <div
-        className="cap-tile-glow absolute inset-0 rounded-xl pointer-events-none"
-        style={{ background: `radial-gradient(circle at 50% 50%, ${capColor}18 0%, transparent 70%)` }}
+        className='cap-tile-glow absolute inset-0 rounded-xl pointer-events-none'
+        style={{
+          background: `radial-gradient(circle at 50% 50%, ${capColor}18 0%, transparent 70%)`,
+        }}
       />
       <div
-        className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 relative z-10"
-        style={{ background: `${capColor}14`, border: `1px solid ${capColor}30`, boxShadow: `0 0 16px ${capColor}18` }}
-      >
+        className='w-10 h-10 rounded-xl flex items-center justify-center shrink-0 relative z-10'
+        style={{
+          background: `${capColor}14`,
+          border: `1px solid ${capColor}30`,
+          boxShadow: `0 0 16px ${capColor}18`,
+        }}>
         <CapIcon size={18} style={{ color: capColor }} strokeWidth={1.8} />
       </div>
-      <span className="text-xs font-semibold leading-snug relative z-10" style={{ color: "var(--text-muted)" }}>
+      <span
+        className='text-xs font-semibold leading-snug relative z-10'
+        style={{ color: "var(--text-muted)" }}>
         {t(cap.key as Parameters<typeof t>[0])}
       </span>
     </motion.div>
   );
 }
 
-// ─── Main Component ───────────────────────────────────────────────────────────
+// ---- Main Component ----
 
 export default function AboutSection() {
   const t = useTranslations("about");
@@ -353,10 +410,12 @@ export default function AboutSection() {
   const isDark = resolvedTheme === "dark";
 
   const canHover = useHoverCapable();
-  const panelBg      = isDark ? "rgba(13,10,30,0.88)"      : "rgba(255,255,255,0.82)";
-  const panelShadow  = isDark ? "0 0 0 1px rgba(255,255,255,0.05)" : "0 0 0 1px rgba(13,10,30,0.07), 0 4px 24px rgba(13,10,30,0.05)";
-  const dividerBg    = isDark ? "rgba(255,255,255,0.05)"    : "rgba(13,10,30,0.06)";
-  const cellBg       = isDark ? "rgba(13,10,30,0.88)"       : "rgba(255,255,255,0.82)";
+  const panelBg = isDark ? "rgba(13,10,30,0.88)" : "rgba(255,255,255,0.82)";
+  const panelShadow = isDark
+    ? "0 0 0 1px rgba(255,255,255,0.05)"
+    : "0 0 0 1px rgba(13,10,30,0.07), 0 4px 24px rgba(13,10,30,0.05)";
+  const dividerBg = isDark ? "rgba(255,255,255,0.05)" : "rgba(13,10,30,0.06)";
+  const cellBg = isDark ? "rgba(13,10,30,0.88)" : "rgba(255,255,255,0.82)";
 
   const ctaCardRef = useRef<HTMLDivElement>(null);
   const ctaBtnRef = useRef<HTMLButtonElement>(null);
@@ -364,61 +423,133 @@ export default function AboutSection() {
   const [ctaHovered, setCtaHovered] = useState(false);
 
   const statsGridRef = useRef<HTMLDivElement>(null);
-  const statsReveal = useScrollReveal(statsGridRef as React.RefObject<Element | null>);
+  const statsReveal = useScrollReveal(
+    statsGridRef as React.RefObject<Element | null>,
+  );
   const bannerRef = useRef<HTMLDivElement>(null);
-  const bannerReveal = useScrollReveal(bannerRef as React.RefObject<Element | null>);
+  const bannerReveal = useScrollReveal(
+    bannerRef as React.RefObject<Element | null>,
+  );
   const ctaStripRef = useRef<HTMLDivElement>(null);
-  const ctaStripReveal = useScrollReveal(ctaStripRef as React.RefObject<Element | null>);
+  const ctaStripReveal = useScrollReveal(
+    ctaStripRef as React.RefObject<Element | null>,
+  );
   const [ctaTapped, setCtaTapped] = useState(false);
 
   return (
     <>
-    <style>{CSS}</style>
-    <section
-        id="about"
-        className="section-wrapper relative overflow-hidden"
+      <style>{CSS}</style>
+      <section
+        id='about'
+        className='section-wrapper relative overflow-hidden'
         style={{ background: "var(--bg-primary)" }}
-        dir={isRtlLocale ? "rtl" : "ltr"}
-      >
-        {/* ── Background ── */}
-        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+        dir={isRtlLocale ? "rtl" : "ltr"}>
+        {/* Background */}
+        <div className='absolute inset-0 z-0 pointer-events-none overflow-hidden'>
           {/* Dot grid */}
-          <div className="absolute inset-0 bg-grid-pattern opacity-20" />
+          <div className='absolute inset-0 bg-grid-pattern opacity-20' />
 
           {/* Ambient orbs */}
-          <div className="absolute bg-drift-xy" style={{ top: "-5%", left: "-8%", width: "50vw", height: "50vw", background: "radial-gradient(circle, rgba(244,63,94,0.09) 0%, transparent 65%)", filter: "blur(50px)", borderRadius: "50%", "--dur": "14s", "--delay": "0s" } as React.CSSProperties} />
-          <div className="absolute bg-drift-y" style={{ bottom: "0%", right: "-8%", width: "45vw", height: "45vw", background: "radial-gradient(circle, rgba(124,58,237,0.09) 0%, transparent 65%)", filter: "blur(50px)", borderRadius: "50%", "--dur": "16s", "--delay": "2s" } as React.CSSProperties} />
-          <div className="absolute bg-scale-pulse" style={{ top: "40%", left: "40%", width: "35vw", height: "35vw", background: "radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 65%)", filter: "blur(60px)", borderRadius: "50%", "--dur": "10s", "--delay": "4s" } as React.CSSProperties} />
+          <div
+            className='absolute bg-drift-xy'
+            style={
+              {
+                top: "-5%",
+                left: "-8%",
+                width: "50vw",
+                height: "50vw",
+                background:
+                  "radial-gradient(circle, rgba(244,63,94,0.09) 0%, transparent 65%)",
+                filter: "blur(50px)",
+                borderRadius: "50%",
+                "--dur": "14s",
+                "--delay": "0s",
+              } as React.CSSProperties
+            }
+          />
+          <div
+            className='absolute bg-drift-y'
+            style={
+              {
+                bottom: "0%",
+                right: "-8%",
+                width: "45vw",
+                height: "45vw",
+                background:
+                  "radial-gradient(circle, rgba(124,58,237,0.09) 0%, transparent 65%)",
+                filter: "blur(50px)",
+                borderRadius: "50%",
+                "--dur": "16s",
+                "--delay": "2s",
+              } as React.CSSProperties
+            }
+          />
+          <div
+            className='absolute bg-scale-pulse'
+            style={
+              {
+                top: "40%",
+                left: "40%",
+                width: "35vw",
+                height: "35vw",
+                background:
+                  "radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 65%)",
+                filter: "blur(60px)",
+                borderRadius: "50%",
+                "--dur": "10s",
+                "--delay": "4s",
+              } as React.CSSProperties
+            }
+          />
 
           {/* Floating icon watermarks */}
           {WATERMARK_POSITIONS.map((pos, idx) => {
             const icons = [Users, Zap, Target, Star, Layers, Code2];
-            const colors = ["#F43F5E", "#C9A84C", "#7C3AED", "#10B981", "#3B82F6", "#F59E0B"];
+            const colors = [
+              "#F43F5E",
+              "#C9A84C",
+              "#7C3AED",
+              "#10B981",
+              "#3B82F6",
+              "#F59E0B",
+            ];
             const Icon = icons[idx % icons.length];
             const color = colors[idx % colors.length];
             return (
-              <div key={idx} className="absolute bg-drift-y pointer-events-none" style={{ left: pos.left, top: pos.top, opacity: 0.045, color, "--dur": pos.dur, "--delay": pos.delay } as React.CSSProperties}>
+              <div
+                key={idx}
+                className='absolute bg-drift-y pointer-events-none'
+                style={
+                  {
+                    left: pos.left,
+                    top: pos.top,
+                    opacity: 0.045,
+                    color,
+                    "--dur": pos.dur,
+                    "--delay": pos.delay,
+                  } as React.CSSProperties
+                }>
                 <Icon size={60} />
               </div>
             );
           })}
         </div>
 
-        {/* ── Content ── */}
-        <div className="section-inner relative z-10">
+        {/* Content */}
+        <div className='section-inner relative z-10'>
           <SectionHeading
             badge={t("badge")}
             title={t("title")}
             subtitle={t("subtitle")}
           />
 
-          {/* ── Identity Banner ── */}
+          {/* Identity Banner */}
           <motion.div
             ref={bannerRef}
             variants={revealVariant}
-            initial="below"
+            initial='below'
             animate={bannerReveal}
-            className="about-banner w-full mb-14 rounded-3xl overflow-hidden relative"
+            className='about-banner w-full mb-14 rounded-3xl overflow-hidden relative'
             style={{
               background:
                 "linear-gradient(135deg, rgba(244,63,94,0.08) 0%, rgba(13,10,30,0.9) 40%, rgba(124,58,237,0.08) 100%)",
@@ -428,70 +559,103 @@ export default function AboutSection() {
             onMouseLeave={canHover ? () => setBannerActive(false) : undefined}
             onTouchStart={() => setBannerActive(true)}
             onTouchEnd={() => setBannerActive(false)}
-            onTouchCancel={() => setBannerActive(false)}
-          >
+            onTouchCancel={() => setBannerActive(false)}>
             {/* Hover/tap red glow overlay */}
             <motion.div
-              className="absolute inset-0 rounded-3xl pointer-events-none"
-              style={{ background: "linear-gradient(135deg, rgba(244,63,94,0.22) 0%, transparent 45%)" }}
+              className='absolute inset-0 rounded-3xl pointer-events-none'
+              style={{
+                background:
+                  "linear-gradient(135deg, rgba(244,63,94,0.22) 0%, transparent 45%)",
+              }}
               initial={{ opacity: 0 }}
               animate={{ opacity: bannerActive ? 1 : 0 }}
               transition={{ duration: 0.3, ease: "easeOut" }}
             />
             {/* Inner grid pattern */}
             <div
-              className="absolute inset-0 pointer-events-none"
+              className='absolute inset-0 pointer-events-none'
               style={{
                 backgroundImage:
                   "linear-gradient(rgba(244,63,94,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(244,63,94,0.035) 1px, transparent 1px)",
                 backgroundSize: "48px 48px",
               }}
             />
-            {/* Static layered gradient mesh — zero animation cost */}
-            <div className="absolute inset-0 overflow-hidden rounded-3xl pointer-events-none">
-              <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 80% 60% at 20% 50%, rgba(244,63,94,0.08) 0%, transparent 60%)" }} />
-              <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 60% 80% at 80% 40%, rgba(124,58,237,0.07) 0%, transparent 60%)" }} />
-              <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 40% 40% at 50% 100%, rgba(201,168,76,0.06) 0%, transparent 60%)" }} />
-              <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(rgba(255,255,255,0.035) 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
+            {/* Static layered gradient mesh - zero animation cost */}
+            <div className='absolute inset-0 overflow-hidden rounded-3xl pointer-events-none'>
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  background:
+                    "radial-gradient(ellipse 80% 60% at 20% 50%, rgba(244,63,94,0.08) 0%, transparent 60%)",
+                }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  background:
+                    "radial-gradient(ellipse 60% 80% at 80% 40%, rgba(124,58,237,0.07) 0%, transparent 60%)",
+                }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  background:
+                    "radial-gradient(ellipse 40% 40% at 50% 100%, rgba(201,168,76,0.06) 0%, transparent 60%)",
+                }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  backgroundImage:
+                    "radial-gradient(rgba(255,255,255,0.035) 1px, transparent 1px)",
+                  backgroundSize: "24px 24px",
+                }}
+              />
             </div>
 
-            <div className="relative z-10 flex flex-col lg:flex-row items-center gap-0">
+            <div className='relative z-10 flex flex-col lg:flex-row items-center gap-0'>
               {/* Left: logo identity */}
-              <div className="flex flex-col items-center justify-center px-12 py-10 lg:py-14 gap-4 min-w-56 lg:border-r border-[rgba(244,63,94,0.15)]">
+              <div className='flex flex-col items-center justify-center px-12 py-10 lg:py-14 gap-4 min-w-56 lg:border-r border-[rgba(244,63,94,0.15)]'>
                 <Image
-                  src="/images/logo.png"
-                  alt="ENTENSY"
+                  src='/images/logo.png'
+                  alt='ENTENSY'
                   width={180}
                   height={54}
-                  className="h-12 md:h-14 w-auto object-contain"
+                  className='h-12 md:h-14 w-auto object-contain'
                   priority
                 />
-                <div className="text-center">
-                  <p
-                    className="text-xl md:text-2xl font-black tracking-[0.28em] uppercase force-ltr heading-glass"
-                  >
+                <div className='text-center'>
+                  <p className='text-xl md:text-2xl font-black tracking-[0.28em] uppercase force-ltr heading-glass'>
                     {tNav("brand")}
                   </p>
                   <p
-                    className="text-xs font-semibold tracking-widest mt-1 uppercase force-ltr"
-                    style={{ color: "rgba(244,63,94,0.75)" }}
-                  >
+                    className='text-xs font-semibold tracking-widest mt-1 uppercase force-ltr'
+                    style={{ color: "rgba(244,63,94,0.75)" }}>
                     {t("motto")}
                   </p>
                 </div>
 
                 {/* Achievement badges */}
-                <div className="flex flex-wrap gap-2 justify-center mt-2">
-                  {(["labels.tag_quality", "labels.tag_tailored", "labels.tag_global"] as const).map((key) => (
+                <div className='flex flex-wrap gap-2 justify-center mt-2'>
+                  {(
+                    [
+                      "labels.tag_quality",
+                      "labels.tag_tailored",
+                      "labels.tag_global",
+                    ] as const
+                  ).map((key) => (
                     <span
                       key={key}
-                      className="text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full"
+                      className='text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full'
                       style={{
                         background: "rgba(244,63,94,0.1)",
                         border: "1px solid rgba(244,63,94,0.25)",
                         color: "rgba(244,63,94,0.9)",
-                      }}
-                    >
+                      }}>
                       {t(key as Parameters<typeof t>[0])}
                     </span>
                   ))}
@@ -499,32 +663,36 @@ export default function AboutSection() {
               </div>
 
               {/* Right: condensed company description */}
-              <div className="flex flex-col justify-center px-8 md:px-12 py-10 md:py-14 flex-1">
+              <div className='flex flex-col justify-center px-8 md:px-12 py-10 md:py-14 flex-1'>
                 <div
-                  className="w-10 h-0.5 mb-5"
+                  className='w-10 h-0.5 mb-5'
                   style={{ background: "rgba(244,63,94,0.55)" }}
                 />
                 <p
-                  className="text-sm md:text-base leading-relaxed mb-6"
-                  style={{ color: "var(--text-secondary)" }}
-                >
+                  className='text-sm md:text-base leading-relaxed mb-6'
+                  style={{ color: "var(--text-secondary)" }}>
                   {t("pillars.who.desc")}
                 </p>
 
                 {/* Key points */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {([
-                    { icon: Zap,    key: "labels.kp_agile"       },
-                    { icon: Target, key: "labels.kp_tailored"    },
-                    { icon: Users,  key: "labels.kp_partnership" },
-                    { icon: Star,   key: "labels.kp_excellence"  },
-                  ] as const).map(({ icon: Icon, key }) => (
+                <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
+                  {(
+                    [
+                      { icon: Zap, key: "labels.kp_agile" },
+                      { icon: Target, key: "labels.kp_tailored" },
+                      { icon: Users, key: "labels.kp_partnership" },
+                      { icon: Star, key: "labels.kp_excellence" },
+                    ] as const
+                  ).map(({ icon: Icon, key }) => (
                     <div
                       key={key}
-                      className="flex items-center gap-2.5 text-xs font-semibold"
-                      style={{ color: "var(--text-muted)" }}
-                    >
-                      <Icon size={14} style={{ color: "#F43F5E", flexShrink: 0 }} strokeWidth={2} />
+                      className='flex items-center gap-2.5 text-xs font-semibold'
+                      style={{ color: "var(--text-muted)" }}>
+                      <Icon
+                        size={14}
+                        style={{ color: "#F43F5E", flexShrink: 0 }}
+                        strokeWidth={2}
+                      />
                       <span>{t(key as Parameters<typeof t>[0])}</span>
                     </div>
                   ))}
@@ -533,14 +701,13 @@ export default function AboutSection() {
             </div>
           </motion.div>
 
-          {/* ── Stats Row — unified spectrum panel ── */}
+          {/* Stats Row - unified spectrum panel */}
           <div
-            className="mb-14 rounded-2xl overflow-hidden"
-            style={{ background: panelBg, boxShadow: panelShadow }}
-          >
+            className='mb-14 rounded-2xl overflow-hidden'
+            style={{ background: panelBg, boxShadow: panelShadow }}>
             {/* Multi-color spectrum bar across the top */}
             <div
-              className="h-0.5 w-full"
+              className='h-0.5 w-full'
               style={{
                 background: `linear-gradient(90deg, ${stats[0].color} 0%, ${stats[1].color} 33%, ${stats[2].color} 66%, ${stats[3].color} 100%)`,
               }}
@@ -549,24 +716,29 @@ export default function AboutSection() {
             <motion.div
               ref={statsGridRef}
               variants={staggerRevealContainer}
-              initial="below"
+              initial='below'
               animate={statsReveal}
-              className="grid grid-cols-2 md:grid-cols-4 gap-px"
-              style={{ background: dividerBg }}
-            >
+              className='grid grid-cols-2 md:grid-cols-4 gap-px'
+              style={{ background: dividerBg }}>
               {stats.map((stat, i) => (
                 <motion.div
                   key={stat.valueKey}
                   variants={revealVariant}
-                  className="relative flex flex-col items-center gap-3 text-center py-9 px-5 cursor-default"
+                  className='relative flex flex-col items-center gap-3 text-center py-9 px-5 cursor-default'
                   style={{ background: cellBg }}
-                  whileHover={canHover ? { boxShadow: `inset 0 0 40px ${stat.color}22` } : {}}
-                  whileTap={{ boxShadow: `inset 0 0 40px ${stat.color}22`, transition: { duration: 0.15, ease: "easeOut" } }}
-                  transition={{ duration: 0.2, ease: "easeOut" }}
-                >
+                  whileHover={
+                    canHover
+                      ? { boxShadow: `inset 0 0 40px ${stat.color}22` }
+                      : {}
+                  }
+                  whileTap={{
+                    boxShadow: `inset 0 0 40px ${stat.color}22`,
+                    transition: { duration: 0.15, ease: "easeOut" },
+                  }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}>
                   {/* Per-stat radial glow from top */}
                   <div
-                    className="absolute inset-0 pointer-events-none"
+                    className='absolute inset-0 pointer-events-none'
                     style={{
                       background: `radial-gradient(ellipse 90% 110% at 50% 0%, ${stat.color}0e 0%, transparent 65%)`,
                     }}
@@ -574,14 +746,17 @@ export default function AboutSection() {
 
                   {/* Icon */}
                   <div
-                    className="relative z-10 w-10 h-10 rounded-xl flex items-center justify-center"
+                    className='relative z-10 w-10 h-10 rounded-xl flex items-center justify-center'
                     style={{
                       background: `${stat.color}14`,
                       border: `1px solid ${stat.color}30`,
                       boxShadow: `0 0 18px ${stat.color}18`,
-                    }}
-                  >
-                    <stat.Icon size={18} style={{ color: stat.color }} strokeWidth={1.8} />
+                    }}>
+                    <stat.Icon
+                      size={18}
+                      style={{ color: stat.color }}
+                      strokeWidth={1.8}
+                    />
                   </div>
 
                   <CounterValue
@@ -590,19 +765,22 @@ export default function AboutSection() {
                   />
 
                   <span
-                    className="text-xs font-semibold tracking-wide leading-snug"
-                    style={{ color: "var(--text-muted)" }}
-                  >
+                    className='text-xs font-semibold tracking-wide leading-snug'
+                    style={{ color: "var(--text-muted)" }}>
                     {t(stat.labelKey as Parameters<typeof t>[0])}
                   </span>
 
-                  {/* Animated bottom accent — sweeps in on scroll */}
+                  {/* Animated bottom accent - sweeps in on scroll */}
                   <motion.div
-                    className="absolute bottom-0 left-0 h-0.5"
+                    className='absolute bottom-0 left-0 h-0.5'
                     initial={{ width: "0%" }}
                     whileInView={{ width: "100%" }}
                     viewport={{ once: true }}
-                    transition={{ delay: i * 0.12, duration: 0.9, ease: "easeOut" }}
+                    transition={{
+                      delay: i * 0.12,
+                      duration: 0.9,
+                      ease: "easeOut",
+                    }}
                     style={{
                       background: `linear-gradient(90deg, transparent, ${stat.color}, transparent)`,
                     }}
@@ -612,43 +790,55 @@ export default function AboutSection() {
             </motion.div>
           </div>
 
-          {/* ── Three Pillars ── */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-14">
+          {/* Three Pillars */}
+          <div className='grid grid-cols-1 md:grid-cols-3 gap-5 mb-14'>
             {pillars.map((pillar) => (
-              <PillarCard key={pillar.key} pillar={pillar} t={t} isRtl={isRtlLocale} />
+              <PillarCard
+                key={pillar.key}
+                pillar={pillar}
+                t={t}
+                isRtl={isRtlLocale}
+              />
             ))}
           </div>
 
-          {/* ── Capabilities ── */}
+          {/* Capabilities */}
           <div
-            className="about-capabilities-panel rounded-2xl p-8"
+            className='about-capabilities-panel rounded-2xl p-8'
             style={{
               background: panelBg,
               border: "1px solid var(--glass-border)",
-            }}
-          >
+            }}>
             {/* Panel header */}
-            <div className="flex items-center gap-2 mb-6">
+            <div className='flex items-center gap-2 mb-6'>
               <div
-                className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
-                style={{ background: "rgba(244,63,94,0.12)", border: "1px solid rgba(244,63,94,0.25)" }}
-              >
-                <Layers size={14} style={{ color: "#F43F5E" }} strokeWidth={2} />
+                className='w-7 h-7 rounded-lg flex items-center justify-center shrink-0'
+                style={{
+                  background: "rgba(244,63,94,0.12)",
+                  border: "1px solid rgba(244,63,94,0.25)",
+                }}>
+                <Layers
+                  size={14}
+                  style={{ color: "#F43F5E" }}
+                  strokeWidth={2}
+                />
               </div>
-              <span className="text-sm font-bold heading-glass">
+              <span className='text-sm font-bold heading-glass'>
                 {t("labels.capabilities")}
               </span>
             </div>
 
             {/* 5-column icon tile grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+            <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3'>
               {capabilities.map((cap, capIdx) => {
-                const capColor = capabilityColors[capIdx % capabilityColors.length];
+                const capColor =
+                  capabilityColors[capIdx % capabilityColors.length];
                 const capLastRow3Rem = capabilities.length % 3;
                 const isLastCap = capIdx === capabilities.length - 1;
-                const capCenter = capLastRow3Rem === 1 && isLastCap
-                  ? "sm:col-span-3 lg:col-span-1 sm:mx-auto sm:w-1/3 lg:w-auto lg:mx-0"
-                  : "";
+                const capCenter =
+                  capLastRow3Rem === 1 && isLastCap
+                    ? "sm:col-span-3 lg:col-span-1 sm:mx-auto sm:w-1/3 lg:w-auto lg:mx-0"
+                    : "";
                 return (
                   <CapabilityTile
                     key={cap.key}
@@ -662,96 +852,140 @@ export default function AboutSection() {
             </div>
           </div>
 
-          {/* ── CTA Strip ── */}
-          <motion.div ref={ctaStripRef} variants={revealVariant} initial="below" animate={ctaStripReveal}>
+          {/* CTA Strip */}
           <motion.div
-            ref={ctaCardRef}
-            className="about-cta-strip mt-12 flex flex-col sm:flex-row items-center justify-between gap-6 rounded-3xl p-8 md:p-10 relative overflow-hidden cursor-default"
-            style={{
-              background: "rgba(13,10,30,0.88)",
-              borderWidth: "1px",
-              borderStyle: "solid",
-              borderColor: "rgba(244,63,94,0.22)",
-            }}
-            animate={ctaTapped ? {
-              scale: 1.01,
-              boxShadow: "0 12px 40px rgba(244,63,94,0.20), 0 4px 16px rgba(244,63,94,0.12)",
-            } : { scale: 1 }}
-            whileHover={canHover ? {
-              y: -1,
-              borderColor: "rgba(244,63,94,0.32)",
-              boxShadow: "0 12px 32px rgba(244,63,94,0.08), 0 4px 12px rgba(244,63,94,0.05)",
-            } : {}}
-            transition={{ type: "spring", stiffness: 280, damping: 24 }}
-            onMouseEnter={canHover ? () => setCtaHovered(true) : undefined}
-            onMouseLeave={() => setCtaHovered(false)}
-            onTouchStart={(e) => {
-              if (!ctaBtnRef.current?.contains(e.target as Node)) setCtaTapped(true);
-            }}
-            onTouchEnd={() => setCtaTapped(false)}
-            onTouchCancel={() => setCtaTapped(false)}
-          >
-            {/* Multi-layered gradient mesh */}
-            <div className="absolute inset-0 pointer-events-none rounded-3xl overflow-hidden">
-              <div style={{ position: "absolute", inset: 0, background: `radial-gradient(ellipse 70% 80% at 10% 50%, rgba(244,63,94,${isDark ? "0.12" : "0.05"}) 0%, transparent 60%)` }} />
-              <div style={{ position: "absolute", inset: 0, background: `radial-gradient(ellipse 60% 80% at 90% 50%, rgba(124,58,237,${isDark ? "0.10" : "0.04"}) 0%, transparent 60%)` }} />
-              <div style={{ position: "absolute", inset: 0, background: `radial-gradient(ellipse 50% 40% at 50% 100%, rgba(201,168,76,${isDark ? "0.07" : "0.03"}) 0%, transparent 60%)` }} />
-              <div className="absolute inset-0 bg-grid-pattern opacity-8" />
-            </div>
-
-
-            {/* Left side: title row (icon inline with text) + subtitle below */}
-            <div className="relative z-10 flex flex-col gap-1">
-              <div className="flex items-center gap-3">
-                <motion.div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-                  animate={{
-                    background: ctaHovered ? "rgba(244,63,94,0.24)" : "rgba(244,63,94,0.14)",
-                    boxShadow: ctaHovered
-                      ? "0 0 42px rgba(244,63,94,0.40), 0 0 16px rgba(244,63,94,0.22)"
-                      : "0 0 28px rgba(244,63,94,0.18)",
+            ref={ctaStripRef}
+            variants={revealVariant}
+            initial='below'
+            animate={ctaStripReveal}>
+            <motion.div
+              ref={ctaCardRef}
+              className='about-cta-strip mt-12 flex flex-col sm:flex-row items-center justify-between gap-6 rounded-3xl p-8 md:p-10 relative overflow-hidden cursor-default'
+              style={{
+                background: "rgba(13,10,30,0.88)",
+                borderWidth: "1px",
+                borderStyle: "solid",
+                borderColor: "rgba(244,63,94,0.22)",
+              }}
+              animate={
+                ctaTapped
+                  ? {
+                      scale: 1.01,
+                      boxShadow:
+                        "0 12px 40px rgba(244,63,94,0.20), 0 4px 16px rgba(244,63,94,0.12)",
+                    }
+                  : { scale: 1 }
+              }
+              whileHover={
+                canHover
+                  ? {
+                      y: -1,
+                      borderColor: "rgba(244,63,94,0.32)",
+                      boxShadow:
+                        "0 12px 32px rgba(244,63,94,0.08), 0 4px 12px rgba(244,63,94,0.05)",
+                    }
+                  : {}
+              }
+              transition={{ type: "spring", stiffness: 280, damping: 24 }}
+              onMouseEnter={canHover ? () => setCtaHovered(true) : undefined}
+              onMouseLeave={() => setCtaHovered(false)}
+              onTouchStart={(e) => {
+                if (!ctaBtnRef.current?.contains(e.target as Node))
+                  setCtaTapped(true);
+              }}
+              onTouchEnd={() => setCtaTapped(false)}
+              onTouchCancel={() => setCtaTapped(false)}>
+              {/* Multi-layered gradient mesh */}
+              <div className='absolute inset-0 pointer-events-none rounded-3xl overflow-hidden'>
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    background: `radial-gradient(ellipse 70% 80% at 10% 50%, rgba(244,63,94,${isDark ? "0.12" : "0.05"}) 0%, transparent 60%)`,
                   }}
-                  transition={{ type: "spring", stiffness: 280, damping: 22 }}
-                  style={{ border: "1px solid rgba(244,63,94,0.32)" }}
-                >
+                />
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    background: `radial-gradient(ellipse 60% 80% at 90% 50%, rgba(124,58,237,${isDark ? "0.10" : "0.04"}) 0%, transparent 60%)`,
+                  }}
+                />
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    background: `radial-gradient(ellipse 50% 40% at 50% 100%, rgba(201,168,76,${isDark ? "0.07" : "0.03"}) 0%, transparent 60%)`,
+                  }}
+                />
+                <div className='absolute inset-0 bg-grid-pattern opacity-8' />
+              </div>
+
+              {/* Left side: title row (icon inline with text) + subtitle below */}
+              <div className='relative z-10 flex flex-col gap-1'>
+                <div className='flex items-center gap-3'>
                   <motion.div
-                    animate={{ x: ctaHovered ? (isRtlLocale ? -4 : 4) : 0 }}
-                    transition={{ type: "spring", stiffness: 320, damping: 16 }}
-                  >
-                    <ArrowRight size={18} style={{ color: "#F43F5E" }} strokeWidth={2.5} className="rtl-arrow" />
+                    className='w-10 h-10 rounded-xl flex items-center justify-center shrink-0'
+                    animate={{
+                      background: ctaHovered
+                        ? "rgba(244,63,94,0.24)"
+                        : "rgba(244,63,94,0.14)",
+                      boxShadow: ctaHovered
+                        ? "0 0 42px rgba(244,63,94,0.40), 0 0 16px rgba(244,63,94,0.22)"
+                        : "0 0 28px rgba(244,63,94,0.18)",
+                    }}
+                    transition={{ type: "spring", stiffness: 280, damping: 22 }}
+                    style={{ border: "1px solid rgba(244,63,94,0.32)" }}>
+                    <motion.div
+                      animate={{ x: ctaHovered ? (isRtlLocale ? -4 : 4) : 0 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 320,
+                        damping: 16,
+                      }}>
+                      <ArrowRight
+                        size={18}
+                        style={{ color: "#F43F5E" }}
+                        strokeWidth={2.5}
+                        className='rtl-arrow'
+                      />
+                    </motion.div>
                   </motion.div>
-                </motion.div>
-                <p className="text-xl md:text-2xl font-black heading-glass">
-                  {t("cta_title")}
+                  <p className='text-xl md:text-2xl font-black heading-glass'>
+                    {t("cta_title")}
+                  </p>
+                </div>
+                <p className='text-sm' style={{ color: "var(--text-muted)" }}>
+                  {t("cta_subtitle")}
                 </p>
               </div>
-              <p className="text-sm" style={{ color: "var(--text-muted)" }}>
-                {t("cta_subtitle")}
-              </p>
-            </div>
 
-            {/* Right side: CTA button */}
-            <motion.button
-              ref={ctaBtnRef}
-              onClick={() =>
-                document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })
-              }
-              className="relative z-10 flex items-center gap-2.5 px-8 py-3.5 rounded-full text-sm font-bold text-white shrink-0"
-              style={{
-                background: "linear-gradient(135deg, #F43F5E, #C8001F)",
-                boxShadow: "0 4px 20px rgba(244,63,94,0.35)",
-              }}
-              whileHover={{ scale: 1.05, boxShadow: "0 8px 28px rgba(244,63,94,0.5)" }}
-              whileTap={{ scale: 0.97 }}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
-            >
-              {t("cta_action")}
-              <ArrowRight size={16} className="rtl-arrow" />
-            </motion.button>
-          </motion.div>
+              {/* Right side: CTA button */}
+              <motion.button
+                ref={ctaBtnRef}
+                onClick={() =>
+                  document
+                    .getElementById("contact")
+                    ?.scrollIntoView({ behavior: "smooth" })
+                }
+                className='relative z-10 flex items-center gap-2.5 px-8 py-3.5 rounded-full text-sm font-bold text-white shrink-0'
+                style={{
+                  background: "linear-gradient(135deg, #F43F5E, #C8001F)",
+                  boxShadow: "0 4px 20px rgba(244,63,94,0.35)",
+                }}
+                whileHover={{
+                  scale: 1.05,
+                  boxShadow: "0 8px 28px rgba(244,63,94,0.5)",
+                }}
+                whileTap={{ scale: 0.97 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}>
+                {t("cta_action")}
+                <ArrowRight size={16} className='rtl-arrow' />
+              </motion.button>
+            </motion.div>
           </motion.div>
         </div>
-    </section>
+      </section>
     </>
   );
 }

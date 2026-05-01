@@ -5,8 +5,16 @@ import { motion } from "framer-motion";
 import { useTranslations, useLocale } from "next-intl";
 import type { LucideIcon } from "lucide-react";
 import {
-  Code2, Globe, Smartphone, Palette, Brain,
-  Kanban, Wrench, BarChart3, RefreshCw, Rocket,
+  Code2,
+  Globe,
+  Smartphone,
+  Palette,
+  Brain,
+  Kanban,
+  Wrench,
+  BarChart3,
+  RefreshCw,
+  Rocket,
 } from "lucide-react";
 import TiltCard from "@/components/ui/TiltCard";
 import SectionHeading from "@/components/ui/SectionHeading";
@@ -16,8 +24,16 @@ import { cardRevealVariant } from "@/lib/animations";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 const iconMap: Record<string, LucideIcon> = {
-  Code2, Globe, Smartphone, Palette, Brain,
-  Kanban, Wrench, BarChart3, RefreshCw, Rocket,
+  Code2,
+  Globe,
+  Smartphone,
+  Palette,
+  Brain,
+  Kanban,
+  Wrench,
+  BarChart3,
+  RefreshCw,
+  Rocket,
 };
 
 const serviceTagKeyMap: Record<string, string> = {
@@ -27,10 +43,10 @@ const serviceTagKeyMap: Record<string, string> = {
   "ui-ux": "ui_ux",
   "tech-consulting": "tech_consulting",
   "agile-pm": "agile_pm",
-  "maintenance": "maintenance",
+  maintenance: "maintenance",
   "business-analysis": "business_analysis",
-  "modernization": "modernization",
-  "mvp": "mvp",
+  modernization: "modernization",
+  mvp: "mvp",
 };
 
 const CSS = `
@@ -47,24 +63,23 @@ const CSS = `
 `;
 
 const WATERMARK_POSITIONS = [
-  { left: "4%",  top: "8%",  dur: "18s", delay: "0s"   },
-  { left: "20%", top: "4%",  dur: "22s", delay: "1.2s" },
-  { left: "38%", top: "14%", dur: "16s", delay: "3s"   },
-  { left: "58%", top: "6%",  dur: "20s", delay: "0.8s" },
+  { left: "4%", top: "8%", dur: "18s", delay: "0s" },
+  { left: "20%", top: "4%", dur: "22s", delay: "1.2s" },
+  { left: "38%", top: "14%", dur: "16s", delay: "3s" },
+  { left: "58%", top: "6%", dur: "20s", delay: "0.8s" },
   { left: "76%", top: "12%", dur: "24s", delay: "2.2s" },
-  { left: "92%", top: "30%", dur: "17s", delay: "4s"   },
-  { left: "88%", top: "60%", dur: "19s", delay: "1s"   },
+  { left: "92%", top: "30%", dur: "17s", delay: "4s" },
+  { left: "88%", top: "60%", dur: "19s", delay: "1s" },
   { left: "68%", top: "80%", dur: "21s", delay: "3.5s" },
-  { left: "44%", top: "88%", dur: "15s", delay: "5s"   },
-  { left: "22%", top: "76%", dur: "23s", delay: "2s"   },
-  { left: "6%",  top: "55%", dur: "18s", delay: "0.5s" },
+  { left: "44%", top: "88%", dur: "15s", delay: "5s" },
+  { left: "22%", top: "76%", dur: "23s", delay: "2s" },
+  { left: "6%", top: "55%", dur: "18s", delay: "0.5s" },
   { left: "32%", top: "42%", dur: "20s", delay: "4.5s" },
 ];
 
 // Individual card that has its own useCardBorder hook
 function ServiceCard({
   service,
-  index,
   tag,
   padded,
   centeringClass,
@@ -73,7 +88,6 @@ function ServiceCard({
   t,
 }: {
   service: (typeof services)[number];
-  index: number;
   tag: string;
   padded: string;
   centeringClass: string;
@@ -85,121 +99,146 @@ function ServiceCard({
   const shellRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const cardState = useScrollReveal(cardRef as React.RefObject<Element | null>);
-  const { handleBorderMouseMove, handleBorderMouseLeave, handleTouchStart, handleTouchEnd } = useCardBorder(
-    shellRef as React.RefObject<HTMLElement | null>
-  );
+  const {
+    handleBorderMouseMove,
+    handleBorderMouseLeave,
+    handleTouchStart,
+    handleTouchEnd,
+  } = useCardBorder(shellRef as React.RefObject<HTMLElement | null>);
 
   return (
     <motion.div
       ref={cardRef}
       variants={cardRevealVariant}
-      initial="below"
+      initial='below'
       animate={cardState}
       className={`col-span-1 h-full ${centeringClass}`}
-      style={{ backdropFilter: "blur(4px) saturate(120%)", WebkitBackdropFilter: "blur(4px) saturate(120%)" }}
+      style={{
+        backdropFilter: "blur(4px) saturate(120%)",
+        WebkitBackdropFilter: "blur(4px) saturate(120%)",
+      }}
       whileTap={{ scale: 0.97 }}
-      transition={{ type: "spring", stiffness: 300, damping: 20 }}
-    >
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}>
       <TiltCard tiltMaxAngle={isWide ? 2 : 10}>
         <div
           ref={shellRef}
-          className="svc-shell relative rounded-2xl p-px overflow-hidden h-full"
+          className='svc-shell relative rounded-2xl p-px overflow-hidden h-full'
           style={{ background: "transparent" }}
           onMouseMove={handleBorderMouseMove}
           onMouseLeave={handleBorderMouseLeave}
-          onTouchStart={(e) => { shellRef.current?.classList.add("is-pressed"); handleTouchStart(e); }}
-          onTouchEnd={() => { shellRef.current?.classList.remove("is-pressed"); handleTouchEnd(); }}
-          onTouchCancel={() => shellRef.current?.classList.remove("is-pressed")}
-        >
+          onTouchStart={(e) => {
+            shellRef.current?.classList.add("is-pressed");
+            handleTouchStart(e);
+          }}
+          onTouchEnd={() => {
+            shellRef.current?.classList.remove("is-pressed");
+            handleTouchEnd();
+          }}
+          onTouchCancel={() =>
+            shellRef.current?.classList.remove("is-pressed")
+          }>
           {/* JS-driven border ring */}
           <div
-            className="card-border-ring rounded-2xl"
-            style={{ "--ring-color": service.color + "65", "--ring-color-light": service.color + "40" } as React.CSSProperties}
+            className='card-border-ring rounded-2xl'
+            style={
+              {
+                "--ring-color": service.color + "65",
+                "--ring-color-light": service.color + "40",
+              } as React.CSSProperties
+            }
           />
 
           {/* Card body */}
           <div
             className={`svc-card relative h-68 rounded-2xl overflow-hidden transition-[box-shadow,border-color] duration-300 ${isWide ? "p-5 pb-12 flex flex-row items-start gap-5" : "p-5 pb-12 flex flex-col gap-3"}`}
-            style={{
-              background: "rgba(255, 255, 255, 0.04)",
-              border: "1px solid rgba(255, 255, 255, 0.09)",
-              boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.07)",
-            } as React.CSSProperties}
-          >
+            style={
+              {
+                background: "rgba(255, 255, 255, 0.04)",
+                border: "1px solid rgba(255, 255, 255, 0.09)",
+                boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.07)",
+              } as React.CSSProperties
+            }>
             <div
-              className="card-cursor-glow"
-              style={{
-                width: "220px", height: "220px",
-                top: "calc(50% - 110px)", left: "calc(50% - 110px)",
-                "--cursor-color": service.color + "30",
-              } as React.CSSProperties}
+              className='card-cursor-glow'
+              style={
+                {
+                  width: "220px",
+                  height: "220px",
+                  top: "calc(50% - 110px)",
+                  left: "calc(50% - 110px)",
+                  "--cursor-color": service.color + "30",
+                } as React.CSSProperties
+              }
             />
 
-            {/* Diagonal corner accent — top-left in LTR, top-right in RTL */}
+            {/* Diagonal corner accent - top-left in LTR, top-right in RTL */}
             <div
               className={`absolute top-0 pointer-events-none overflow-hidden ${isRtl ? "right-0 rounded-tr-2xl" : "left-0 rounded-tl-2xl"}`}
-              style={{ width: "68%", height: "60%" }}
-            >
+              style={{ width: "68%", height: "60%" }}>
               {/* Main fill */}
               <div
-                className="absolute inset-0"
+                className='absolute inset-0'
                 style={{
                   background: `linear-gradient(${isRtl ? "225deg" : "135deg"}, ${service.color}32 0%, ${service.color}14 38%, transparent 60%)`,
-                  clipPath: isRtl ? "polygon(0 0, 100% 0, 100% 100%)" : "polygon(0 0, 100% 0, 0 100%)",
+                  clipPath: isRtl
+                    ? "polygon(0 0, 100% 0, 100% 100%)"
+                    : "polygon(0 0, 100% 0, 0 100%)",
                 }}
               />
               {/* Bright edge shimmer */}
               <div
-                className="absolute inset-0"
+                className='absolute inset-0'
                 style={{
                   background: `linear-gradient(${isRtl ? "225deg" : "135deg"}, ${service.color}65 0%, ${service.color}18 10%, transparent 22%)`,
-                  clipPath: isRtl ? "polygon(0 0, 100% 0, 100% 100%)" : "polygon(0 0, 100% 0, 0 100%)",
+                  clipPath: isRtl
+                    ? "polygon(0 0, 100% 0, 100% 100%)"
+                    : "polygon(0 0, 100% 0, 0 100%)",
                 }}
               />
             </div>
 
             {/* Icon + Content */}
-            <div className={`flex relative z-10 ${isWide ? "flex-col gap-3 flex-1" : "flex-col gap-3 flex-1"}`}>
             <div
-              className="svc-icon w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
-              style={{
-                background: `${service.color}18`,
-                border: `1px solid ${service.color}35`,
-              }}
-            >
-              {Icon && (
-                <Icon size={22} style={{ color: service.color }} strokeWidth={1.8} />
-              )}
-            </div>
-
-            {/* Content */}
-            <div className="flex flex-col gap-2 flex-1">
-              <h3
-                className="text-sm font-bold leading-snug heading-glass"
-              >
-                {t(service.titleKey as Parameters<typeof t>[0])}
-              </h3>
-              <p
-                className="text-xs leading-relaxed"
+              className={`flex relative z-10 ${isWide ? "flex-col gap-3 flex-1" : "flex-col gap-3 flex-1"}`}>
+              <div
+                className='svc-icon w-12 h-12 rounded-xl flex items-center justify-center shrink-0'
                 style={{
-                  color: "var(--text-muted)",
-                  display: "-webkit-box",
-                  WebkitLineClamp: 3,
-                  WebkitBoxOrient: "vertical",
-                  overflow: "hidden",
-                }}
-              >
-                {t(service.descKey as Parameters<typeof t>[0])}
-              </p>
-            </div>
+                  background: `${service.color}18`,
+                  border: `1px solid ${service.color}35`,
+                }}>
+                {Icon && (
+                  <Icon
+                    size={22}
+                    style={{ color: service.color }}
+                    strokeWidth={1.8}
+                  />
+                )}
+              </div>
 
-            </div>{/* end icon+content wrapper */}
+              {/* Content */}
+              <div className='flex flex-col gap-2 flex-1'>
+                <h3 className='text-sm font-bold leading-snug heading-glass'>
+                  {t(service.titleKey as Parameters<typeof t>[0])}
+                </h3>
+                <p
+                  className='text-xs leading-relaxed'
+                  style={{
+                    color: "var(--text-muted)",
+                    display: "-webkit-box",
+                    WebkitLineClamp: 3,
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                  }}>
+                  {t(service.descKey as Parameters<typeof t>[0])}
+                </p>
+              </div>
+            </div>
+            {/* end icon+content wrapper */}
 
             {/* Decorative index number */}
             <span
               className={`absolute bottom-3 text-5xl font-black leading-none pointer-events-none select-none z-10 ${isRtl ? "left-4" : "right-4"}`}
-              style={{ color: service.color, opacity: 0.07 }}
-            >
+              style={{ color: service.color, opacity: 0.07 }}>
               {padded}
             </span>
 
@@ -207,13 +246,12 @@ function ServiceCard({
             {tag && (
               <span
                 className={`absolute bottom-4 text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full z-10 force-ltr ${isRtl ? "right-5" : "left-5"}`}
-                dir="ltr"
+                dir='ltr'
                 style={{
                   background: `${service.color}18`,
                   color: service.color,
                   border: `1px solid ${service.color}35`,
-                }}
-              >
+                }}>
                 {tag}
               </span>
             )}
@@ -237,67 +275,133 @@ export default function ServicesSection() {
     <>
       <style>{CSS}</style>
       <section
-        id="services"
-        className="section-wrapper relative"
+        id='services'
+        className='section-wrapper relative'
         style={{ background: "var(--bg-primary)" }}
-        dir={isRtlLocale ? "rtl" : "ltr"}
-      >
-        {/* ── Background ── */}
-        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+        dir={isRtlLocale ? "rtl" : "ltr"}>
+        {/* Background */}
+        <div className='absolute inset-0 z-0 pointer-events-none overflow-hidden'>
           {/* Dot grid */}
-          <div className="absolute inset-0 bg-grid-pattern opacity-20" />
+          <div className='absolute inset-0 bg-grid-pattern opacity-20' />
 
           {/* Ambient orbs */}
-          <div className="absolute bg-drift-xy" style={{ top: "-10%", left: "-8%", width: "50vw", height: "50vw", background: "radial-gradient(circle, rgba(244,63,94,0.09) 0%, transparent 65%)", filter: "blur(50px)", borderRadius: "50%", "--dur": "20s", "--delay": "0s" } as React.CSSProperties} />
-          <div className="absolute bg-drift-y" style={{ bottom: "-8%", right: "-6%", width: "44vw", height: "44vw", background: "radial-gradient(circle, rgba(124,58,237,0.09) 0%, transparent 65%)", filter: "blur(50px)", borderRadius: "50%", "--dur": "17s", "--delay": "3s" } as React.CSSProperties} />
-          <div className="absolute bg-scale-pulse" style={{ top: "30%", left: "36%", width: "38vw", height: "38vw", background: "radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 65%)", filter: "blur(60px)", borderRadius: "50%", "--dur": "13s", "--delay": "6s" } as React.CSSProperties} />
+          <div
+            className='absolute bg-drift-xy'
+            style={
+              {
+                top: "-10%",
+                left: "-8%",
+                width: "50vw",
+                height: "50vw",
+                background:
+                  "radial-gradient(circle, rgba(244,63,94,0.09) 0%, transparent 65%)",
+                filter: "blur(50px)",
+                borderRadius: "50%",
+                "--dur": "20s",
+                "--delay": "0s",
+              } as React.CSSProperties
+            }
+          />
+          <div
+            className='absolute bg-drift-y'
+            style={
+              {
+                bottom: "-8%",
+                right: "-6%",
+                width: "44vw",
+                height: "44vw",
+                background:
+                  "radial-gradient(circle, rgba(124,58,237,0.09) 0%, transparent 65%)",
+                filter: "blur(50px)",
+                borderRadius: "50%",
+                "--dur": "17s",
+                "--delay": "3s",
+              } as React.CSSProperties
+            }
+          />
+          <div
+            className='absolute bg-scale-pulse'
+            style={
+              {
+                top: "30%",
+                left: "36%",
+                width: "38vw",
+                height: "38vw",
+                background:
+                  "radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 65%)",
+                filter: "blur(60px)",
+                borderRadius: "50%",
+                "--dur": "13s",
+                "--delay": "6s",
+              } as React.CSSProperties
+            }
+          />
 
           {/* Floating icon watermarks */}
           {WATERMARK_POSITIONS.map((pos, idx) => {
             const icons = [Code2, Globe, Smartphone, Palette, Brain, Wrench];
-            const colors = ["#F43F5E", "#7C3AED", "#C9A84C", "#3B82F6", "#10B981", "#F59E0B"];
+            const colors = [
+              "#F43F5E",
+              "#7C3AED",
+              "#C9A84C",
+              "#3B82F6",
+              "#10B981",
+              "#F59E0B",
+            ];
             const Icon = icons[idx % icons.length];
             const color = colors[idx % colors.length];
             return (
-              <div key={idx} className="absolute bg-drift-y pointer-events-none" style={{ left: pos.left, top: pos.top, opacity: 0.045, color, "--dur": pos.dur, "--delay": pos.delay } as React.CSSProperties}>
+              <div
+                key={idx}
+                className='absolute bg-drift-y pointer-events-none'
+                style={
+                  {
+                    left: pos.left,
+                    top: pos.top,
+                    opacity: 0.045,
+                    color,
+                    "--dur": pos.dur,
+                    "--delay": pos.delay,
+                  } as React.CSSProperties
+                }>
                 <Icon size={60} />
               </div>
             );
           })}
         </div>
 
-        <div className="section-inner relative z-10">
+        <div className='section-inner relative z-10'>
           <SectionHeading
             badge={t("services.badge")}
             title={t("services.title")}
             subtitle={t("services.subtitle")}
           />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5'>
             {services.map((service, index) => {
               const tagKey = serviceTagKeyMap[service.id];
-              const tag = tagKey ? t(`services.tags.${tagKey}` as Parameters<typeof t>[0]) : "";
+              const tag = tagKey
+                ? t(`services.tags.${tagKey}` as Parameters<typeof t>[0])
+                : "";
               const padded = String(index + 1).padStart(2, "0");
               const isLast = index === services.length - 1;
               const isSecondLast = index === services.length - 2;
-              const smCenter = lastRowRemainderSm === 1 && isLast
-                ? "sm:col-span-2"
-                : "";
+              const smCenter =
+                lastRowRemainderSm === 1 && isLast ? "sm:col-span-2" : "";
               const lgCenter =
                 lastRowRemainder === 1 && isLast
                   ? "lg:col-span-3"
                   : lastRowRemainder === 2 && isSecondLast
-                  ? "lg:col-start-1"
-                  : lastRowRemainder === 2 && isLast
-                  ? "lg:col-span-2"
-                  : "";
+                    ? "lg:col-start-1"
+                    : lastRowRemainder === 2 && isLast
+                      ? "lg:col-span-2"
+                      : "";
               const centeringClass = `${smCenter} ${lgCenter}`.trim();
 
               return (
                 <ServiceCard
                   key={service.id}
                   service={service}
-                  index={index}
                   tag={tag}
                   padded={padded}
                   centeringClass={centeringClass}

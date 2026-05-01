@@ -22,7 +22,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const actual = document.documentElement.classList.contains("dark") ? "dark" : "light";
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (actual !== theme) setThemeState(actual);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const setTheme = (t: Theme) => {

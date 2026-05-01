@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 
 // Cloudflare Turnstile global type
 declare global {
@@ -15,7 +15,7 @@ declare global {
           "error-callback"?: () => void;
           theme?: "light" | "dark" | "auto";
           size?: "normal" | "compact" | "invisible";
-        }
+        },
       ) => string;
       remove: (widgetId: string) => void;
       reset: (widgetId: string) => void;
@@ -32,7 +32,14 @@ interface TurnstileProps {
   size?: "normal" | "compact" | "invisible";
 }
 
-export default function Turnstile({ siteKey, onToken, onExpire, onScriptError, theme = "auto", size = "invisible" }: TurnstileProps) {
+export default function Turnstile({
+  siteKey,
+  onToken,
+  onExpire,
+  onScriptError,
+  theme = "auto",
+  size = "invisible",
+}: TurnstileProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);
 
@@ -41,9 +48,11 @@ export default function Turnstile({ siteKey, onToken, onExpire, onScriptError, t
   const onTokenRef = useRef(onToken);
   const onExpireRef = useRef(onExpire);
   const onScriptErrorRef = useRef(onScriptError);
-  onTokenRef.current = onToken;
-  onExpireRef.current = onExpire;
-  onScriptErrorRef.current = onScriptError;
+  useLayoutEffect(() => {
+    onTokenRef.current = onToken;
+    onExpireRef.current = onExpire;
+    onScriptErrorRef.current = onScriptError;
+  });
 
   useEffect(() => {
     const render = () => {
@@ -72,17 +81,23 @@ export default function Turnstile({ siteKey, onToken, onExpire, onScriptError, t
       document.head.appendChild(script);
     }
 
-    // Always clean up — whether the widget was rendered immediately or after script load
+    // Always clean up - whether the widget was rendered immediately or after script load
     return () => {
       if (widgetIdRef.current && window.turnstile) {
         window.turnstile.remove(widgetIdRef.current);
         widgetIdRef.current = null;
       }
     };
-  // Callbacks are intentionally excluded — they're read through refs above
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [siteKey, theme, size]);
 
-  // Invisible mode renders no visible UI — keep in DOM so Cloudflare can attach its iframe
-  return <div ref={containerRef} aria-hidden="true" style={size === "invisible" ? { display: "none" } : { marginTop: "0.25rem" }} />;
+  // Invisible mode renders no visible UI - keep in DOM so Cloudflare can attach its iframe
+  return (
+    <div
+      ref={containerRef}
+      aria-hidden='true'
+      style={
+        size === "invisible" ? { display: "none" } : { marginTop: "0.25rem" }
+      }
+    />
+  );
 }

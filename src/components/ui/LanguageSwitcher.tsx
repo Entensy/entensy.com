@@ -6,7 +6,7 @@ import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Globe } from "lucide-react";
 
-// Order: English → Kurdish → Arabic
+// Order: English -> Kurdish -> Arabic
 const languages = [
   { code: "en", dir: "ltr" },
   { code: "ckb", dir: "rtl" },
@@ -23,12 +23,15 @@ export default function LanguageSwitcher() {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  const buildLocalePath = useCallback((code: string) => {
-    const segments = pathname.split("/");
-    segments[1] = code;
-    const query = searchParams.toString();
-    return `${segments.join("/")}${query ? `?${query}` : ""}`;
-  }, [pathname, searchParams]);
+  const buildLocalePath = useCallback(
+    (code: string) => {
+      const segments = pathname.split("/");
+      segments[1] = code;
+      const query = searchParams.toString();
+      return `${segments.join("/")}${query ? `?${query}` : ""}`;
+    },
+    [pathname, searchParams],
+  );
 
   const switchLocale = (code: string) => {
     if (code === locale) {
@@ -36,14 +39,17 @@ export default function LanguageSwitcher() {
       return;
     }
 
-    // Cover the current page instantly — loading screen (z-9999) takes over once the new component mounts
+    // Cover the current page instantly - loading screen (z-9999) takes over once the new component mounts
     const cover = document.createElement("div");
     cover.id = "lang-switch-cover";
-    cover.style.cssText = "position:fixed;inset:0;z-index:9998;background:var(--bg-primary);";
+    cover.style.cssText =
+      "position:fixed;inset:0;z-index:9998;background:var(--bg-primary);";
     document.body.appendChild(cover);
 
     window.sessionStorage.setItem("entensy:lang-switching", "1");
+    // eslint-disable-next-line react-hooks/immutability
     document.documentElement.style.overflow = "hidden";
+    // eslint-disable-next-line react-hooks/immutability
     document.documentElement.style.pointerEvents = "none";
 
     router.replace(buildLocalePath(code), { scroll: false });
@@ -70,14 +76,13 @@ export default function LanguageSwitcher() {
   }, []);
 
   return (
-    <div ref={ref} className="relative z-9001">
+    <div ref={ref} className='relative z-9001'>
       {/* Trigger: globe icon only */}
       <button
         onClick={() => setOpen((v) => !v)}
         className={`navbar-icon-btn flex items-center justify-center w-9 h-9 rounded-full${open ? " navbar-icon-btn--open" : ""}`}
-        aria-label="Switch language"
-        aria-expanded={open}
-      >
+        aria-label='Switch language'
+        aria-expanded={open}>
         <Globe size={15} />
       </button>
 
@@ -94,35 +99,44 @@ export default function LanguageSwitcher() {
               background: "var(--bg-secondary)",
               border: "1px solid var(--border-color)",
               backdropFilter: "blur(16px)",
-            }}
-          >
+            }}>
             {languages.map((lang) => (
               <li key={lang.code}>
                 <button
                   onClick={() => switchLocale(lang.code)}
-                  className="w-full flex items-center justify-between px-4 py-2.5 text-sm font-medium transition-colors duration-150"
+                  className='w-full flex items-center justify-between px-4 py-2.5 text-sm font-medium transition-colors duration-150'
                   style={{
-                    color: lang.code === locale ? "#FC002A" : "var(--text-secondary)",
-                    background: lang.code === locale ? "rgba(252,0,42,0.08)" : "transparent",
+                    color:
+                      lang.code === locale
+                        ? "#FC002A"
+                        : "var(--text-secondary)",
+                    background:
+                      lang.code === locale
+                        ? "rgba(252,0,42,0.08)"
+                        : "transparent",
                     direction: "ltr", // dropdown always LTR for readability
                   }}
                   onMouseEnter={(e) => {
                     if (lang.code !== locale) {
-                      (e.currentTarget as HTMLButtonElement).style.background = "var(--glass-bg)";
+                      (e.currentTarget as HTMLButtonElement).style.background =
+                        "var(--glass-bg)";
                     }
                   }}
                   onMouseLeave={(e) => {
                     if (lang.code !== locale) {
-                      (e.currentTarget as HTMLButtonElement).style.background = "transparent";
+                      (e.currentTarget as HTMLButtonElement).style.background =
+                        "transparent";
                     }
-                  }}
-                >
-                  <span style={{ fontFamily: "var(--font-notoSans), system-ui, sans-serif" }}>
+                  }}>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-notoSans), system-ui, sans-serif",
+                    }}>
                     {tLang(lang.code as Parameters<typeof tLang>[0])}
                   </span>
                   {lang.code === locale && (
                     <span
-                      className="w-1.5 h-1.5 rounded-full"
+                      className='w-1.5 h-1.5 rounded-full'
                       style={{ background: "#FC002A" }}
                     />
                   )}
