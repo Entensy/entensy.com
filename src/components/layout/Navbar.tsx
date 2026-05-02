@@ -141,10 +141,9 @@ export default function Navbar() {
               scrolled ? "navbar-scrolled" : ""
             )}
             style={{
-              backdropFilter: "blur(12px) saturate(120%)",
-              WebkitBackdropFilter: "blur(12px) saturate(120%)",
-              background: `var(${scrolled ? "--navbar-bg-scrolled" : "--navbar-bg"})`,
-              overflowX: "auto",
+              backdropFilter: scrolled ? "blur(12px) saturate(120%)" : "none",
+              WebkitBackdropFilter: scrolled ? "blur(12px) saturate(120%)" : "none",
+              background: scrolled ? "var(--navbar-bg-scrolled)" : "transparent",
               minWidth: 0,
             }}
             onClick={() => mobileOpen && setTimeout(() => setMobileOpen(false), 120)}
