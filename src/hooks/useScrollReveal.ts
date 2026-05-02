@@ -1,12 +1,12 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 export type RevealState = "below" | "visible" | "above";
 
 // Direction-aware scroll hook.
-// "below"  — element hasn't entered the viewport yet (or exited from the bottom on scroll-up)
-// "visible" — element is in the active trigger zone
-// "above"   — element has been scrolled past the top (exits then re-enters from the top when user scrolls back)
+// "below"  - element hasn't entered the viewport yet (or exited from the bottom on scroll-up)
+// "visible" - element is in the active trigger zone
+// "above"   - element has been scrolled past the top (exits then re-enters from the top when user scrolls back)
 //
 // rootMargin: shrinks the effective viewport so:
 //   - entrance fires when element is ~8% into the viewport from the bottom
@@ -14,7 +14,7 @@ export type RevealState = "below" | "visible" | "above";
 // This gives entrance animations a natural lead-in and prevents the top-edge flicker.
 export function useScrollReveal(
   ref: React.RefObject<Element | null>,
-  rootMargin = "-5% 0px 10% 0px"
+  rootMargin = "-10% 0px -10% 0px"
 ): RevealState {
   const [state, setState] = useState<RevealState>("below");
 
@@ -41,8 +41,8 @@ export function useScrollReveal(
 
     observer.observe(el);
     return () => observer.disconnect();
-  // rootMargin intentionally stable — consumers pass a literal string
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // rootMargin intentionally stable - consumers pass a literal string
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return state;
