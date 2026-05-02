@@ -40,6 +40,7 @@ The official website for **ENTENSY** — a software development and tech consult
 | Carousel | Embla Carousel |
 | Icons | react-icons + devicon (via @iconify-json/devicon) |
 | Particles | tsParticles Slim |
+| Bot protection | Cloudflare Turnstile |
 | Package Manager | pnpm |
 
 ---
@@ -69,10 +70,17 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 Create a `.env.local` file in the project root:
 
 ```env
+# Email — Resend
 RESEND_API_KEY=re_your_api_key
+
+# Bot protection — Cloudflare Turnstile
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=your_site_key
+TURNSTILE_SECRET_KEY=your_secret_key
 ```
 
-Get your API key from the [Resend dashboard](https://resend.com/api-keys). Verify the `entensy.com` domain in Resend before going live so emails can be sent from `contact@entensy.com`.
+**Resend:** Get your API key from the [Resend dashboard](https://resend.com/api-keys). Verify the `entensy.com` domain before going live so emails can be sent from `contact@entensy.com`.
+
+**Cloudflare Turnstile:** Create a widget at [dash.cloudflare.com](https://dash.cloudflare.com) → Turnstile → Add widget. Choose **Managed** challenge type and add your domain. The dashboard gives you a **Site Key** (public, goes in `NEXT_PUBLIC_TURNSTILE_SITE_KEY`) and a **Secret Key** (server-only, goes in `TURNSTILE_SECRET_KEY`). For local development, Cloudflare provides dummy keys that always pass — see [their docs](https://developers.cloudflare.com/turnstile/troubleshooting/testing/).
 
 ---
 
@@ -340,7 +348,8 @@ The site targets **Vercel**. Push to `main` and Vercel auto-deploys.
 
 Before deploying:
 1. Add `RESEND_API_KEY` in the Vercel dashboard under **Settings → Environment Variables**
-2. Run `pnpm build` locally to confirm no TypeScript or build errors
+2. Add `NEXT_PUBLIC_TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY` in the same place
+3. Run `pnpm build` locally to confirm no TypeScript or build errors
 
 ---
 

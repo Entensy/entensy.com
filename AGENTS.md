@@ -84,7 +84,8 @@ src/
 │       ├── LanguageSwitcher.tsx    Language dropdown in navbar
 │       ├── ThemeToggle.tsx         Dark/light button (fixed bottom-right)
 │       ├── GlobeBackground.tsx     Three.js wireframe globe
-│       └── ParticleBackground.tsx  tsParticles background
+│       ├── ParticleBackground.tsx  tsParticles background
+│       └── Turnstile.tsx           Cloudflare Turnstile bot-protection widget
 │
 ├── hooks/
 │   ├── useCardBorder.ts            GSAP border spotlight + cursor glow per card
@@ -267,6 +268,23 @@ RESEND_API_KEY=re_...    # server-side only — never NEXT_PUBLIC_ prefix
 - Domain `entensy.com` must be verified in the Resend dashboard before sending
 - All mail delivered to `contact@entensy.com`; `replyTo` is the sender's address
 - Add `RESEND_API_KEY` to Vercel → Settings → Environment Variables
+
+---
+
+## Cloudflare Turnstile
+
+The contact form renders `src/components/ui/Turnstile.tsx` for bot protection. It fires `onToken` with a one-time challenge token; `/api/send` verifies it with Cloudflare before sending the email.
+
+```
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=...   # public — rendered in the browser widget
+TURNSTILE_SECRET_KEY=...             # server-only — never use NEXT_PUBLIC_ prefix
+```
+
+- For local dev use Cloudflare's always-pass dummy keys:
+  - Site key: `1x00000000000000000000AA`
+  - Secret key: `1x0000000000000000000000000000000AA`
+- Create a real widget at Cloudflare dashboard → Turnstile → Add widget (Managed challenge type)
+- Add both keys to Vercel → Settings → Environment Variables before deploying
 
 ---
 

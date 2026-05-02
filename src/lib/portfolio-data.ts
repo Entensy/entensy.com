@@ -1,3 +1,31 @@
+// ---- Available stack name strings for the `stacks` array ------------------------------
+// This is a curated list of popular technologies. You can add any string you want, but
+// only the ones listed below will show an icon and color. The rest will render as plain
+// Each string must match a TechItem.name defined in stacks-data.ts to show
+// its icon and color. Any other string is allowed - it renders as a plain
+// text pill with no icon.
+//
+// Languages:  "C#" , "Java" , "Python" , "C" , "C++" , "JavaScript" , "TypeScript"
+//             "Go" , "PHP" , "Rust" , "Ruby" , "Swift" , "Dart" , "Scala"
+//             "Elixir" , "Haskell"
+// Frontend:   "React" , "Vue.js" , "Next.js" , "Nuxt.js" , "Angular" , "Svelte"
+//             "Astro" , "Solid.js" , "Vite" , "Tailwind CSS" , "Bootstrap"
+//             "SASS/SCSS" , "Redux" , "Three.js" , "WebAssembly" , "Webpack"
+//             "Framer Motion" , "GSAP" , "Electron" , "Storybook"
+// Backend:    "Node.js" , "Laravel" , "NestJS" , "Django" , "FastAPI" , "Flask"
+//             "Spring" , "Express.js" , "Ruby on Rails" , "REST APIs" , "GraphQL"
+// Databases:  "PostgreSQL" , "MySQL" , "MongoDB" , "Redis" , "Firebase" , "Supabase"
+//             "MariaDB" , "Cassandra" , "SQLite" , "Elasticsearch" , "SQL Server"
+// Mobile:     "React Native" , "Flutter" , "Ionic" , "Expo" , "Kotlin" , "Swift (iOS)"
+// DevOps:     "Docker" , "Kubernetes" , "Terraform" , "AWS" , "GCP" , "Azure"
+//             "Nginx" , "Apache Kafka" , "Git" , "Jenkins" , "Ansible" , "CI/CD"
+//             "Prometheus" , "Grafana" , "Linux" , "Vercel" , "Netlify" , "Heroku"
+//             "Cloudflare" , "Stripe"
+// Game / 3D:  "Unity" , "Unreal Engine" , "Godot" , "Blender" , "OpenGL" , "Vulkan"
+//             "Steam"
+// Design:     "Figma" , "Illustrator" , "Sketch" , "Canva"
+// ---------------------------------------------------------------------------------------
+
 export interface PortfolioProject {
   id: string;
   titleKey: string;
