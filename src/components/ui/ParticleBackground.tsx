@@ -1,6 +1,5 @@
 "use client";
 
-import { useCallback } from "react";
 import Particles from "@tsparticles/react";
 import { initParticlesEngine } from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim";
@@ -107,6 +106,7 @@ export default function ParticleBackground({
         },
         detectRetina: true,
         background: { color: "transparent" },
+        pauseOnOutsideViewport: true,
       }}
     />
   );
