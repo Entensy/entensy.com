@@ -188,33 +188,45 @@
     "unavailable": "Unavailable",
     "source_code": "Source Code",
     "projects": {
-      "ecommerce": {
-        "title": "E-Commerce Platform",
-        "desc": "A full-featured online retail platform with advanced product management, real-time inventory, and seamless checkout."
+      "procurement_erp": {
+        "title": "Procurement & Document Workflow ERP",
+        "desc": "An internal ERP/back-office system built as a Filament admin panel for managing procurement and document workflows. It handles purchase requests, quotations with line items and terms, departments, imports/exports, and board work schedules, with role/permission-based access. It generates PDF documents and supports data export and activity logging."
       },
-      "dashboard": {
-        "title": "Admin Dashboard",
-        "desc": "A comprehensive admin interface with data analytics, user management, and real-time reporting capabilities."
+      "queue_ticketing": {
+        "title": "Service Queue / Ticketing Management System",
+        "desc": "A Laravel 11 / Filament admin application for managing a customer service queue/ticketing system with counters, services, sections, captions, screens, and caller queues, plus archiving of served entries. It broadcasts real-time queue and display-screen updates and supports thermal (ESC/POS) receipt printing, Excel exports, multi-language switching, activity logging, and role-based access."
       },
-      "banking": {
-        "title": "Mobile Banking App",
-        "desc": "A secure cross-platform banking application with real-time transactions, biometric auth, and financial analytics."
+      "retail_pos": {
+        "title": "Retail Point-of-Sale System",
+        "desc": "A Laravel 11 / Filament v3 point-of-sale system for managing inventory items and item types, sales with line items, captions, and expenses. It adds role-based access control, dashboard charts, PDF/printable receipts, barcode and QR-code generation, and Excel export."
       },
-      "analytics": {
-        "title": "SaaS Analytics Tool",
-        "desc": "A multi-tenant SaaS platform providing advanced business intelligence and data visualization for enterprises."
+      "project_finance": {
+        "title": "Project Finance Management Panel",
+        "desc": "An admin application for managing projects and their finances. It tracks projects, project customers, and per-project income and expense records, with user management, activity logging, exception tracking, screen lock, database backups, and data export."
       },
-      "portal": {
-        "title": "Company Portal",
-        "desc": "An internal company portal centralizing HR, operations, and communications with role-based access control."
+      "real_estate": {
+        "title": "Real Estate Sales Management System",
+        "desc": "A Laravel/Filament application for managing real estate inventory and sales, covering houses and apartments, their sale records, sales strategies, and visitors. It includes dashboard reporting widgets summarizing properties, sales, and visitor counts."
       },
-      "booking": {
-        "title": "Booking System",
-        "desc": "A full-stack reservation platform with dynamic scheduling, payment processing, and automated notifications."
+      "restaurant_qr": {
+        "title": "Multi-Restaurant QR Ordering Platform",
+        "desc": "A Laravel 8 multi-restaurant QR-code ordering and management platform. Restaurants manage categories, menu items with extras, tables, taxes, custom menus, and orders, while customers place orders and call waiters; the system supports subscription plans, multiple payment gateways, and email templates."
       },
-      "crm": {
-        "title": "CRM System",
-        "desc": "A custom customer relationship management system streamlining sales, support, and client interactions."
+      "digital_book": {
+        "title": "Digital Book / E-Reading Platform",
+        "desc": "A Laravel 12 digital book and e-reading platform with a public Inertia + Svelte frontend and a Filament 4 admin panel. Users and organizations browse multilingual books, purchase or subscribe to access PDF content with reading-progress tracking and content protection, while admins manage books, categories, organizations, subscriptions, purchases, and site settings."
+      },
+      "electronics_ecommerce": {
+        "title": "Electronics E-Commerce Website",
+        "desc": "A multi-language e-commerce website for computers, monitors, storage devices and related electronics, with product catalogs by brand, category and color variants, search, cart, wishlist, checkout and order management. The customer-facing frontend is a Vue 3 SPA served via Inertia.js with payment-gateway integration, while a Filament admin panel manages products, orders, banners and settings."
+      },
+      "bookstore": {
+        "title": "Online Bookstore E-Commerce Site",
+        "desc": "An online bookstore and stationery e-commerce site with bilingual RTL support. Customers browse a catalog filtered by category, subcategory, language and year, manage a basket and wishlist, apply coupons/discounts, and place orders with social login. A Filament admin panel manages books, categories, orders, discounts, and content pages."
+      },
+      "login_tracking": {
+        "title": "Login Location & Activity Tracking System",
+        "desc": "A Laravel 9 application that records user login/logout events along with geolocation data (IP, country, city, coordinates, map links) and captured login/logout images. Administrators manage users and review activity logs and reports through a Blade dashboard."
       }
     }
   },
