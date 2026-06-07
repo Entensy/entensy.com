@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useRef, useLayoutEffect } from "react";
+import { motion } from "framer-motion";
 import { useTranslations, useLocale } from "next-intl";
 import { useTheme } from "@/components/layout/ThemeContext";
 import SectionHeading from "@/components/ui/SectionHeading";
@@ -143,6 +143,14 @@ export default function StacksSection() {
   const canHover = useHoverCapable();
   const [activeCategory, setActiveCategory] = useState(stackCategories[0].id);
   const sectionRef = useRef<HTMLElement>(null);
+  const badgesContentRef = useRef<HTMLDivElement>(null);
+  const [badgesHeight, setBadgesHeight] = useState<number | undefined>(undefined);
+
+  useLayoutEffect(() => {
+    if (badgesContentRef.current) {
+      setBadgesHeight(badgesContentRef.current.offsetHeight);
+    }
+  }, [activeCategory]);
 
   const badgeBaseColor = isDark
     ? "rgba(248,248,255,0.65)"
@@ -280,27 +288,34 @@ export default function StacksSection() {
         </div>
 
         {/* Tech badges grid */}
-        <AnimatePresence mode='wait'>
-          <motion.div
-            key={activeCategory}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className='flex flex-wrap justify-center gap-4 force-ltr'
-            dir='ltr'>
-            {currentCategory.items.map((tech, index) => (
-              <TechBadge
-                key={tech.name}
-                tech={tech}
-                index={index}
-                isDark={isDark}
-                canHover={canHover}
-                badgeBaseColor={badgeBaseColor}
-                badgeBaseBg={badgeBaseBg}
-                badgeBaseBorder={badgeBaseBorder}
-              />
-            ))}
-          </motion.div>
-        </AnimatePresence>
+        <motion.div
+          initial={false}
+          animate={{ height: badgesHeight ?? "auto" }}
+          transition={{ type: "spring", stiffness: 220, damping: 28, mass: 0.9 }}
+          className='overflow-hidden'>
+          <div ref={badgesContentRef}>
+            <motion.div
+              key={activeCategory}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className='flex flex-wrap justify-center gap-4 force-ltr'
+              dir='ltr'>
+              {currentCategory.items.map((tech, index) => (
+                <TechBadge
+                  key={tech.name}
+                  tech={tech}
+                  index={index}
+                  isDark={isDark}
+                  canHover={canHover}
+                  badgeBaseColor={badgeBaseColor}
+                  badgeBaseBg={badgeBaseBg}
+                  badgeBaseBorder={badgeBaseBorder}
+                />
+              ))}
+            </motion.div>
+          </div>
+        </motion.div>
 
         {/* Category color bar */}
         <motion.div
