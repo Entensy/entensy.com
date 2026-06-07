@@ -46,9 +46,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
-  const [isTight, setIsTight] = useState(false);
   const [linksOverflow, setLinksOverflow] = useState(false);
-  const tightRef = useRef(false);
   const overflowRef = useRef(false);
   const navRef = useRef<HTMLDivElement>(null);
   const linksListRef = useRef<HTMLUListElement>(null);
@@ -63,31 +61,27 @@ export default function Navbar() {
   useEffect(() => {
     const el = linksListRef.current;
     if (!el) return;
-    let frame: number;
+    let timer: ReturnType<typeof setTimeout>;
     const check = () => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => {
+      clearTimeout(timer);
+      // 150ms debounce: spring animations fire resize events continuously for ~500ms,
+      // so this only runs once the nav has settled — prevents mid-animation state flips
+      // that cause secondary layout shifts (e.g. language button jumping).
+      timer = setTimeout(() => {
         const children = Array.from(el.children);
         const T = children.reduce((sum, c) => sum + (c as HTMLElement).offsetWidth, 0)
           + (children.length - 1) * 8; // include gap-2
 
-        // Normalize back to "what clientWidth would be at 24px padding, no hamburger"
-        // tight=true added 16px to ul (padding shrank) → subtract to normalize
-        // overflow=true removed 46px from ul (hamburger appeared) → add back to normalize
-        const normalized = el.clientWidth
-          - (tightRef.current ? 16 : 0)
-          + (overflowRef.current ? 46 : 0);
+        // Normalize: if hamburger is visible it took 46px from the ul — add it back
+        const normalized = el.clientWidth + (overflowRef.current ? 46 : 0);
+        const newOverflow = T > normalized;
 
-        const newOverflow = T > normalized + 16; // even 16px padding boost isn't enough
-        const newTight = T > normalized;          // 24px padding not enough, 16px might save it
-
-        if (newTight !== tightRef.current) { tightRef.current = newTight; setIsTight(newTight); }
         if (newOverflow !== overflowRef.current) { overflowRef.current = newOverflow; setLinksOverflow(newOverflow); }
-      });
+      }, 150);
     };
     const obs = new ResizeObserver(check);
     obs.observe(el);
-    return () => { obs.disconnect(); cancelAnimationFrame(frame); };
+    return () => { obs.disconnect(); clearTimeout(timer); };
   }, []);
 
   useEffect(() => {
@@ -127,37 +121,46 @@ export default function Navbar() {
         {/* Outer spring-animated wrapper — drives the floating gap */}
         <motion.div
           className="pointer-events-auto flex justify-center"
-          animate={{
-            paddingTop: scrolled ? "1.25rem" : "0rem",
-            paddingLeft: scrolled ? (isTight && !linksOverflow ? "1rem" : "1.5rem") : "0rem",
-            paddingRight: scrolled ? (isTight && !linksOverflow ? "1rem" : "1.5rem") : "0rem",
+          style={{
+            paddingLeft: scrolled ? "1.5rem" : "0rem",
+            paddingRight: scrolled ? "1.5rem" : "0rem",
           }}
+          animate={{ paddingTop: scrolled ? "1.25rem" : "0rem" }}
           transition={SPRING}
         >
-          {/* Inner nav — spring-animates shape, size, shadow */}
+          {/* Inner nav — spring-animates shape only */}
           <motion.nav
-            className={cn(
-              "navbar-pill-bg w-full mx-auto flex items-center justify-between gap-4",
-              scrolled ? "navbar-scrolled" : ""
-            )}
-            style={{
-              backdropFilter: scrolled ? "blur(12px) saturate(120%)" : "none",
-              WebkitBackdropFilter: scrolled ? "blur(12px) saturate(120%)" : "none",
-              background: scrolled ? "var(--navbar-bg-scrolled)" : "transparent",
-              minWidth: 0,
-            }}
+            className="navbar-pill-bg w-full mx-auto relative"
+            style={{ minWidth: 0, willChange: "transform" }}
             onClick={() => mobileOpen && setTimeout(() => setMobileOpen(false), 120)}
-            initial={{ maxWidth: 1280, minWidth: 0, borderRadius: 14 }}
+            initial={{ maxWidth: 1280, minWidth: 0, borderRadius: 14, paddingTop: "1rem", paddingBottom: "1rem", paddingLeft: "1.5rem", paddingRight: "1.5rem" }}
             animate={{
               maxWidth: scrolled ? (isRtlLocale ? 1260 : 1160) : 1280,
               paddingTop: scrolled ? "0.65rem" : "1rem",
               paddingBottom: scrolled ? "0.65rem" : "1rem",
-              paddingLeft: isTight && !linksOverflow ? "1rem" : "1.5rem",
-              paddingRight: isTight && !linksOverflow ? "1rem" : "1.5rem",
+              paddingLeft: "1.5rem",
+              paddingRight: "1.5rem",
               borderRadius: scrolled ? 9999 : 14,
             }}
             transition={SPRING}
           >
+            {/* Glass layer — all visual props here, faded as one via Framer Motion opacity */}
+            <motion.div
+              className="absolute inset-0 z-0 pointer-events-none"
+              style={{
+                borderRadius: "inherit",
+                background: "var(--nav-glass-bg)",
+                boxShadow: "var(--nav-glass-shadow)",
+                backdropFilter: "blur(12px) saturate(120%)",
+                WebkitBackdropFilter: "blur(12px) saturate(120%)",
+              }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: scrolled ? 1 : 0 }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            />
+
+            {/* Content — above glass layer */}
+            <div className="relative z-10 flex items-center justify-between gap-4 w-full min-w-0">
 
               {/* Logo */}
               <motion.a
@@ -177,7 +180,7 @@ export default function Navbar() {
                 />
                 <span
                   className="navbar-brand-name text-sm font-black select-none max-[360px]:hidden"
-                  style={{ color: "rgba(218, 213, 255, 0.82)", letterSpacing: "0.18em" }}
+                  style={{ letterSpacing: "0.18em" }}
                 >
                   {t("brand")}
                 </span>
@@ -217,7 +220,6 @@ export default function Navbar() {
 
               {/* Right side — always LTR so buttons never flip outside the nav in RTL pages */}
               <div className="flex items-center gap-2.5 shrink-0" dir="ltr">
-                {/* In RTL: hamburger comes first so language button stays at the far right */}
                 {isRtlLocale && linksOverflow && (
                   <button
                     className={cn("navbar-icon-btn w-9 h-9 flex items-center justify-center rounded-full", mobileOpen && "navbar-icon-btn--open")}
@@ -243,7 +245,6 @@ export default function Navbar() {
 
                 {!isRtlLocale && <LanguageSwitcher />}
 
-                {/* In LTR: hamburger comes after language button */}
                 {!isRtlLocale && linksOverflow && (
                   <button
                     className={cn("navbar-icon-btn w-9 h-9 flex items-center justify-center rounded-full", mobileOpen && "navbar-icon-btn--open")}
@@ -254,6 +255,8 @@ export default function Navbar() {
                   </button>
                 )}
               </div>
+
+            </div>
           </motion.nav>
         </motion.div>
       </header>
@@ -262,7 +265,7 @@ export default function Navbar() {
       <div
         className="fixed z-8002 pointer-events-none"
         style={{
-          top: scrolled ? "calc(1.25rem + 56px + 8px)" : "calc(56px + 8px)",
+          top: scrolled ? "calc(1.25rem + 3.55rem + 0.5rem)" : "calc(4.25rem + 0.5rem)",
           left: scrolled ? "50%" : "clamp(0.75rem, 4vw, 2rem)",
           right: scrolled ? "auto" : "clamp(0.75rem, 4vw, 2rem)",
           width: scrolled ? "min(64rem, calc(100vw - 2rem))" : undefined,
