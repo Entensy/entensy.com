@@ -11,7 +11,7 @@
 // Frontend:   "React" , "Vue.js" , "Next.js" , "Nuxt.js" , "Angular" , "Svelte"
 //             "Astro" , "Solid.js" , "Vite" , "Tailwind CSS" , "Bootstrap"
 //             "SASS/SCSS" , "Redux" , "Three.js" , "WebAssembly" , "Webpack"
-//             "Framer Motion" , "GSAP" , "Electron" , "Storybook"
+//             "Framer Motion" , "GSAP" , "Electron" , "Storybook" , "Alpine.js" , "Inertia.js"
 // Backend:    "Node.js" , "Laravel" , "NestJS" , "Django" , "FastAPI" , "Flask"
 //             "Spring" , "Express.js" , "Ruby on Rails" , "REST APIs" , "GraphQL"
 // Databases:  "PostgreSQL" , "MySQL" , "MongoDB" , "Redis" , "Firebase" , "Supabase"

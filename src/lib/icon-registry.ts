@@ -7,6 +7,7 @@ import {
   SiReact, SiVuedotjs, SiNextdotjs, SiNuxt, SiAngular, SiSvelte, SiAstro,
   SiSolid, SiVite, SiTailwindcss, SiBootstrap, SiSass, SiRedux, SiThreedotjs,
   SiWebassembly, SiWebpack, SiFramer, SiGreensock, SiElectron, SiStorybook,
+  SiAlpinedotjs, SiInertia,
   SiNodedotjs, SiLaravel, SiNestjs, SiDjango, SiFastapi, SiFlask, SiSpring,
   SiExpress, SiRubyonrails, SiPostman, SiGraphql,
   SiPostgresql, SiMysql, SiMongodb, SiRedis, SiFirebase, SiSupabase,
@@ -65,6 +66,7 @@ export const iconRegistry: Record<string, IconComp> = {
   SiReact, SiVuedotjs, SiNextdotjs, SiNuxt, SiAngular, SiSvelte, SiAstro,
   SiSolid, SiVite, SiTailwindcss, SiBootstrap, SiSass, SiRedux, SiThreedotjs,
   SiWebassembly, SiWebpack, SiFramer, SiGreensock, SiElectron, SiStorybook,
+  SiAlpinedotjs, SiInertia,
   // Backend
   SiNodedotjs, SiLaravel, SiNestjs, SiDjango, SiFastapi, SiFlask, SiSpring,
   SiExpress, SiRubyonrails, SiPostman, SiGraphql,
