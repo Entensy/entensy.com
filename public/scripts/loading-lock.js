@@ -1,0 +1,1 @@
+(function(){try{var nav=performance.getEntriesByType('navigation')[0];var isReload=nav&&nav.type==='reload';var hasLoaded=!!sessionStorage.getItem('entensy:loaded-locale');if(isReload||!hasLoaded){document.documentElement.style.overflow='hidden';document.documentElement.style.pointerEvents='none';}}catch(e){}})()

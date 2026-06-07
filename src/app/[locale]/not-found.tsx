@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useTranslations, useLocale } from "next-intl";
 import Image from "next/image";
@@ -10,6 +11,7 @@ export default function NotFound() {
   const t = useTranslations("notFound");
   const locale = useLocale();
   const isRtl = locale === "ar" || locale === "ckb";
+  const router = useRouter();
 
   return (
     <div
@@ -128,18 +130,11 @@ export default function NotFound() {
           <AnimatedButton
             variant="primary"
             size="lg"
-            href={`/${locale}`}
             icon={isRtl ? <ArrowRight size={18} /> : <ArrowLeft size={18} />}
             iconPosition="left"
+            onClick={() => { sessionStorage.removeItem("entensy:loaded-locale"); router.push(`/${locale}`); }}
           >
             {t("go_home")}
-          </AnimatedButton>
-          <AnimatedButton
-            variant="ghost"
-            size="lg"
-            href={`/${locale}#contact`}
-          >
-            {t("contact")}
           </AnimatedButton>
         </motion.div>
       </div>

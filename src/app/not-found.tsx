@@ -1,11 +1,21 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import AnimatedButton from "@/components/ui/AnimatedButton";
 
 export default function NotFound() {
+  const router = useRouter();
+
+  useEffect(() => {
+    document.documentElement.style.pointerEvents = "";
+    document.documentElement.style.overflow = "";
+  }, []);
+
   return (
     <div
       className="relative min-h-svh flex flex-col items-center justify-center overflow-hidden"
@@ -112,34 +122,22 @@ export default function NotFound() {
           The page you&apos;re looking for doesn&apos;t exist or has been moved. Let&apos;s get you back on track.
         </motion.p>
 
-        {/* Buttons */}
+        {/* Button */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.55, duration: 0.5 }}
           className="flex flex-col sm:flex-row gap-3 mt-2"
         >
-          <Link
-            href="/"
-            className="flex items-center justify-center gap-2 px-6 py-3 rounded-full text-sm font-bold text-white transition-opacity hover:opacity-90"
-            style={{
-              background: "linear-gradient(135deg, #FC002A, #C8001F)",
-              boxShadow: "0 4px 20px rgba(252,0,42,0.35)",
-            }}
+          <AnimatedButton
+            variant="primary"
+            size="lg"
+            icon={<ArrowLeft size={18} />}
+            iconPosition="left"
+            onClick={() => { sessionStorage.removeItem("entensy:loaded-locale"); router.push("/"); }}
           >
-            <ArrowLeft size={18} />
             Back to Home
-          </Link>
-          <Link
-            href="/#contact"
-            className="flex items-center justify-center gap-2 px-6 py-3 rounded-full text-sm font-semibold border transition-colors hover:border-[rgba(252,0,42,0.4)]"
-            style={{
-              color: "var(--text-secondary)",
-              borderColor: "var(--border-color)",
-            }}
-          >
-            Contact Us
-          </Link>
+          </AnimatedButton>
         </motion.div>
       </div>
 

@@ -652,6 +652,11 @@ body {
   overflow: hidden;
 }
 
+/* Lock scroll whenever the loading screen is in the DOM — no JS timing dependency */
+html:has(.loading-screen) {
+  overflow: hidden;
+}
+
 /* ============================================================
    MARQUEE (portfolio auto-scroll)
    ============================================================ */

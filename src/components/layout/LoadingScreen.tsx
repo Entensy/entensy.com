@@ -21,20 +21,22 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
   const [exiting, setExiting] = useState(false);
 
   useEffect(() => {
-    let exitTimer: ReturnType<typeof setTimeout> | null = null;
+    // Plain timer drives completion - guaranteed to fire regardless of GSAP state.
+    // GSAP handles visuals only; this handles the exit trigger.
+    // Timeline: logo(0.8s) + tagline(-=0.3) + bar(1.8s, -=0.5) + hold(0.4s) = 2.65s total.
+    const completionTimer = setTimeout(() => {
+      setExiting(true);
+      setTimeout(onComplete, 700);
+    }, 2700);
+
     const ctx = gsap.context(() => {
-      // Hide targets immediately so there's no frame where they're visible before the animation starts
-      if (logoImgRef.current) gsap.set(logoImgRef.current, { opacity: 0, y: 40, scale: 0.82 });
-      if (taglineRef.current) gsap.set(taglineRef.current, { opacity: 0, y: 16 });
+      if (logoImgRef.current)
+        gsap.set(logoImgRef.current, { opacity: 0, y: 40, scale: 0.82 });
+      if (taglineRef.current)
+        gsap.set(taglineRef.current, { opacity: 0, y: 16 });
 
-      const tl = gsap.timeline({
-        onComplete: () => {
-          setExiting(true);
-          exitTimer = setTimeout(onComplete, 700);
-        },
-      });
+      const tl = gsap.timeline();
 
-      // Animate logo image
       if (logoImgRef.current) {
         tl.to(logoImgRef.current, {
           opacity: 1,
@@ -45,7 +47,6 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
         });
       }
 
-      // Animate tagline
       if (taglineRef.current) {
         tl.to(
           taglineRef.current,
@@ -55,48 +56,51 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
             duration: 0.45,
             ease: "power2.out",
           },
-          "-=0.3"
+          "-=0.3",
         );
       }
 
-      // Animate progress bar
-      tl.to(
-        barRef.current,
-        {
-          width: "100%",
-          duration: 1.8,
-          ease: "power2.inOut",
-          onUpdate: function () {
-            setProgress(Math.round(this.progress() * 100));
+      if (barRef.current) {
+        tl.to(
+          barRef.current,
+          {
+            width: "100%",
+            duration: 1.8,
+            ease: "power2.inOut",
+            onUpdate: function () {
+              setProgress(Math.round(this.progress() * 100));
+            },
           },
-        },
-        "-=0.5"
-      );
+          "-=0.5",
+        );
+      }
 
       tl.to({}, { duration: 0.4 }); // hold
     });
 
-    return () => { ctx.revert(); if (exitTimer) clearTimeout(exitTimer); };
+    return () => {
+      clearTimeout(completionTimer);
+      ctx.revert();
+    };
   }, [isRtlLocale, onComplete]);
 
   return (
     <AnimatePresence>
       {!exiting && (
         <motion.div
-          className="loading-screen"
+          className='loading-screen'
           dir={isRtlLocale ? "rtl" : "ltr"}
           initial={{ opacity: 1 }}
           exit={{
             clipPath: "polygon(0 0, 100% 0, 100% 0, 0 0)",
             transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
-          }}
-        >
+          }}>
           {/* Background grid */}
-          <div className="absolute inset-0 bg-grid-pattern opacity-20" />
+          <div className='absolute inset-0 bg-grid-pattern opacity-20' />
 
           {/* Radial glow */}
           <div
-            className="absolute inset-0"
+            className='absolute inset-0'
             style={{
               background:
                 "radial-gradient(ellipse 60% 60% at 50% 50%, rgba(252,0,42,0.12) 0%, transparent 70%)",
@@ -105,25 +109,27 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
 
           {/* Floating ring */}
           <div
-            className="absolute w-64 h-64 rounded-full border border-brand/10 animate-spin-slow"
+            className='absolute w-64 h-64 rounded-full border border-brand/10 animate-spin-slow'
             style={{ animationDuration: "20s" }}
           />
           <div
-            className="absolute w-96 h-96 rounded-full border border-gold/6 animate-spin-slow"
+            className='absolute w-96 h-96 rounded-full border border-gold/6 animate-spin-slow'
             style={{ animationDuration: "30s", animationDirection: "reverse" }}
           />
 
           {/* Content */}
-          <div className="relative z-10 flex flex-col items-center gap-8 px-8">
+          <div className='relative z-10 flex flex-col items-center gap-8 px-8'>
             {/* Logo */}
-            <div className="flex flex-col items-center gap-6">
-              <div ref={logoImgRef} className="flex items-center justify-center">
+            <div className='flex flex-col items-center gap-6'>
+              <div
+                ref={logoImgRef}
+                className='flex items-center justify-center'>
                 <Image
-                  src="/images/logo.png"
-                  alt="ENTENSY"
+                  src='/images/logo.png'
+                  alt='ENTENSY'
                   width={240}
                   height={72}
-                  className="h-10 md:h-12 w-auto object-contain"
+                  className='h-10 md:h-12 w-auto object-contain'
                   priority
                 />
               </div>
@@ -133,21 +139,19 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
                 className={`text-sm font-medium opacity-60 ${
                   isRtlLocale ? "" : "tracking-[0.35em] uppercase"
                 }`}
-                style={{ color: "var(--text-secondary)" }}
-              >
+                style={{ color: "var(--text-secondary)" }}>
                 {t("tagline")}
               </p>
             </div>
 
             {/* Progress bar */}
-            <div className="w-48 md:w-64 flex flex-col items-center gap-6">
+            <div className='w-48 md:w-64 flex flex-col items-center gap-6'>
               <div
-                className="w-full h-0.5 rounded-full overflow-hidden"
-                style={{ background: "var(--border-color)" }}
-              >
+                className='w-full h-0.5 rounded-full overflow-hidden'
+                style={{ background: "var(--border-color)" }}>
                 <div
                   ref={barRef}
-                  className="h-full rounded-full"
+                  className='h-full rounded-full'
                   style={{
                     width: "0%",
                     background:
@@ -158,12 +162,18 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
                 />
               </div>
               <span
-                className="text-xs font-medium tabular-nums"
-                dir="ltr"
-                style={{ color: "var(--text-muted)", unicodeBidi: "bidi-override" }}
-              >
+                className='text-xs font-medium tabular-nums'
+                dir='ltr'
+                style={{
+                  color: "var(--text-muted)",
+                  unicodeBidi: "bidi-override",
+                }}>
                 {isRtlLocale
-                  ? "٪" + String(progress).replace(/[0-9]/g, d => "٠١٢٣٤٥٦٧٨٩"[parseInt(d)])
+                  ? "٪" +
+                    String(progress).replace(
+                      /[0-9]/g,
+                      (d) => "٠١٢٣٤٥٦٧٨٩"[parseInt(d)],
+                    )
                   : `${progress}%`}
               </span>
             </div>

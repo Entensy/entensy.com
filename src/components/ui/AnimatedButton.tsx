@@ -133,13 +133,15 @@ const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>(
     };
 
     if (href && !isDisabled) {
+      const { onClick } = props;
       return (
         <motion.a
           href={href}
           className={commonClassName}
           whileHover={hoverAnim}
           whileTap={tapAnim}
-          transition={springTransition}>
+          transition={springTransition}
+          onClick={onClick ? (e) => onClick(e as unknown as React.MouseEvent<HTMLButtonElement>) : undefined}>
           {content}
         </motion.a>
       );

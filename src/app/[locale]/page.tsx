@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useLayoutEffect } from "react";
+import { useState, useLayoutEffect, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { useLocale } from "next-intl";
 import Navbar from "@/components/layout/Navbar";
@@ -10,13 +10,27 @@ import ThemeToggle from "@/components/ui/ThemeToggle";
 import LoadingScreen from "@/components/layout/LoadingScreen";
 
 // Below-fold sections — split into separate JS chunks, fetched in parallel on load
-const ServicesSection  = dynamic(() => import("@/components/sections/ServicesSection"));
-const SolutionsSection = dynamic(() => import("@/components/sections/SolutionsSection"));
-const StacksSection    = dynamic(() => import("@/components/sections/StacksSection"));
-const PortfolioSection = dynamic(() => import("@/components/sections/PortfolioSection"));
-const AboutSection     = dynamic(() => import("@/components/sections/AboutSection"));
-const ContactSection   = dynamic(() => import("@/components/sections/ContactSection"));
-const SocialsSection   = dynamic(() => import("@/components/sections/SocialsSection"));
+const ServicesSection = dynamic(
+  () => import("@/components/sections/ServicesSection"),
+);
+const SolutionsSection = dynamic(
+  () => import("@/components/sections/SolutionsSection"),
+);
+const StacksSection = dynamic(
+  () => import("@/components/sections/StacksSection"),
+);
+const PortfolioSection = dynamic(
+  () => import("@/components/sections/PortfolioSection"),
+);
+const AboutSection = dynamic(
+  () => import("@/components/sections/AboutSection"),
+);
+const ContactSection = dynamic(
+  () => import("@/components/sections/ContactSection"),
+);
+const SocialsSection = dynamic(
+  () => import("@/components/sections/SocialsSection"),
+);
 
 const SESSION_LOCALE_KEY = "entensy:loaded-locale";
 
@@ -32,7 +46,9 @@ function shouldSkipLoading(): boolean {
     window.sessionStorage.removeItem(LANG_SWITCHING_KEY);
     return false;
   }
-  const navEntry = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
+  const navEntry = performance.getEntriesByType("navigation")[0] as
+    | PerformanceNavigationTiming
+    | undefined;
   const isReload = navEntry?.type === "reload";
   return !isReload && !!window.sessionStorage.getItem(SESSION_LOCALE_KEY);
 }
@@ -40,7 +56,7 @@ function shouldSkipLoading(): boolean {
 export default function HomePage() {
   const locale = useLocale();
   // Lazy initializer runs synchronously on first render. If it returns true, isLoaded/showContent
-  // start as true and the LoadingScreen is never added to the tree at all — no AnimatePresence
+  // start as true and the LoadingScreen is never added to the tree at all - no AnimatePresence
   // exit flash, no layout shift, no scroll-lock flicker.
   const [isLoaded, setIsLoaded] = useState(shouldSkipLoading);
   const [showContent, setShowContent] = useState(shouldSkipLoading);
@@ -63,12 +79,12 @@ export default function HomePage() {
     };
   }, [isLoaded]);
 
-  const handleLoadingComplete = () => {
+  const handleLoadingComplete = useCallback(() => {
     document.getElementById("lang-switch-cover")?.remove();
     window.sessionStorage.setItem(SESSION_LOCALE_KEY, locale);
     setIsLoaded(true);
     setTimeout(() => setShowContent(true), 80);
-  };
+  }, [locale]);
 
   return (
     <>
@@ -80,11 +96,11 @@ export default function HomePage() {
 
       {/* Main Content */}
       <div
+        suppressHydrationWarning
         style={{
           opacity: showContent ? 1 : 0,
           transition: "opacity 0.5s ease",
-        }}
-      >
+        }}>
         <Navbar />
 
         <main>

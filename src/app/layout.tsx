@@ -40,6 +40,7 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
       suppressHydrationWarning
     >
       <head>
+        {/* eslint-disable-next-line @next/next/no-before-interactive-script-outside-document */}
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('entensy-theme');if(t==='light'){document.documentElement.classList.remove('dark')}else{document.documentElement.classList.add('dark')}}catch(e){}})()`,
