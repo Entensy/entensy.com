@@ -139,9 +139,9 @@ function PortfolioCard({
                 <span className='text-5xl font-black opacity-20 text-white'>
                   {t(project.titleKey as Parameters<typeof t>[0])
                     .split(" ")
-                    .map((w) => w[0])
-                    .join("")
-                    .slice(0, 2)}
+                    .filter((w) => /^\p{L}/u.test(w))
+                    .map((w) => /^[A-Z]{2,}$/.test(w) ? w : w[0].toUpperCase())
+                    .join("")}
                 </span>
               </div>
               <div
