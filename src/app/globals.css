@@ -716,14 +716,12 @@ body {
 
 .embla__container {
   display: flex;
-  margin-left: -1.25rem;
   will-change: transform;
 }
 
 .embla__slide {
   flex: 0 0 clamp(300px, 26vw, 420px);
   min-width: 0;
-  padding-left: 1.25rem;
 }
 
 /* ============================================================
@@ -935,19 +933,15 @@ body {
   transform: scaleX(-1);
 }
 
-[dir="rtl"] .embla__container {
-  direction: rtl;
-}
-
 /* RTL: flip left/right arrow icons inline (without displacing siblings) */
 [dir="rtl"] .rtl-arrow {
   display: inline-flex;
   transform: scaleX(-1);
 }
 
-/* RTL: embla carousel scrolls right to left */
+/* RTL: embla slides flow right-to-left */
 [dir="rtl"] .embla__container {
-  flex-direction: row-reverse;
+  direction: rtl;
 }
 
 /* RTL: text alignment for card content */

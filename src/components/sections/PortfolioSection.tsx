@@ -99,7 +99,7 @@ function PortfolioCard({
 
   return (
     <div
-      className='py-3'
+      className='py-3 px-2.5'
       onMouseEnter={onScrollStop}
       onMouseLeave={onScrollPlay}
       onTouchEnd={onScrollPlay}>
@@ -299,7 +299,7 @@ export default function PortfolioSection() {
       startDelay: 0,
       stopOnInteraction: false,
       stopOnMouseEnter: false,
-      direction: isRtlLocale ? "backward" : "forward",
+      direction: "forward",
     }),
   );
   const carouselRef = useRef<HTMLDivElement>(null);
@@ -308,7 +308,7 @@ export default function PortfolioSection() {
   );
 
   const [emblaRef, emblaApi] = useEmblaCarousel(
-    { loop: true, align: "start", dragFree: true },
+    { loop: true, align: "start", dragFree: true, direction: isRtlLocale ? "rtl" : "ltr" },
     // eslint-disable-next-line react-hooks/refs
     [autoScrollPlugin.current],
   );
