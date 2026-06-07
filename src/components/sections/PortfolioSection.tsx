@@ -72,17 +72,21 @@ const WATERMARK_POSITIONS = [
 
 function PortfolioCard({
   project,
+  index,
   t,
   isRtlLocale,
   onScrollStop,
   onScrollPlay,
 }: {
   project: (typeof portfolioProjects)[number];
+  index: number;
   t: ReturnType<typeof useTranslations>;
   isRtlLocale: boolean;
   onScrollStop: () => void;
   onScrollPlay: () => void;
 }) {
+  const accentColor = project.gradient.match(/#[0-9A-Fa-f]{6}/)?.[0] ?? "#8B5CF6";
+  const padded = String(index + 1).padStart(2, "0");
   const [hoveredGithub, setHoveredGithub] = useState(false);
   const shellRef = useRef<HTMLDivElement>(null);
   const canHover = useHoverCapable();
@@ -166,9 +170,16 @@ function PortfolioCard({
             <div
               className='flex-1 p-5 flex flex-col gap-3 relative z-10'
               dir={isRtlLocale ? "rtl" : "ltr"}>
-              <h3 className='text-sm font-bold leading-tight heading-glass'>
-                {t(project.titleKey as Parameters<typeof t>[0])}
-              </h3>
+              <div className='flex items-center justify-between gap-2'>
+                <h3 className='text-sm font-bold leading-tight heading-glass flex-1'>
+                  {t(project.titleKey as Parameters<typeof t>[0])}
+                </h3>
+                <span
+                  className='text-4xl font-black leading-none pointer-events-none select-none shrink-0'
+                  style={{ color: accentColor, opacity: 0.15 }}>
+                  {padded}
+                </span>
+              </div>
               <p
                 className='text-xs leading-relaxed flex-1'
                 style={{ color: "var(--text-muted)" }}>
@@ -467,6 +478,7 @@ export default function PortfolioSection() {
                   style={{ overflow: "visible" }}>
                   <PortfolioCard
                     project={project}
+                    index={index % portfolioProjects.length}
                     t={t}
                     isRtlLocale={isRtlLocale}
                     onScrollStop={stopScroll}
