@@ -160,7 +160,7 @@ export default function ContactSection() {
   const [ctaCardHovered, setCtaCardHovered] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [turnstileResetKey, setTurnstileResetKey] = useState(0);
-  const [formTouched, setFormTouched] = useState(false);
+  const [sectionSeen, setSectionSeen] = useState(false);
   const statusTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const formRef = useRef<HTMLDivElement>(null);
   const formReveal = useScrollReveal(formRef as { current: Element | null });
@@ -176,6 +176,19 @@ export default function ContactSection() {
     },
     [],
   );
+
+  // Mount Turnstile as soon as the form scrolls into view so the challenge
+  // completes before the user starts typing (not lazily on first focus).
+  useEffect(() => {
+    if (!formRef.current) return;
+    const el = formRef.current;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setSectionSeen(true); },
+      { threshold: 0.1 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const scheduleReset = (delay: number) => {
     if (statusTimerRef.current) clearTimeout(statusTimerRef.current);
@@ -425,7 +438,6 @@ export default function ContactSection() {
             <form
               // eslint-disable-next-line react-hooks/refs
               onSubmit={handleSubmit(onSubmit)}
-              onFocus={() => setFormTouched(true)}
               className='flex flex-col gap-5'
               noValidate>
               {/* Name */}
@@ -513,9 +525,9 @@ export default function ContactSection() {
                 )}
               </div>
 
-              {/* Turnstile CAPTCHA - lazy-mounted on first form focus so Cloudflare's
-                  script is not fetched for visitors who never interact with the form */}
-              {formTouched && process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && (
+              {/* Turnstile CAPTCHA - mounted when the section scrolls into view so the
+                  challenge completes before the user starts filling the form */}
+              {sectionSeen && process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && (
                 <Turnstile
                   key={turnstileResetKey}
                   siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
