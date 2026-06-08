@@ -1,4 +1,5 @@
 import { Montserrat, Noto_Sans_Arabic } from "next/font/google";
+import { cookies } from "next/headers";
 import { routing } from "@/i18n/routing";
 import "./globals.css";
 
@@ -23,7 +24,7 @@ type RootLayoutProps = Readonly<{
 }>;
 
 export default async function RootLayout({ children, params }: RootLayoutProps) {
-  const { locale } = await params;
+  const [{ locale }, cookieStore] = await Promise.all([params, cookies()]);
 
   const resolvedLocale = routing.locales.includes(
     locale as (typeof routing.locales)[number],
@@ -31,27 +32,18 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
     ? locale
     : "en";
   const dir = resolvedLocale === "en" ? "ltr" : "rtl";
+  // Default to dark; switch to light only when the user has explicitly chosen it.
+  // Reading the cookie server-side means the correct class is in the HTML from the
+  // very first byte — no script, no flash, no React 19 inline-script warning.
+  const isDark = cookieStore.get("entensy-theme")?.value !== "light";
 
   return (
     <html
       lang={resolvedLocale}
       dir={dir}
-      className={`${montserrat.variable} ${notoSansArabic.variable} scroll-smooth dark`}
+      className={`${montserrat.variable} ${notoSansArabic.variable} scroll-smooth ${isDark ? "dark" : ""}`}
       suppressHydrationWarning
     >
-      <head>
-        {/* eslint-disable-next-line @next/next/no-before-interactive-script-outside-document */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('entensy-theme');if(t==='light'){document.documentElement.classList.remove('dark')}else{document.documentElement.classList.add('dark')}}catch(e){}})()`,
-          }}
-        />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{var nav=performance.getEntriesByType('navigation')[0];var isReload=nav&&nav.type==='reload';var hasLoaded=!!sessionStorage.getItem('entensy:loaded-locale');if(isReload||!hasLoaded){document.documentElement.style.overflow='hidden';document.documentElement.style.pointerEvents='none';}}catch(e){}})()`,
-          }}
-        />
-      </head>
       <body className="antialiased overflow-x-hidden" suppressHydrationWarning>
         {children}
       </body>

@@ -30,6 +30,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const setTheme = (t: Theme) => {
     setThemeState(t);
     localStorage.setItem("entensy-theme", t);
+    // Cookie lets the server layout read the preference during SSR so it can
+    // apply the correct class without any client-side script (no FOUC, no React 19 warning).
+    document.cookie = `entensy-theme=${t}; path=/; max-age=31536000; SameSite=Lax`;
     document.documentElement.classList.toggle("dark", t === "dark");
   };
 

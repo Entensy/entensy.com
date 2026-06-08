@@ -134,7 +134,7 @@ export default function NotFound() {
             size="lg"
             icon={<ArrowLeft size={18} />}
             iconPosition="left"
-            onClick={() => { sessionStorage.removeItem("entensy:loaded-locale"); router.push("/"); }}
+            onClick={() => router.push("/")}
           >
             Back to Home
           </AnimatedButton>

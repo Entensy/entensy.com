@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Globe } from "lucide-react";
 
@@ -13,25 +12,15 @@ const languages = [
   { code: "ar", dir: "rtl" },
 ] as const;
 
+// Mirrors the localePrefix.prefixes in src/i18n/routing.ts
+const URL_PREFIXES: Record<string, string> = { ckb: "ku" };
+
 export default function LanguageSwitcher() {
   const locale = useLocale();
   const isRtlLocale = locale === "ar" || locale === "ckb";
   const tLang = useTranslations("lang");
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-
-  const buildLocalePath = useCallback(
-    (code: string) => {
-      const segments = pathname.split("/");
-      segments[1] = code;
-      const query = searchParams.toString();
-      return `${segments.join("/")}${query ? `?${query}` : ""}`;
-    },
-    [pathname, searchParams],
-  );
 
   const switchLocale = (code: string) => {
     if (code === locale) {
@@ -39,32 +28,21 @@ export default function LanguageSwitcher() {
       return;
     }
 
-    // Cover the current page instantly - loading screen (z-9999) takes over once the new component mounts
+    // Cover the current page instantly while the new page loads
     const cover = document.createElement("div");
     cover.id = "lang-switch-cover";
     cover.style.cssText =
       "position:fixed;inset:0;z-index:9998;background:var(--bg-primary);";
     document.body.appendChild(cover);
 
-    window.sessionStorage.setItem("entensy:lang-switching", "1");
-    // eslint-disable-next-line react-hooks/immutability
-    document.documentElement.style.overflow = "hidden";
-    // eslint-disable-next-line react-hooks/immutability
-    document.documentElement.style.pointerEvents = "none";
-
-    router.replace(buildLocalePath(code), { scroll: false });
+    // Hard navigation so page.tsx re-mounts fresh and the loading screen
+    // runs on every locale switch.
+    const segs = window.location.pathname.split("/");
+    segs[1] = URL_PREFIXES[code] ?? code;
+    window.location.replace(segs.join("/") + window.location.search);
     setOpen(false);
   };
 
-  useEffect(() => {
-    languages.forEach((lang) => {
-      if (lang.code !== locale) {
-        router.prefetch(buildLocalePath(lang.code));
-      }
-    });
-  }, [buildLocalePath, locale, router]);
-
-  // Close on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) {

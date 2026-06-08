@@ -7,28 +7,20 @@ import { gsap } from "gsap";
 import { useLocale, useTranslations } from "next-intl";
 
 interface LoadingScreenProps {
+  progress: number; // 0–100, driven by real section-import progress
   onComplete: () => void;
 }
 
-export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
+export default function LoadingScreen({ progress, onComplete }: LoadingScreenProps) {
   const t = useTranslations("loading");
   const locale = useLocale();
   const isRtlLocale = locale === "ar" || locale === "ckb";
   const taglineRef = useRef<HTMLParagraphElement>(null);
   const logoImgRef = useRef<HTMLDivElement>(null);
-  const barRef = useRef<HTMLDivElement>(null);
-  const [progress, setProgress] = useState(0);
   const [exiting, setExiting] = useState(false);
 
+  // Logo + tagline entry animation — cosmetic, fixed duration
   useEffect(() => {
-    // Plain timer drives completion - guaranteed to fire regardless of GSAP state.
-    // GSAP handles visuals only; this handles the exit trigger.
-    // Timeline: logo(0.8s) + tagline(-=0.3) + bar(1.8s, -=0.5) + hold(0.4s) = 2.65s total.
-    const completionTimer = setTimeout(() => {
-      setExiting(true);
-      setTimeout(onComplete, 700);
-    }, 2700);
-
     const ctx = gsap.context(() => {
       if (logoImgRef.current)
         gsap.set(logoImgRef.current, { opacity: 0, y: 40, scale: 0.82 });
@@ -50,39 +42,29 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
       if (taglineRef.current) {
         tl.to(
           taglineRef.current,
-          {
-            opacity: 0.6,
-            y: 0,
-            duration: 0.45,
-            ease: "power2.out",
-          },
+          { opacity: 0.6, y: 0, duration: 0.45, ease: "power2.out" },
           "-=0.3",
         );
       }
-
-      if (barRef.current) {
-        tl.to(
-          barRef.current,
-          {
-            width: "100%",
-            duration: 1.8,
-            ease: "power2.inOut",
-            onUpdate: function () {
-              setProgress(Math.round(this.progress() * 100));
-            },
-          },
-          "-=0.5",
-        );
-      }
-
-      tl.to({}, { duration: 0.4 }); // hold
     });
 
-    return () => {
-      clearTimeout(completionTimer);
-      ctx.revert();
-    };
-  }, [isRtlLocale, onComplete]);
+    return () => ctx.revert();
+  }, [isRtlLocale]);
+
+  // Exit when real progress reaches 100%
+  useEffect(() => {
+    if (progress < 100) return;
+    const holdTimer = setTimeout(() => {
+      setExiting(true);
+      setTimeout(onComplete, 700);
+    }, 400);
+    return () => clearTimeout(holdTimer);
+  }, [progress, onComplete]);
+
+  const displayProgress = isRtlLocale
+    ? "٪" +
+      String(progress).replace(/[0-9]/g, (d) => "٠١٢٣٤٥٦٧٨٩"[parseInt(d)])
+    : `${progress}%`;
 
   return (
     <AnimatePresence>
@@ -107,7 +89,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
             }}
           />
 
-          {/* Floating ring */}
+          {/* Floating rings */}
           <div
             className='absolute w-64 h-64 rounded-full border border-brand/10 animate-spin-slow'
             style={{ animationDuration: "20s" }}
@@ -121,9 +103,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
           <div className='relative z-10 flex flex-col items-center gap-8 px-8'>
             {/* Logo */}
             <div className='flex flex-col items-center gap-6'>
-              <div
-                ref={logoImgRef}
-                className='flex items-center justify-center'>
+              <div ref={logoImgRef} className='flex items-center justify-center'>
                 <Image
                   src='/images/logo.png'
                   alt='ENTENSY'
@@ -150,10 +130,10 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
                 className='w-full h-0.5 rounded-full overflow-hidden'
                 style={{ background: "var(--border-color)" }}>
                 <div
-                  ref={barRef}
                   className='h-full rounded-full'
                   style={{
-                    width: "0%",
+                    width: `${progress}%`,
+                    transition: "width 0.45s cubic-bezier(0.4,0,0.2,1)",
                     background:
                       "linear-gradient(90deg, #FC002A, #C9A84C, #FC002A)",
                     backgroundSize: "200% 100%",
@@ -168,13 +148,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
                   color: "var(--text-muted)",
                   unicodeBidi: "bidi-override",
                 }}>
-                {isRtlLocale
-                  ? "٪" +
-                    String(progress).replace(
-                      /[0-9]/g,
-                      (d) => "٠١٢٣٤٥٦٧٨٩"[parseInt(d)],
-                    )
-                  : `${progress}%`}
+                {displayProgress}
               </span>
             </div>
           </div>

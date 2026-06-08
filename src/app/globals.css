@@ -652,9 +652,12 @@ body {
   overflow: hidden;
 }
 
-/* Lock scroll whenever the loading screen is in the DOM — no JS timing dependency */
+/* Lock scroll and block pointer events whenever the loading screen is in the DOM.
+   Pure CSS — no inline script or JS timing needed. Does not affect 404 pages because
+   they never render .loading-screen. */
 html:has(.loading-screen) {
   overflow: hidden;
+  pointer-events: none;
 }
 
 /* ============================================================

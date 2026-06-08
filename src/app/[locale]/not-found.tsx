@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useTranslations, useLocale } from "next-intl";
@@ -7,11 +8,22 @@ import Image from "next/image";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import AnimatedButton from "@/components/ui/AnimatedButton";
 
+// Mirrors localePrefix.prefixes in src/i18n/routing.ts
+const URL_PREFIXES: Record<string, string> = { ckb: "ku" };
+
 export default function NotFound() {
   const t = useTranslations("notFound");
   const locale = useLocale();
   const isRtl = locale === "ar" || locale === "ckb";
   const router = useRouter();
+  const homeHref = `/${URL_PREFIXES[locale] ?? locale}`;
+
+  // The root layout's CSS locks scroll/pointer-events while .loading-screen is in the DOM.
+  // This page has no loading screen, so clear any residual inline styles just in case.
+  useEffect(() => {
+    document.documentElement.style.overflow = "";
+    document.documentElement.style.pointerEvents = "";
+  }, []);
 
   return (
     <div
@@ -50,7 +62,7 @@ export default function NotFound() {
 
         {/* Logo */}
         <motion.a
-          href={`/${locale}`}
+          href={homeHref}
           initial={{ opacity: 0, y: -16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
@@ -132,7 +144,7 @@ export default function NotFound() {
             size="lg"
             icon={isRtl ? <ArrowRight size={18} /> : <ArrowLeft size={18} />}
             iconPosition="left"
-            onClick={() => { sessionStorage.removeItem("entensy:loaded-locale"); router.push(`/${locale}`); }}
+            onClick={() => router.push(homeHref)}
           >
             {t("go_home")}
           </AnimatedButton>

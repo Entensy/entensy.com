@@ -160,6 +160,7 @@ export default function ContactSection() {
   const [ctaCardHovered, setCtaCardHovered] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [turnstileResetKey, setTurnstileResetKey] = useState(0);
+  const [formTouched, setFormTouched] = useState(false);
   const statusTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const formRef = useRef<HTMLDivElement>(null);
   const formReveal = useScrollReveal(formRef as { current: Element | null });
@@ -424,6 +425,7 @@ export default function ContactSection() {
             <form
               // eslint-disable-next-line react-hooks/refs
               onSubmit={handleSubmit(onSubmit)}
+              onFocus={() => setFormTouched(true)}
               className='flex flex-col gap-5'
               noValidate>
               {/* Name */}
@@ -511,8 +513,9 @@ export default function ContactSection() {
                 )}
               </div>
 
-              {/* Turnstile CAPTCHA - only rendered when site key is configured */}
-              {process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && (
+              {/* Turnstile CAPTCHA - lazy-mounted on first form focus so Cloudflare's
+                  script is not fetched for visitors who never interact with the form */}
+              {formTouched && process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && (
                 <Turnstile
                   key={turnstileResetKey}
                   siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
