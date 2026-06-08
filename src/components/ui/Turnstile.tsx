@@ -14,7 +14,7 @@ declare global {
           "expired-callback"?: () => void;
           "error-callback"?: () => void;
           theme?: "light" | "dark" | "auto";
-          size?: "normal" | "compact" | "invisible";
+          size?: "normal" | "compact" | "flexible";
         },
       ) => string;
       remove: (widgetId: string) => void;
@@ -29,7 +29,7 @@ interface TurnstileProps {
   onExpire?: () => void;
   onScriptError?: () => void;
   theme?: "light" | "dark" | "auto";
-  size?: "normal" | "compact" | "invisible";
+  size?: "normal" | "compact" | "flexible";
 }
 
 export default function Turnstile({
@@ -38,7 +38,7 @@ export default function Turnstile({
   onExpire,
   onScriptError,
   theme = "auto",
-  size = "invisible",
+  size = "compact",
 }: TurnstileProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);
@@ -71,7 +71,6 @@ export default function Turnstile({
     if (window.turnstile) {
       render();
     } else {
-      // Lazy-load the Turnstile script only when the form is in view
       const script = document.createElement("script");
       script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
       script.async = true;
@@ -81,7 +80,6 @@ export default function Turnstile({
       document.head.appendChild(script);
     }
 
-    // Always clean up - whether the widget was rendered immediately or after script load
     return () => {
       if (widgetIdRef.current && window.turnstile) {
         window.turnstile.remove(widgetIdRef.current);
@@ -90,14 +88,6 @@ export default function Turnstile({
     };
   }, [siteKey, theme, size]);
 
-  // Invisible mode renders no visible UI - keep in DOM so Cloudflare can attach its iframe
-  return (
-    <div
-      ref={containerRef}
-      aria-hidden='true'
-      style={
-        size === "invisible" ? { display: "none" } : { marginTop: "0.25rem" }
-      }
-    />
-  );
+  // Always hidden — the challenge runs in a background iframe, no visible UI needed
+  return <div ref={containerRef} aria-hidden="true" style={{ display: "none" }} />;
 }
