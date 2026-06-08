@@ -46,9 +46,14 @@ export const stackCategories: StackCategory[] = [
     labelKey: "stacks.categories.languages",
     color: "#3178C6",
     items: [
-      { name: "C#", icon: "DeviconCsharp", color: "#9B59D7", bgColor: "rgba(155,89,215,0.1)" },
-      { name: "Java", icon: "FaJava", color: "#ED8B00", bgColor: "rgba(237,139,0,0.1)" },
+      { name: "PHP", icon: "SiPhp", color: "#777BB4", bgColor: "rgba(119,123,180,0.1)" },
       { name: "Python", icon: "SiPython", color: "#3776AB", bgColor: "rgba(55,118,171,0.1)" },
+      { name: "JavaScript", icon: "SiJavascript", color: "#F7DF1E", bgColor: "rgba(247,223,30,0.1)" },
+      { name: "Go", icon: "SiGo", color: "#00ACD7", bgColor: "rgba(0,172,215,0.1)" },
+      { name: "C#", icon: "DeviconCsharp", color: "#9B59D7", bgColor: "rgba(155,89,215,0.1)" },
+      { name: "Dart", icon: "SiDart", color: "#FF5D01", bgColor: "rgba(255,93,1,0.1)" },
+      { name: "TypeScript", icon: "SiTypescript", color: "#3178C6", bgColor: "rgba(49,120,198,0.1)" },
+      { name: "Swift", icon: "SiSwift", color: "#F05138", bgColor: "rgba(240,81,56,0.1)" },
     ],
   },
   {
@@ -56,8 +61,6 @@ export const stackCategories: StackCategory[] = [
     labelKey: "stacks.categories.frontend",
     color: "#61DAFB",
     items: [
-      { name: "JavaScript", icon: "SiJavascript", color: "#F7DF1E", bgColor: "rgba(247,223,30,0.1)" },
-      { name: "TypeScript", icon: "SiTypescript", color: "#3178C6", bgColor: "rgba(49,120,198,0.1)" },
       // Frameworks & Libraries
       { name: "React", icon: "SiReact", color: "#61DAFB", bgColor: "rgba(97,218,251,0.1)" },
       { name: "Next.js", icon: "SiNextdotjs", color: "#FFFFFF", bgColor: "rgba(255,255,255,0.08)" },
@@ -104,16 +107,12 @@ export const stackCategories: StackCategory[] = [
       { name: "NestJS", icon: "SiNestjs", color: "#E0234E", bgColor: "rgba(224,35,78,0.1)" },
 
       // PHP Ecosystem
-      { name: "PHP", icon: "SiPhp", color: "#777BB4", bgColor: "rgba(119,123,180,0.1)" },
       { name: "Laravel", icon: "SiLaravel", color: "#FF2D20", bgColor: "rgba(255,45,32,0.1)" },
 
       // Python Ecosystem
       { name: "Django", icon: "SiDjango", color: "#44B78B", bgColor: "rgba(68,183,139,0.1)" },
       { name: "FastAPI", icon: "SiFastapi", color: "#009688", bgColor: "rgba(0,150,136,0.1)" },
       { name: "Flask", icon: "SiFlask", color: "#9E9E9E", bgColor: "rgba(158,158,158,0.1)" },
-
-      // Go Ecosystem
-      { name: "Go", icon: "SiGo", color: "#00ACD7", bgColor: "rgba(0,172,215,0.1)" },
 
       // APIs & Data Layer
       { name: "REST APIs", icon: "SiPostman", color: "#FF6C37", bgColor: "rgba(255,108,55,0.1)" },
@@ -144,7 +143,8 @@ export const stackCategories: StackCategory[] = [
       { name: "Supabase", icon: "SiSupabase", color: "#3ECF8E", bgColor: "rgba(62,207,142,0.1)" },
 
       // Search / Indexing
-      { name: "Elasticsearch", icon: "SiElasticsearch", color: "#FEC514", bgColor: "rgba(254,197,20,0.1)" },
+      { name: "ElasticSearch", icon: "SiElasticsearch", color: "#FEC514", bgColor: "rgba(254,197,20,0.1)" },
+      { name: "OpenSearch", icon: "SiElasticsearch", color: "#FEC514", bgColor: "rgba(254,197,20,0.1)" },
     ],
   },
   {
@@ -159,9 +159,6 @@ export const stackCategories: StackCategory[] = [
 
       // Tooling / Ecosystem
       { name: "Expo", icon: "SiExpo", color: "#9B9B9B", bgColor: "rgba(155,155,155,0.1)" },
-
-      // Native Development
-      { name: "Swift", icon: "SiSwift", color: "#F05138", bgColor: "rgba(240,81,56,0.1)" },
     ],
   },
   {
