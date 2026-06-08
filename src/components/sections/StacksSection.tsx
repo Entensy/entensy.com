@@ -292,7 +292,7 @@ export default function StacksSection() {
           initial={false}
           animate={{ height: badgesHeight ?? "auto" }}
           transition={{ type: "spring", stiffness: 220, damping: 28, mass: 0.9 }}
-          className='overflow-hidden'>
+          className=''>
           <div ref={badgesContentRef}>
             <motion.div
               key={activeCategory}
