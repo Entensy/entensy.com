@@ -147,9 +147,12 @@ export default function StacksSection() {
   const [badgesHeight, setBadgesHeight] = useState<number | undefined>(undefined);
 
   useLayoutEffect(() => {
-    if (badgesContentRef.current) {
-      setBadgesHeight(badgesContentRef.current.offsetHeight);
-    }
+    const el = badgesContentRef.current;
+    if (!el) return;
+    setBadgesHeight(el.offsetHeight);
+    const ro = new ResizeObserver(() => setBadgesHeight(el.offsetHeight));
+    ro.observe(el);
+    return () => ro.disconnect();
   }, [activeCategory]);
 
   const badgeBaseColor = isDark
