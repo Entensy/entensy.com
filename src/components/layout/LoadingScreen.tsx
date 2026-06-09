@@ -18,6 +18,9 @@ export default function LoadingScreen({ progress, onComplete }: LoadingScreenPro
   const taglineRef = useRef<HTMLParagraphElement>(null);
   const logoImgRef = useRef<HTMLDivElement>(null);
   const [exiting, setExiting] = useState(false);
+  const tweenTarget = useRef({ value: 0 });
+  const barRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLSpanElement>(null);
 
   // Logo + tagline entry animation — cosmetic, fixed duration
   useEffect(() => {
@@ -51,6 +54,26 @@ export default function LoadingScreen({ progress, onComplete }: LoadingScreenPro
     return () => ctx.revert();
   }, [isRtlLocale]);
 
+  // Drive both bar width and number from the same tween — direct DOM, no React batching
+  useEffect(() => {
+    const tween = gsap.to(tweenTarget.current, {
+      value: progress,
+      duration: 0.45,
+      ease: "power1.inOut",
+      overwrite: true,
+      onUpdate: () => {
+        const v = tweenTarget.current.value;
+        const rounded = Math.round(v);
+        if (barRef.current) barRef.current.style.width = `${v}%`;
+        if (textRef.current)
+          textRef.current.textContent = isRtlLocale
+            ? "٪" + String(rounded).replace(/[0-9]/g, (d) => "٠١٢٣٤٥٦٧٨٩"[parseInt(d)])
+            : `${rounded}%`;
+      },
+    });
+    return () => tween.kill();
+  }, [progress, isRtlLocale]);
+
   // Exit when real progress reaches 100%
   useEffect(() => {
     if (progress < 100) return;
@@ -60,11 +83,6 @@ export default function LoadingScreen({ progress, onComplete }: LoadingScreenPro
     }, 400);
     return () => clearTimeout(holdTimer);
   }, [progress, onComplete]);
-
-  const displayProgress = isRtlLocale
-    ? "٪" +
-      String(progress).replace(/[0-9]/g, (d) => "٠١٢٣٤٥٦٧٨٩"[parseInt(d)])
-    : `${progress}%`;
 
   return (
     <AnimatePresence>
@@ -130,10 +148,10 @@ export default function LoadingScreen({ progress, onComplete }: LoadingScreenPro
                 className='w-full h-0.5 rounded-full overflow-hidden'
                 style={{ background: "var(--border-color)" }}>
                 <div
+                  ref={barRef}
                   className='h-full rounded-full'
                   style={{
-                    width: `${progress}%`,
-                    transition: "width 0.45s cubic-bezier(0.4,0,0.2,1)",
+                    width: "0%",
                     background:
                       "linear-gradient(90deg, #FC002A, #C9A84C, #FC002A)",
                     backgroundSize: "200% 100%",
@@ -142,13 +160,14 @@ export default function LoadingScreen({ progress, onComplete }: LoadingScreenPro
                 />
               </div>
               <span
+                ref={textRef}
                 className='text-xs font-medium tabular-nums'
                 dir='ltr'
                 style={{
                   color: "var(--text-muted)",
                   unicodeBidi: "bidi-override",
                 }}>
-                {displayProgress}
+                0%
               </span>
             </div>
           </div>
