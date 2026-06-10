@@ -459,8 +459,7 @@ export default function AboutSection() {
                 width: "50vw",
                 height: "50vw",
                 background:
-                  "radial-gradient(circle, rgba(244,63,94,0.09) 0%, transparent 65%)",
-                filter: "blur(50px)",
+                  "radial-gradient(circle, rgba(244,63,94,0.065) 0%, rgba(244,63,94,0.022) 50%, transparent 75%)",
                 borderRadius: "50%",
                 "--dur": "14s",
                 "--delay": "0s",
@@ -476,8 +475,7 @@ export default function AboutSection() {
                 width: "45vw",
                 height: "45vw",
                 background:
-                  "radial-gradient(circle, rgba(124,58,237,0.09) 0%, transparent 65%)",
-                filter: "blur(50px)",
+                  "radial-gradient(circle, rgba(124,58,237,0.065) 0%, rgba(124,58,237,0.022) 50%, transparent 75%)",
                 borderRadius: "50%",
                 "--dur": "16s",
                 "--delay": "2s",
@@ -493,8 +491,7 @@ export default function AboutSection() {
                 width: "35vw",
                 height: "35vw",
                 background:
-                  "radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 65%)",
-                filter: "blur(60px)",
+                  "radial-gradient(circle, rgba(201,168,76,0.042) 0%, rgba(201,168,76,0.015) 50%, transparent 80%)",
                 borderRadius: "50%",
                 "--dur": "10s",
                 "--delay": "4s",

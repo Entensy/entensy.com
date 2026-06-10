@@ -37,7 +37,7 @@ const navLinks = [
   { key: "contact", href: "#contact" },
 ];
 
-const SPRING = { type: "spring", stiffness: 220, damping: 30 } as const;
+const TRANSITION = { type: "tween", duration: 0.5, ease: [0.22, 1, 0.36, 1] } as const;
 
 export default function Navbar() {
   const t = useTranslations("nav");
@@ -121,19 +121,19 @@ export default function Navbar() {
         {/* Outer spring-animated wrapper — drives the floating gap */}
         <motion.div
           className="pointer-events-auto flex justify-center"
-          style={{
+          animate={{
+            paddingTop: scrolled ? "1.25rem" : "0rem",
             paddingLeft: scrolled ? "1.5rem" : "0rem",
             paddingRight: scrolled ? "1.5rem" : "0rem",
           }}
-          animate={{ paddingTop: scrolled ? "1.25rem" : "0rem" }}
-          transition={SPRING}
+          transition={TRANSITION}
         >
-          {/* Inner nav — spring-animates shape only */}
+          {/* Inner nav */}
           <motion.nav
             className="navbar-pill-bg w-full mx-auto relative"
-            style={{ minWidth: 0, willChange: "transform" }}
+            style={{ minWidth: 0 }}
             onClick={() => mobileOpen && setTimeout(() => setMobileOpen(false), 120)}
-            initial={{ maxWidth: 1280, minWidth: 0, borderRadius: 14, paddingTop: "1rem", paddingBottom: "1rem", paddingLeft: "1.5rem", paddingRight: "1.5rem" }}
+            initial={{ maxWidth: 1280, borderRadius: 14, paddingTop: "1rem", paddingBottom: "1rem", paddingLeft: "1.5rem", paddingRight: "1.5rem" }}
             animate={{
               maxWidth: scrolled ? (isRtlLocale ? 1260 : 1160) : 1280,
               paddingTop: scrolled ? "0.65rem" : "1rem",
@@ -142,7 +142,7 @@ export default function Navbar() {
               paddingRight: "1.5rem",
               borderRadius: scrolled ? 9999 : 14,
             }}
-            transition={SPRING}
+            transition={TRANSITION}
           >
             {/* Glass layer — all visual props here, faded as one via Framer Motion opacity */}
             <motion.div
@@ -210,7 +210,7 @@ export default function Navbar() {
                         <motion.span
                           layoutId="nav-indicator"
                           className="absolute inset-0 rounded-full bg-brand/10"
-                          transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                          transition={TRANSITION}
                         />
                       )}
                     </button>
@@ -262,15 +262,14 @@ export default function Navbar() {
       </header>
 
       {/* Mobile dropdown */}
-      <div
+      <motion.div
         className="fixed z-8002 pointer-events-none"
-        style={{
-          top: scrolled ? "calc(1.25rem + 3.55rem + 0.5rem)" : "calc(4.25rem + 0.5rem)",
-          left: scrolled ? "50%" : "clamp(0.75rem, 4vw, 2rem)",
-          right: scrolled ? "auto" : "clamp(0.75rem, 4vw, 2rem)",
-          width: scrolled ? "min(64rem, calc(100vw - 2rem))" : undefined,
-          transform: scrolled ? "translateX(-50%)" : undefined,
+        animate={{
+          top: scrolled ? "5.3rem" : "4.75rem",
+          left: scrolled ? "1.5rem" : "0.75rem",
+          right: scrolled ? "1.5rem" : "0.75rem",
         }}
+        transition={TRANSITION}
       >
         <AnimatePresence>
           {mobileOpen && (
@@ -326,7 +325,7 @@ export default function Navbar() {
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
+      </motion.div>
     </div>
   );
 }

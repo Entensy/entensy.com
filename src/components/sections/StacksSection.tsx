@@ -174,7 +174,7 @@ export default function StacksSection() {
       id='stacks'
       ref={sectionRef}
       className='section-wrapper stacks-section-wrapper relative'
-      style={{ background: "var(--bg-secondary)" }}
+      style={{ background: "var(--bg-secondary)", "--section-fade-bg": "var(--bg-secondary)" } as React.CSSProperties}
       dir={isRtlLocale ? "rtl" : "ltr"}>
       {/* Radial gradient pulse at section center - CSS-driven */}
       <div
@@ -257,7 +257,7 @@ export default function StacksSection() {
                     : "0 0 0px rgba(0,0,0,0)",
                 }}
                 viewport={{
-                  once: false,
+                  once: true,
                   margin: "-15% 0px -5% 0px",
                   amount: 0.05,
                 }}

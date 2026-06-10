@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Points, PointMaterial } from "@react-three/drei";
 import * as THREE from "three";
 
@@ -61,6 +61,21 @@ function GlobeWireframe() {
       <meshBasicMaterial color='#FC002A' wireframe transparent opacity={0.04} />
     </mesh>
   );
+}
+
+// Pulls the camera back on narrow (portrait) viewports so the full globe is visible.
+// fov=45 vertical; globe radius=1.4; required z = (r * margin) / (tan(fov/2) * aspect)
+function ResponsiveCamera() {
+  const { camera, size } = useThree();
+
+  useEffect(() => {
+    const aspect = size.width / size.height;
+    const requiredZ = (1.4 * 1.2) / (Math.tan(((45 * Math.PI) / 180) / 2) * aspect);
+    (camera as THREE.PerspectiveCamera).position.z = Math.max(4, requiredZ);
+    camera.updateProjectionMatrix();
+  }, [camera, size]);
+
+  return null;
 }
 
 function FloatingIcosahedron() {
@@ -140,6 +155,7 @@ export default function GlobeBackground({
             gl.getContext()?.getExtension("WEBGL_lose_context")?.loseContext();
           };
         }}>
+        <ResponsiveCamera />
         <ambientLight intensity={0.5} />
         <GlobeWireframe />
         <GlobePoints />

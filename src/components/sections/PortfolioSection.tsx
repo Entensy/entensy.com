@@ -338,12 +338,7 @@ export default function PortfolioSection() {
     return () => observer.disconnect();
   }, [emblaApi]);
 
-  // Triple the projects so Embla has enough slides for seamless looping
-  const allProjects = [
-    ...portfolioProjects,
-    ...portfolioProjects,
-    ...portfolioProjects,
-  ];
+  const allProjects = portfolioProjects;
 
   return (
     <>
@@ -368,8 +363,7 @@ export default function PortfolioSection() {
                 width: "50vw",
                 height: "50vw",
                 background:
-                  "radial-gradient(circle, rgba(139,92,246,0.10) 0%, transparent 65%)",
-                filter: "blur(40px)",
+                  "radial-gradient(circle, rgba(139,92,246,0.072) 0%, rgba(139,92,246,0.025) 50%, transparent 72%)",
                 borderRadius: "50%",
                 "--dur": "20s",
                 "--delay": "0s",
@@ -385,8 +379,7 @@ export default function PortfolioSection() {
                 width: "45vw",
                 height: "45vw",
                 background:
-                  "radial-gradient(circle, rgba(244,63,94,0.09) 0%, transparent 65%)",
-                filter: "blur(40px)",
+                  "radial-gradient(circle, rgba(244,63,94,0.065) 0%, rgba(244,63,94,0.022) 50%, transparent 72%)",
                 borderRadius: "50%",
                 "--dur": "17s",
                 "--delay": "3s",
@@ -402,8 +395,7 @@ export default function PortfolioSection() {
                 width: "40vw",
                 height: "40vw",
                 background:
-                  "radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 65%)",
-                filter: "blur(50px)",
+                  "radial-gradient(circle, rgba(201,168,76,0.042) 0%, rgba(201,168,76,0.015) 50%, transparent 78%)",
                 borderRadius: "50%",
                 "--dur": "13s",
                 "--delay": "6s",

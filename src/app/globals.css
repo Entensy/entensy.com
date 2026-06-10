@@ -181,9 +181,8 @@
   --border-hover: rgba(252, 0, 42, 0.4);
   --glass-bg: rgba(255, 255, 255, 0.03);
   --glass-border: rgba(255, 255, 255, 0.07);
-  --scrollbar-track: #0d0a1e;
-  --scrollbar-thumb: rgba(100, 80, 180, 0.32);
-  --scrollbar-thumb-hover: rgba(100, 80, 180, 0.52);
+  --scrollbar-thumb: rgba(100, 80, 180, 0.30);
+  --scrollbar-thumb-hover: rgba(100, 80, 180, 0.40);
   --section-orb-opacity: 0.07;
   --card-surface: rgba(13, 10, 30, 0.7);
   --capabilities-bg: rgba(13, 10, 30, 0.6);
@@ -204,9 +203,8 @@
   --border-hover: rgba(252, 0, 42, 0.45);
   --glass-bg: rgba(255, 255, 255, 0.75);
   --glass-border: rgba(13, 10, 30, 0.1);
-  --scrollbar-track: #ecedf4;
-  --scrollbar-thumb: rgba(100, 80, 180, 0.28);
-  --scrollbar-thumb-hover: rgba(100, 80, 180, 0.48);
+  --scrollbar-thumb: rgba(100, 80, 180, 0.30);
+  --scrollbar-thumb-hover: rgba(100, 80, 180, 0.40);
   --section-orb-opacity: 0.13;
   --card-surface: rgba(255, 255, 255, 0.92);
   --capabilities-bg: transparent;
@@ -235,18 +233,16 @@
 /* backdrop-filter applied inline in JSX on .svc-card / .sol-card */
 
 .portfolio-card-body {
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
   background: rgba(13, 10, 30, 0.72) !important;
   border: 1px solid rgba(255, 255, 255, 0.07);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .soc-card {
-  backdrop-filter: blur(14px) !important;
-  -webkit-backdrop-filter: blur(14px) !important;
-  background: rgba(255, 255, 255, 0.05) !important;
-  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  /* backdrop-filter applied inline in JSX — CSS transform on the parent
+     motion.div creates a new stacking context that breaks CSS backdrop-filter */
 }
 
 /* ── Light mode card backgrounds — frosted, not too white ── */
@@ -258,7 +254,6 @@
 }
 
 :root:not(.dark) .soc-card {
-  background: rgba(255, 255, 255, 0.52) !important;
   border-color: rgba(13, 10, 30, 0.08) !important;
 }
 
@@ -333,8 +328,7 @@
 
 /* Light mode: socials card */
 :root:not(.dark) .soc-card {
-  backdrop-filter: blur(16px) !important;
-  background: rgba(255, 255, 255, 0.82) !important;
+  backdrop-filter: blur(2px) !important;
 }
 
 /* Light mode: navbar text colors */
@@ -465,7 +459,7 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--scrollbar-track);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -480,7 +474,7 @@ body {
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  scrollbar-color: var(--scrollbar-thumb) transparent;
 }
 
 /* ============================================================
@@ -488,8 +482,8 @@ body {
    ============================================================ */
 .glass-card {
   background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 1rem;
   box-shadow:
@@ -530,22 +524,27 @@ body {
   padding-right: clamp(1.25rem, 5vw, 5rem);
 }
 
-/* Section vertical fade — same left/right mask technique as the portfolio carousel */
-.section-wrapper {
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    transparent 0%,
-    black 5rem,
-    black calc(100% - 5rem),
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    to bottom,
-    transparent 0%,
-    black 5rem,
-    black calc(100% - 5rem),
-    transparent 100%
-  );
+/* Section vertical fade — gradient overlays instead of mask-image.
+   mask-image on a section with animated children forces the compositor to
+   flatten all promoted layers through the mask every frame. Pseudo-element
+   overlays achieve the same visual with zero compositing overhead. */
+.section-wrapper::before,
+.section-wrapper::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 5rem;
+  pointer-events: none;
+  z-index: 20;
+}
+.section-wrapper::before {
+  top: 0;
+  background: linear-gradient(to bottom, var(--section-fade-bg, var(--bg-primary)) 0%, transparent 100%);
+}
+.section-wrapper::after {
+  bottom: 0;
+  background: linear-gradient(to top, var(--section-fade-bg, var(--bg-primary)) 0%, transparent 100%);
 }
 
 .section-inner {
@@ -645,6 +644,7 @@ body {
   position: fixed;
   inset: 0;
   z-index: 9999;
+  pointer-events: auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -652,12 +652,9 @@ body {
   overflow: hidden;
 }
 
-/* Lock scroll and block pointer events whenever the loading screen is in the DOM.
-   Pure CSS — no inline script or JS timing needed. Does not affect 404 pages because
-   they never render .loading-screen. */
+/* Lock scroll whenever the loading screen is in the DOM. */
 html:has(.loading-screen) {
   overflow: hidden;
-  pointer-events: none;
 }
 
 /* ============================================================
@@ -788,8 +785,8 @@ html:has(.loading-screen) {
   font-weight: 600;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
   position: relative;
   overflow: hidden;
   /* Color handled by Framer whileHover — no CSS color transition to avoid conflicts */
@@ -1048,16 +1045,19 @@ html:has(.loading-screen) {
    interactive children (e.g. Portfolio stack badges & buttons).
    ============================================================ */
 /* .tilt-card — flat stacking context, children are NOT in 3D space (intentional) */
-.tilt-card-inner {
+.tilt-card:hover .tilt-card-inner {
   will-change: transform;
 }
 
 /* ============================================================
    PERFORMANCE: will-change HINTS
    ============================================================ */
-.stack-badge {
+.stack-badge:hover {
   will-change: transform;
 }
+
+/* Drift/pulse elements always animate — pre-promote to compositor layer so
+   they run on the GPU and don't block the main thread or slow VT snapshots. */
 .bg-drift-y,
 .bg-drift-xy,
 .bg-scale-pulse {
@@ -1076,7 +1076,7 @@ html:has(.loading-screen) {
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.09);
   color: rgba(200, 196, 240, 0.55);
-  transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.15s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
 }
@@ -1086,11 +1086,12 @@ html:has(.loading-screen) {
     border-color: rgba(255, 255, 255, 0.18);
     color: rgba(230, 226, 255, 0.92);
     transform: scale(1.05);
+    transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.15s cubic-bezier(0.22, 1, 0.36, 1);
   }
 }
 .navbar-icon-btn:active {
   transform: scale(0.94);
-  transition-duration: 0.08s;
+  transition: background 0.08s, border-color 0.08s, color 0.08s, transform 0.08s;
 }
 :root:not(.dark) .navbar-icon-btn {
   background: rgba(13, 10, 30, 0.06);
@@ -1140,10 +1141,10 @@ html:has(.loading-screen) {
   transition-duration: 0.08s;
 }
 :root:not(.dark) .theme-toggle-btn {
-  background: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.45);
 }
 :root:not(.dark) .theme-toggle-btn:hover {
-  background: rgba(255, 255, 255, 0.9) !important;
+  background: rgba(255, 255, 255, 0.60) !important;
 }
 
 html.theme-switching *,
@@ -1152,6 +1153,7 @@ html.theme-switching *::after {
   transition: none !important;
   animation-play-state: paused !important;
 }
+
 
 /* ============================================================
    SCROLL VIGNETTE — fades section content at viewport edges
