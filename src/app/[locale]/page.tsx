@@ -40,7 +40,7 @@ export default function HomePage() {
   // visibility state, unlike requestAnimationFrame which is throttled when backgrounded),
   // then jump to 100% once sections are loaded and the minimum time has passed.
   useEffect(() => {
-    const FILL_MS = 1800;
+    const FILL_MS = 1000;
     const start = Date.now();
     let canceled = false;
     let timeoutId: ReturnType<typeof setTimeout>;

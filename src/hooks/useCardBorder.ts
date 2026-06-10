@@ -38,8 +38,11 @@ const SPOTLIGHT_SPEED_IN = 1200; // px/s - snappy approach to cursor/tap point
 
 export function useCardBorder(shellRef: React.RefObject<HTMLElement | null>) {
   const isHoveringRef = useRef(false);
+  const isVisibleRef = useRef(false);
   const lastTouchRef = useRef(0);
   const returnTweenRef = useRef<gsap.core.Tween | null>(null);
+  const wRef = useRef(0);
+  const hRef = useRef(0);
 
   useEffect(() => {
     const shell = shellRef.current;
@@ -49,10 +52,27 @@ export function useCardBorder(shellRef: React.RefObject<HTMLElement | null>) {
 
     acquireOrbit();
 
+    // Cache dimensions — reading offsetWidth/offsetHeight every tick forces layout
+    wRef.current = shell.offsetWidth;
+    hRef.current = shell.offsetHeight;
+    const ro = new ResizeObserver(() => {
+      wRef.current = shell.offsetWidth;
+      hRef.current = shell.offsetHeight;
+    });
+    ro.observe(shell);
+
+    // Skip tick when card is off-screen — 100px buffer so ring is already
+    // in position when the card scrolls into view
+    const vio = new IntersectionObserver(
+      ([entry]) => { isVisibleRef.current = entry.isIntersecting; },
+      { rootMargin: "100px 0px 100px 0px", threshold: 0 },
+    );
+    vio.observe(shell);
+
     const tick = () => {
-      if (isHoveringRef.current) return;
-      const W = shell.offsetWidth;
-      const H = shell.offsetHeight;
+      if (!isVisibleRef.current || isHoveringRef.current) return;
+      const W = wRef.current;
+      const H = hRef.current;
       const perim = 2 * (W + H);
       const pos = (sharedProxy.t % 1) * perim;
       let mx: number, my: number;
@@ -72,15 +92,17 @@ export function useCardBorder(shellRef: React.RefObject<HTMLElement | null>) {
     gsap.ticker.add(tick);
 
     return () => {
+      vio.disconnect();
+      ro.disconnect();
       gsap.ticker.remove(tick);
       releaseOrbit();
     };
   }, [shellRef]);
 
   // Reads the current orbit position from sharedProxy so we can animate to/from it.
-  const getOrbitPos = useCallback((shell: HTMLElement) => {
-    const W = shell.offsetWidth;
-    const H = shell.offsetHeight;
+  const getOrbitPos = useCallback((_shell: HTMLElement) => {
+    const W = wRef.current;
+    const H = hRef.current;
     const perim = 2 * (W + H);
     const pos = (sharedProxy.t % 1) * perim;
     if (pos < W) return { mx: pos, my: 0 };

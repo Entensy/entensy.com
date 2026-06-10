@@ -207,12 +207,13 @@ export default function HomeSection() {
                       {m ? (
                         <>
                           {m[2] && <span>{m[2]}</span>}
-                          <span
-                            style={{
-                              unicodeBidi: "bidi-override",
-                              direction: "ltr",
-                            }}>
-                            {m[1]}
+                          <span className='inline-flex'>
+                            {m[1].endsWith("+") && <span>+</span>}
+                            <span>
+                              {m[1].endsWith("+")
+                                ? m[1].slice(0, -1)
+                                : m[1]}
+                            </span>
                           </span>
                         </>
                       ) : (
@@ -351,17 +352,18 @@ export default function HomeSection() {
           transition={{ delay: 1.4, duration: 0.6 }}
           className='flex flex-wrap items-center justify-center gap-x-6 gap-y-4 md:gap-x-12 pt-2'>
           {[
-            { value: isRtlLocale ? "٥٠+" : "50+", label: t("stats.projects") },
-            { value: isRtlLocale ? "٥+" : "5+", label: t("stats.years") },
-            { value: isRtlLocale ? "١٠+" : "10+", label: t("stats.services") },
-            { value: isRtlLocale ? "٣" : "3", label: t("stats.languages") },
+            { digits: isRtlLocale ? "٥٠" : "50", hasPlus: true, label: t("stats.projects") },
+            { digits: isRtlLocale ? "٥" : "5", hasPlus: true, label: t("stats.years") },
+            { digits: isRtlLocale ? "١٠" : "10", hasPlus: true, label: t("stats.services") },
+            { digits: isRtlLocale ? "٣" : "3", hasPlus: false, label: t("stats.languages") },
           ].map((stat, i) => (
             <div key={i} className='flex flex-col items-center gap-1'>
               <span
-                className='text-2xl md:text-3xl font-black'
-                dir='ltr'
-                style={{ color: "#FC002A", unicodeBidi: "bidi-override" }}>
-                {stat.value}
+                className='text-2xl md:text-3xl font-black inline-flex'
+                style={{ color: "#FC002A", direction: "ltr" }}>
+                {isRtlLocale && stat.hasPlus && <span>+</span>}
+                <span>{stat.digits}</span>
+                {!isRtlLocale && stat.hasPlus && <span>+</span>}
               </span>
               <span
                 className='text-xs font-medium tracking-wide'

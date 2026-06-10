@@ -113,10 +113,7 @@ function ServiceCard({
       initial='below'
       animate={cardState}
       className={`col-span-1 h-full ${centeringClass}`}
-      style={{
-        backdropFilter: "blur(4px) saturate(120%)",
-        WebkitBackdropFilter: "blur(4px) saturate(120%)",
-      }}
+      style={{ backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)" }}
       whileTap={{ scale: 0.97 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}>
       <TiltCard tiltMaxAngle={isWide ? 2 : 10}>
@@ -294,8 +291,7 @@ export default function ServicesSection() {
                 width: "50vw",
                 height: "50vw",
                 background:
-                  "radial-gradient(circle, rgba(244,63,94,0.09) 0%, transparent 65%)",
-                filter: "blur(50px)",
+                  "radial-gradient(circle, rgba(244,63,94,0.065) 0%, rgba(244,63,94,0.022) 50%, transparent 75%)",
                 borderRadius: "50%",
                 "--dur": "20s",
                 "--delay": "0s",
@@ -311,8 +307,7 @@ export default function ServicesSection() {
                 width: "44vw",
                 height: "44vw",
                 background:
-                  "radial-gradient(circle, rgba(124,58,237,0.09) 0%, transparent 65%)",
-                filter: "blur(50px)",
+                  "radial-gradient(circle, rgba(124,58,237,0.065) 0%, rgba(124,58,237,0.022) 50%, transparent 75%)",
                 borderRadius: "50%",
                 "--dur": "17s",
                 "--delay": "3s",
@@ -328,8 +323,7 @@ export default function ServicesSection() {
                 width: "38vw",
                 height: "38vw",
                 background:
-                  "radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 65%)",
-                filter: "blur(60px)",
+                  "radial-gradient(circle, rgba(201,168,76,0.042) 0%, rgba(201,168,76,0.015) 50%, transparent 80%)",
                 borderRadius: "50%",
                 "--dur": "13s",
                 "--delay": "6s",

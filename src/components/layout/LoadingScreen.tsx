@@ -71,7 +71,7 @@ export default function LoadingScreen({ progress, onComplete }: LoadingScreenPro
             : `${rounded}%`;
       },
     });
-    return () => tween.kill();
+    return () => { tween.kill(); };
   }, [progress, isRtlLocale]);
 
   // Exit when real progress reaches 100%
@@ -167,7 +167,7 @@ export default function LoadingScreen({ progress, onComplete }: LoadingScreenPro
                   color: "var(--text-muted)",
                   unicodeBidi: "bidi-override",
                 }}>
-                0%
+                {isRtlLocale ? "٪٠" : "0%"}
               </span>
             </div>
           </div>

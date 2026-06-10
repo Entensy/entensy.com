@@ -86,7 +86,8 @@ function InfoCard({
       className='p-5 rounded-2xl flex items-start gap-4 overflow-hidden relative'
       style={{
         background: "var(--glass-bg)",
-        backdropFilter: "blur(12px)",
+        backdropFilter: "blur(2px)",
+        WebkitBackdropFilter: "blur(2px)",
         borderWidth: "1px",
         borderStyle: "solid",
         borderColor: "var(--glass-border)",
@@ -382,8 +383,8 @@ export default function ContactSection() {
       <style>{`
         .contact-input {
           border-radius: 0.75rem !important;
-          backdrop-filter: blur(14px);
-          -webkit-backdrop-filter: blur(14px);
+          backdrop-filter: blur(2px);
+          -webkit-backdrop-filter: blur(2px);
           transition: border-color 0.22s ease, background 0.22s ease, box-shadow 0.22s ease;
         }
         .contact-input::placeholder {
@@ -432,7 +433,8 @@ export default function ContactSection() {
             className='rounded-2xl p-8'
             style={{
               background: "var(--glass-bg)",
-              backdropFilter: "blur(16px)",
+              backdropFilter: "blur(2px)",
+              WebkitBackdropFilter: "blur(2px)",
               border: "1px solid var(--glass-border)",
             }}>
             <form
@@ -643,6 +645,8 @@ export default function ContactSection() {
               style={{
                 background:
                   "linear-gradient(135deg, rgba(252,0,42,0.08) 0%, rgba(201,168,76,0.05) 100%)",
+                backdropFilter: "blur(2px)",
+                WebkitBackdropFilter: "blur(2px)",
                 borderWidth: "1px",
                 borderStyle: "solid",
                 borderColor: "rgba(252,0,42,0.15)",

@@ -21,40 +21,48 @@ export default function ThemeToggle() {
     const newBg = newTheme === "dark" ? "#0D0A1E" : "#F5F5F8";
 
     if (!btn || !document.startViewTransition) {
-      // Fallback: ripple via DOM overlay
+      // Fallback: scale-based ripple — transform:scale runs on the compositor,
+      // no per-frame repaint even when backdrop-filter elements exist below.
       const rect = btn?.getBoundingClientRect();
-      const x = rect
-        ? Math.round(rect.left + rect.width / 2)
-        : window.innerWidth - 40;
-      const y = rect
-        ? Math.round(rect.top + rect.height / 2)
-        : window.innerHeight - 40;
+      const x = rect ? rect.left + rect.width / 2 : window.innerWidth - 40;
+      const y = rect ? rect.top + rect.height / 2 : window.innerHeight - 40;
+
+      // Scale needed so a 4px circle covers the farthest viewport corner
+      const maxDist = Math.max(
+        Math.hypot(x, y),
+        Math.hypot(window.innerWidth - x, y),
+        Math.hypot(x, window.innerHeight - y),
+        Math.hypot(window.innerWidth - x, window.innerHeight - y),
+      );
+      const scale = Math.ceil(maxDist / 2) + 1;
 
       const overlay = document.createElement("div");
       overlay.style.cssText = `
-        position:fixed;inset:0;z-index:99997;
+        position:fixed;
+        left:${x}px;top:${y}px;
+        width:4px;height:4px;
+        border-radius:50%;
+        transform:translate(-50%,-50%) scale(1);
+        transform-origin:center;
+        z-index:99997;
         background:${newBg};
-        clip-path:circle(0px at ${x}px ${y}px);
         pointer-events:none;
-        will-change:clip-path;
+        will-change:transform;
       `;
       document.body.appendChild(overlay);
 
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          overlay.style.transition =
-            "clip-path 0.55s cubic-bezier(0.22,1,0.36,1)";
-          overlay.style.clipPath = `circle(200vmax at ${x}px ${y}px)`;
+          overlay.style.transition = "transform 0.55s cubic-bezier(0.22,1,0.36,1)";
+          overlay.style.transform = `translate(-50%,-50%) scale(${scale})`;
         });
       });
 
       overlay.addEventListener(
         "transitionend",
         () => {
-          // Freeze all CSS transitions so nothing lags behind the reveal
           document.documentElement.classList.add("theme-switching");
           setTheme(newTheme);
-          // Two rAF: first lets React apply the new class, second lets browser paint
           requestAnimationFrame(() => {
             requestAnimationFrame(() => {
               document.documentElement.classList.remove("theme-switching");
@@ -67,13 +75,14 @@ export default function ThemeToggle() {
       return;
     }
 
-    // Native View Transitions API - smoother in supported browsers
+    const html = document.documentElement;
+
     document.startViewTransition(() => {
-      document.documentElement.classList.add("theme-switching");
+      html.classList.add("theme-switching");
       setTheme(newTheme);
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          document.documentElement.classList.remove("theme-switching");
+          html.classList.remove("theme-switching");
         });
       });
     });

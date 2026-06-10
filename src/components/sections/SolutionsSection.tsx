@@ -125,10 +125,7 @@ function SolutionCard({
       initial='below'
       animate={cardState}
       className={`${colSpan} ${centerClass} h-full`}
-      style={{
-        backdropFilter: "blur(4px) saturate(120%)",
-        WebkitBackdropFilter: "blur(4px) saturate(120%)",
-      }}
+      style={{ backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)" }}
       whileTap={{ scale: 0.97 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}>
       <TiltCard tiltMaxAngle={8}>
@@ -324,8 +321,7 @@ export default function SolutionsSection() {
                 width: "55vw",
                 height: "55vw",
                 background:
-                  "radial-gradient(circle, rgba(225,29,72,0.09) 0%, transparent 65%)",
-                filter: "blur(50px)",
+                  "radial-gradient(circle, rgba(225,29,72,0.065) 0%, rgba(225,29,72,0.022) 50%, transparent 75%)",
                 borderRadius: "50%",
                 "--dur": "18s",
                 "--delay": "0s",
@@ -341,8 +337,7 @@ export default function SolutionsSection() {
                 width: "50vw",
                 height: "50vw",
                 background:
-                  "radial-gradient(circle, rgba(124,58,237,0.10) 0%, transparent 65%)",
-                filter: "blur(50px)",
+                  "radial-gradient(circle, rgba(124,58,237,0.072) 0%, rgba(124,58,237,0.025) 50%, transparent 75%)",
                 borderRadius: "50%",
                 "--dur": "15s",
                 "--delay": "4s",
@@ -358,8 +353,7 @@ export default function SolutionsSection() {
                 width: "38vw",
                 height: "38vw",
                 background:
-                  "radial-gradient(circle, rgba(217,119,6,0.07) 0%, transparent 65%)",
-                filter: "blur(60px)",
+                  "radial-gradient(circle, rgba(217,119,6,0.048) 0%, rgba(217,119,6,0.016) 50%, transparent 80%)",
                 borderRadius: "50%",
                 "--dur": "12s",
                 "--delay": "7s",

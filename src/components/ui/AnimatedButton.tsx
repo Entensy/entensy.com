@@ -108,7 +108,7 @@ const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>(
     );
 
     const commonClassName = cn(
-      "relative group inline-flex items-center justify-center gap-2 rounded-full font-medium overflow-hidden transition-colors duration-300 will-change-transform",
+      "relative group inline-flex items-center justify-center gap-2 rounded-full font-medium overflow-hidden transition-colors duration-300",
       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FC002A] focus-visible:ring-offset-2",
       "select-none",
       variantStyles[variant],
