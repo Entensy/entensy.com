@@ -61,7 +61,6 @@ export default function HomePage() {
       import("@/components/sections/ContactSection"),
       import("@/components/sections/SocialsSection"),
     ]).then(() => {
-      if (canceled) return;
       const wait = Math.max(0, FILL_MS - (Date.now() - start));
       timeoutId = setTimeout(() => { setLoadProgress(100); }, wait);
     });
