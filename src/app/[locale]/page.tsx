@@ -63,7 +63,7 @@ export default function HomePage() {
     ]).then(() => {
       if (canceled) return;
       const wait = Math.max(0, FILL_MS - (Date.now() - start));
-      timeoutId = setTimeout(() => { if (!canceled) setLoadProgress(100); }, wait);
+      timeoutId = setTimeout(() => { setLoadProgress(100); }, wait);
     });
 
     return () => {
