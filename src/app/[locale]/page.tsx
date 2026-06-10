@@ -42,11 +42,8 @@ export default function HomePage() {
   useEffect(() => {
     const FILL_MS = 1000;
     const start = Date.now();
-    let canceled = false;
-    let timeoutId: ReturnType<typeof setTimeout>;
 
     const intervalId = setInterval(() => {
-      if (canceled) { clearInterval(intervalId); return; }
       const pct = Math.min(95, Math.round(((Date.now() - start) / FILL_MS) * 95));
       setLoadProgress(pct);
       if (pct >= 95) clearInterval(intervalId);
@@ -62,14 +59,10 @@ export default function HomePage() {
       import("@/components/sections/SocialsSection"),
     ]).then(() => {
       const wait = Math.max(0, FILL_MS - (Date.now() - start));
-      timeoutId = setTimeout(() => { setLoadProgress(100); }, wait);
+      setTimeout(() => { setLoadProgress(100); }, wait);
     });
 
-    return () => {
-      canceled = true;
-      clearInterval(intervalId);
-      clearTimeout(timeoutId);
-    };
+    return () => { clearInterval(intervalId); };
   }, []);
 
   const handleLoadingComplete = useCallback(() => {
