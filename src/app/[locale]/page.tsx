@@ -43,11 +43,19 @@ export default function HomePage() {
     const FILL_MS = 1000;
     const start = Date.now();
 
+    // Functional updater: once progress reaches 95+ (set by Promise path) the
+    // interval can no longer lower it back below that value.
     const intervalId = setInterval(() => {
-      const pct = Math.min(95, Math.round(((Date.now() - start) / FILL_MS) * 95));
-      setLoadProgress(pct);
-      if (pct >= 95) clearInterval(intervalId);
+      setLoadProgress(prev => {
+        if (prev >= 95) { clearInterval(intervalId); return prev; }
+        return Math.min(95, Math.round(((Date.now() - start) / FILL_MS) * 95));
+      });
     }, 50);
+
+    // Hard cap: if any chunk download hangs indefinitely (e.g. cache disabled +
+    // dev-server compilation delay), force completion after 8 s so the page is
+    // never permanently stuck at 95%.
+    const fallbackId = setTimeout(() => setLoadProgress(100), 8000);
 
     Promise.allSettled([
       import("@/components/sections/ServicesSection"),
@@ -58,11 +66,15 @@ export default function HomePage() {
       import("@/components/sections/ContactSection"),
       import("@/components/sections/SocialsSection"),
     ]).then(() => {
+      clearTimeout(fallbackId);
       const wait = Math.max(0, FILL_MS - (Date.now() - start));
-      setTimeout(() => { setLoadProgress(100); }, wait);
+      setTimeout(() => setLoadProgress(100), wait);
     });
 
-    return () => { clearInterval(intervalId); };
+    return () => {
+      clearInterval(intervalId);
+      clearTimeout(fallbackId);
+    };
   }, []);
 
   const handleLoadingComplete = useCallback(() => {

@@ -37,7 +37,7 @@ const navLinks = [
   { key: "contact", href: "#contact" },
 ];
 
-const TRANSITION = { type: "tween", duration: 0.5, ease: [0.22, 1, 0.36, 1] } as const;
+const TRANSITION = { type: "spring", stiffness: 300, damping: 35 } as const;
 
 export default function Navbar() {
   const t = useTranslations("nav");
@@ -135,7 +135,7 @@ export default function Navbar() {
             onClick={() => mobileOpen && setTimeout(() => setMobileOpen(false), 120)}
             initial={{ maxWidth: 1280, borderRadius: 14, paddingTop: "1rem", paddingBottom: "1rem", paddingLeft: "1.5rem", paddingRight: "1.5rem" }}
             animate={{
-              maxWidth: scrolled ? (isRtlLocale ? 1260 : 1160) : 1280,
+              maxWidth: scrolled ? 1160 : 1280,
               paddingTop: scrolled ? "0.65rem" : "1rem",
               paddingBottom: scrolled ? "0.65rem" : "1rem",
               paddingLeft: "1.5rem",
